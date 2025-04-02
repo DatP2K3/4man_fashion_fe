@@ -1,0 +1,111 @@
+<div class="header">
+  <div class="logo">
+    <img class="logo-image" src="/assets/images/logo.png" alt="4ManFashion" />
+  </div>
+
+  <nav class="nav">
+    <ul class="nav-list">
+      <li>
+        <a routerLink="/home">TRANG CHỦ</a>
+      </li>
+      <li>
+        <a routerLink="/home">QUẦN</a>
+      </li>
+      <li>
+        <a routerLink="/phukien">PHỤ KIỆN</a>
+      </li>
+      <li>
+        <a routerLink="/about">GIỚI THIỆU</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="search">
+    <input type="text" placeholder="Tìm kiếm sản phẩm..." />
+    <button><i class="pi pi-search"></i></button>
+  </div>
+
+  <nav class="auth-nav">
+    <ul class="auth-nav-list">
+      <li *ngIf="user.authStatus != 'AUTH'" class="login-btn">
+        <a (click)="login()">ĐĂNG NHẬP</a>
+      </li>
+      <li *ngIf="user.authStatus != 'AUTH'" class="register-btn">
+        <a>ĐĂNG KÝ</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="menu" *ngIf="user.authStatus == 'AUTH'">
+    <i class="pi pi-user" (click)="visible = true"></i>
+    <i class="pi pi-shopping-cart"></i>
+    <p-drawer
+      [(visible)]="visible"
+      position="right"
+      [baseZIndex]="10000"
+      [style]="{ width: '350px' }"
+    >
+      <div class="profile-drawer">
+        <h2 class="title-drawer">Hi, Phan Đạt</h2>
+        <p-divider></p-divider>
+        <div class="spending-info">
+          <p>
+            Chi tiêu thêm <strong class="target-cash">500.000đ</strong> để lên
+            hạng
+            <strong>BẠC</strong>
+          </p>
+          <p-progressbar [value]="percent" />
+        </div>
+
+        <div class="man-club">
+          <p>
+            Hiện tại bạn có: <br />
+            <span class="wallet"
+              ><i class="pi pi-money-bill"></i>
+              <strong class="coin">0</strong> 4Mancash</span
+            >
+          </p>
+          <button>Về 4Man</button>
+        </div>
+
+        <div class="row section-invite">
+          <P class="title-invite">Giới thiệu bạn bè</P>
+          <p class="invite-desc">
+            Nhận ngay 10% giá trị đơn hàng đầu tiên của bạn bè được quy đổi
+            thành 4ManCash
+          </p>
+          <div class="btn-invite-group">
+            <button class="share-btn">Chia sẻ</button>
+            <button class="more-btn">Tìm hiểu thêm</button>
+          </div>
+        </div>
+
+        <div class="nav-manage">
+          <div class="nav-manage-item">
+            <i class="pi pi-history"></i>
+            <a routerLink="/my-order">Lịch sử đơn hàng</a>
+          </div>
+
+          <div class="nav-manage-item">
+            <i class="pi pi-address-book"></i>
+            <a routerLink="/my-order">Sổ địa chỉ</a>
+          </div>
+
+          <div class="nav-manage-item">
+            <i class="pi pi-cog"></i>
+            <a routerLink="/my-setting">Cài đặt tài khoản</a>
+          </div>
+
+          <div class="nav-manage-item">
+            <i class="pi pi-question-circle"></i>
+            <a routerLink="/address">FAQ & Chính sách</a>
+          </div>
+        </div>
+
+        <div class="footer">
+          <button><a routerLink="/account">Đi đến tài khoản</a></button>
+        </div>
+      </div>
+    </p-drawer>
+  </div>
+</div>

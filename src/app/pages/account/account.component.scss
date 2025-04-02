@@ -1,0 +1,106 @@
+.main-content {
+  background-color: var(--secondary-background-color) !important;
+  padding: 20px 30px;
+}
+
+.mancash {
+  background: var(--background-color);
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 30px;
+
+  .man-club {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    p {
+      height: 80px;
+      padding: 10px;
+      border-radius: 10px;
+
+      .wallet {
+        display: flex;
+        align-items: center;
+
+        .coin {
+          margin: 0 6px;
+        }
+      }
+
+      i {
+        font-size: 1.8rem;
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+.cash-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+
+  .spending-info {
+    flex: 1;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px 0;
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    .target-cash {
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+  }
+  .section-invite {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--third-background-color);
+    padding: 15px 30px;
+    width: 300px;
+    color: var(--secondary-text-color);
+    font-size: 1.8rem;
+
+    i {
+      font-size: 1.8rem;
+    }
+  }
+}
+
+.navbar {
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.6rem;
+    background-color: var(--background-color);
+    color: var(--primary-text-color);
+    padding: 15px 30px;
+    border-radius: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+
+    i {
+      font-size: 1.8rem;
+    }
+
+    &:hover {
+      background-color: var(--third-background-color);
+      color: var(--secondary-text-color);
+    }
+  }
+
+  .active-nav {
+    background-color: var(--third-background-color);
+    color: var(--secondary-text-color);
+  }
+}

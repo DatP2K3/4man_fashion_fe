@@ -1,0 +1,80 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+
+  <!-- Main Content -->
+  <main class="row">
+    <div class="main-content">
+      <div class="mancash row">
+        <div class="man-club">
+          <h2 class="title-drawer">Hi, Phan Đạt</h2>
+          <p>
+            Hiện tại bạn có: <br />
+            <span class="wallet"
+              ><i class="pi pi-money-bill"></i>
+              <strong class="coin">0</strong> 4Mancash</span
+            >
+          </p>
+        </div>
+
+        <div class="cash-info">
+          <div class="spending-info">
+            <p>
+              Chi tiêu thêm <strong class="target-cash">500.000đ</strong> để lên
+              hạng
+              <strong>BẠC</strong>
+            </p>
+            <p-progressbar [value]="percent" />
+          </div>
+
+          <button class="row section-invite">
+            Giới thiệu bạn bè <i class="pi pi-user-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <ul class="navbar">
+            <li (click)="changeColor($event)">
+              <a routerLink="/info">Thông tin tài khoản</a
+              ><i class="pi pi-arrow-right"></i>
+            </li>
+            <li (click)="changeColor($event)">
+              <a routerLink="/refer-friend">Giới thiệu bạn bè</a
+              ><i class="pi pi-arrow-right"></i>
+            </li>
+            <li (click)="changeColor($event)">
+              <a routerLink="/orders">Lịch sử đơn hàng</a
+              ><i class="pi pi-arrow-right"></i>
+            </li>
+            <li (click)="changeColor($event)">
+              <a routerLink="/4mancash-point">Lịch sử 4ManCash</a
+              ><i class="pi pi-arrow-right"></i>
+            </li>
+            <li (click)="changeColor($event)">
+              <a routerLink="/user-address">Sổ địa chỉ</a
+              ><i class="pi pi-arrow-right"></i>
+            </li>
+            <li (click)="changeColor($event)">
+              <a routerLink="/faq">Chính sách & câu hỏi thường gặp</a
+              ><i class="pi pi-arrow-right"></i>
+            </li>
+            <li (click)="logout()">
+              <span>Đăng xuất</span> <i class="pi pi-arrow-right"></i>
+            </li>
+          </ul>
+        </div>
+        <div class="col-8">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="row">
+    <app-footer></app-footer>
+  </footer>
+</div>

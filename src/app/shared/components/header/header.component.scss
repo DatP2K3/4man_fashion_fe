@@ -1,0 +1,293 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: var(--background-color);
+  border-bottom: 2px solid var(--primary-color);
+
+  .logo img {
+    width: 139px;
+  }
+
+  .nav {
+    .nav-list {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin: 0 39px;
+        font-size: 1.6rem;
+
+        &:hover {
+          color: var(--primary-color);
+        }
+
+        a {
+          text-decoration: none;
+          color: inherit;
+        }
+      }
+    }
+  }
+
+  .search {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--primary-color);
+    border-radius: 999px;
+    padding: 5px;
+    overflow: hidden; /* Ngăn button bị lộ viền khi hover */
+
+    input {
+      width: 230px;
+      border: none;
+      outline: none;
+      padding: 5px;
+      font-size: 1.6rem;
+    }
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 20px; /* Giữ cong giống .search */
+      transition: background 0.3s ease, color 0.3s ease;
+
+      i {
+        font-size: 1.8rem;
+        color: var(--primary-color);
+        transition: color 0.3s ease;
+      }
+
+      &:hover {
+        background: var(--primary-color);
+        color: var(--secondary-text-color);
+
+        i {
+          color: white;
+        }
+      }
+    }
+  }
+
+  .auth-nav {
+    .auth-nav-list {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-left: 20px;
+        font-size: 1.6rem;
+        padding: 8px 8px;
+        border-radius: 20px;
+        width: 123px;
+        text-align: center;
+        background-color: var(--primary-color);
+        color: var(--secondary-text-color);
+        cursor: pointer;
+
+        a {
+          text-decoration: none;
+          color: inherit;
+        }
+      }
+
+      .login-btn {
+        background-color: transparent;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+      }
+    }
+  }
+
+  .menu {
+    display: flex;
+    align-items: center;
+
+    i {
+      font-size: 20px;
+      margin-left: 20px;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+
+    .profile-icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+  }
+}
+
+.profile-drawer {
+  padding-bottom: 20px;
+  .title-drawer {
+    color: var(--primary-color);
+    text-align: center;
+  }
+
+  .spending-info {
+    background-color: var(--secondary-background-color);
+    font-weight: bold;
+    padding: 20px 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+
+    .target-cash {
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+  }
+
+  .man-club {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+
+    p {
+      background-color: var(--secondary-background-color);
+      height: 80px;
+      padding: 10px;
+      border-radius: 10px;
+      flex: 1;
+
+      .wallet {
+        display: flex;
+        align-items: center;
+
+        .coin {
+          margin: 0 6px;
+        }
+      }
+
+      i {
+        font-size: 1.8rem;
+        color: var(--primary-color);
+      }
+    }
+    button {
+      background-color: var(--third-background-color);
+      border-radius: 10px;
+      color: var(--secondary-text-color);
+      font-size: 1.8rem;
+      padding: 20px 10px;
+      height: 80px;
+      cursor: pointer;
+    }
+  }
+
+  .section-invite {
+    background-image: url(/assets/images/bg_invite_section.png);
+    background-size: cover; // Phủ kín phần tử
+    background-position: center; // Căn giữa hình
+    background-repeat: no-repeat;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 15px 0;
+    color: var(--secondary-text-color);
+
+    .title-invite {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .invite-desc {
+      font-size: 1.4rem;
+      margin: 10px 0;
+    }
+
+    button {
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    .btn-invite-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .share-btn {
+      background-color: var(--secondary-text-color);
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      border-radius: 20px;
+    }
+
+    .more-btn {
+      background-color: inherit;
+      color: var(--secondary-text-color);
+      border: 2px solid var(--secondary-text-color);
+      border-radius: 20px;
+    }
+  }
+
+  .nav-manage {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    .nav-manage-item {
+      display: flex;
+      background-color: var(--secondary-background-color);
+      border-radius: 20px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      width: 156px;
+      cursor: pointer;
+
+      i {
+        font-size: 2.5rem;
+      }
+
+      a {
+        margin-top: 10px;
+        text-decoration: none;
+        color: var(--primary-text-color);
+      }
+    }
+  }
+
+  .footer {
+    button {
+      margin-top: 20px;
+      font-size: 1.6rem;
+      padding: 8px 8px;
+      border-radius: 20px;
+      border: none;
+      width: 100%;
+      text-align: center;
+      background-color: var(--primary-color);
+      color: var(--secondary-text-color);
+      cursor: pointer;
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+    }
+  }
+}
+
+// PrimeNG overrides
+::ng-deep .p-progressbar-value {
+  background: var(--primary-color) !important;
+}
