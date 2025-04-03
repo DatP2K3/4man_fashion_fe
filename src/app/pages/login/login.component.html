@@ -1,0 +1,66 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+
+  <!-- Main Content -->
+  <main class="form-login">
+    <form class="login" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <h1>Sign In</h1>
+      <p-inputgroup class="input-group">
+        <p-inputgroup-addon class="addon-group">
+          <i class="pi pi-user"></i>
+        </p-inputgroup-addon>
+        <input pInputText formControlName="username" placeholder="Username" />
+      </p-inputgroup>
+
+      <small *ngIf="loginForm.get('username')?.touched">
+        <span *ngIf="loginForm.get('username')?.errors?.['required']"
+          >Username is required.</span
+        >
+        <span *ngIf="loginForm.get('username')?.errors?.['pattern']"
+          >Username must be 3-20 characters, start with a letter, and contain
+          only letters, numbers, '_' or '.'.</span
+        >
+      </small>
+
+      <p-inputgroup class="input-group">
+        <p-inputgroup-addon class="addon-group">
+          <i class="pi pi-key"></i>
+        </p-inputgroup-addon>
+        <input pInputText formControlName="password" placeholder="Password" />
+      </p-inputgroup>
+
+      <small *ngIf="loginForm.get('password')?.touched">
+        <span *ngIf="loginForm.get('password')?.errors?.['required']"
+          >Password is required.</span
+        >
+        <span *ngIf="loginForm.get('password')?.errors?.['pattern']"
+          >Password must have at least 8 characters, including 1 uppercase, 1
+          lowercase, 1 number, and 1 special character.</span
+        >
+      </small>
+      <a routerLink="/forgot-password">Forgot password</a>
+      <button class="btn-login" type="submit" [disabled]="loginForm.invalid">
+        Đăng nhập
+      </button>
+      <p-divider class="divider"></p-divider>
+      <button class="btn-fb">Đăng nhập bằng Facebook</button>
+    </form>
+
+    <div>
+      <img
+        class="background"
+        src="/assets/images/bg_login.png"
+        alt=""
+        height="800px"
+      />
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="row">
+    <app-footer></app-footer>
+  </footer>
+</div>

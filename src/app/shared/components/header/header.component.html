@@ -28,7 +28,7 @@
   <nav class="auth-nav">
     <ul class="auth-nav-list">
       <li *ngIf="user.authStatus != 'AUTH'" class="login-btn">
-        <a (click)="login()">ĐĂNG NHẬP</a>
+        <a routerLink="/login">ĐĂNG NHẬP</a>
       </li>
       <li *ngIf="user.authStatus != 'AUTH'" class="register-btn">
         <a>ĐĂNG KÝ</a>

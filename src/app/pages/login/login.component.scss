@@ -1,0 +1,94 @@
+.form-login {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  .background {
+    flex: 1;
+  }
+
+  .login {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    margin-top: -80px;
+
+    flex: 1;
+
+    h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin: 20px 0;
+
+      input {
+        width: 300px;
+        padding: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-right-radius: 10px;
+        border: 1px solid var(--primary-color);
+        font-size: 1.6rem;
+        color: var(--primary-text-color);
+      }
+
+      .addon-group {
+        border: 1px solid var(--primary-color);
+        border-right: none;
+      }
+
+      i {
+        font-size: 1.8rem;
+        color: var(--primary-color);
+      }
+    }
+
+    small {
+      color: red;
+    }
+
+    a {
+      font-size: 1.4rem;
+      color: var(--primary-color);
+      text-decoration: none;
+      margin: 10px 0 10px 225px;
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      font-size: 1.6rem;
+      padding: 10px 8px;
+      border-radius: 20px;
+      width: 330px;
+      text-align: center;
+      background-color: inherit;
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    .btn-fb {
+      font-size: 1.6rem;
+      padding: 10px 8px;
+      border-radius: 20px;
+      width: 330px;
+      text-align: center;
+      background-color: var(--primary-color);
+      color: var(--secondary-text-color);
+      cursor: pointer;
+      border: none;
+    }
+  }
+
+  .divider {
+    width: 200px;
+  }
+}
