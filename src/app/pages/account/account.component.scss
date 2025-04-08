@@ -1,9 +1,46 @@
 .main-content {
   background-color: var(--secondary-background-color) !important;
   padding: 20px 30px;
+
+  .basic-info {
+    display: flex;
+    gap: 60px;
+    flex-direction: row;
+    align-items: center;
+
+    .avatar-img {
+      width: 200px !important;
+      height: 200px !important;
+    }
+
+    .avatar {
+      position: relative;
+
+      .change-avatar-btn {
+        position: absolute;
+        width: 150px;
+        bottom: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(50%);
+        display: none;
+        background-color: var(--primary-color);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+      }
+
+      &:hover .change-avatar-btn {
+        display: block;
+      }
+    }
+  }
 }
 
 .mancash {
+  flex: 1;
   background: var(--background-color);
   padding: 20px;
   border-radius: 20px;

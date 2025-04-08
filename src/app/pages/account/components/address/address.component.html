@@ -1,0 +1,122 @@
+<div class="address-manager">
+  <!-- Thay thế danh sách địa chỉ bằng dropdown -->
+  <div class="address-select">
+    <h3>Địa chỉ của bạn</h3>
+    <p-dropdown
+      [options]="addressOptions"
+      [(ngModel)]="editingAddressIndex"
+      (onChange)="onAddressChange($event)"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Chọn địa chỉ hoặc thêm mới"
+      [style]="{ width: '100%' }"
+      class="address-dropdown"
+    >
+    </p-dropdown>
+  </div>
+
+  <!-- Form chỉnh sửa/thêm mới địa chỉ -->
+  <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="info-form">
+    <h3>{{ isNewAddress ? "Thêm địa chỉ mới" : "Chỉnh sửa địa chỉ" }}</h3>
+
+    <p-iftalabel class="form-group">
+      <input
+        id="recipient_name"
+        type="text"
+        pInputText
+        formControlName="recipientName"
+        autocomplete="off"
+      />
+      <label for="recipient_name">Tên người nhận</label>
+    </p-iftalabel>
+
+    <!-- Giữ nguyên các input khác -->
+    <p-iftalabel class="form-group">
+      <input
+        id="phone_number"
+        type="text"
+        pInputText
+        formControlName="phoneNumber"
+        autocomplete="off"
+      />
+      <label for="phone_number">Số điện thoại</label>
+    </p-iftalabel>
+
+    <p-iftalabel class="form-group">
+      <input
+        id="address_line1"
+        type="text"
+        pInputText
+        formControlName="addressLine1"
+        autocomplete="off"
+      />
+      <label for="address_line1">Số nhà, tên đường</label>
+    </p-iftalabel>
+
+    <p-iftalabel class="form-group">
+      <input
+        id="address_line2"
+        type="text"
+        pInputText
+        formControlName="addressLine2"
+        autocomplete="off"
+      />
+      <label for="address_line2">Toà nhà/ căn hộ</label>
+    </p-iftalabel>
+
+    <div class="location-fields">
+      <p-iftalabel class="form-group">
+        <input
+          id="ward"
+          type="text"
+          pInputText
+          formControlName="ward"
+          autocomplete="off"
+        />
+        <label for="ward">Phường/ xã</label>
+      </p-iftalabel>
+
+      <p-iftalabel class="form-group">
+        <input
+          id="district"
+          type="text"
+          pInputText
+          formControlName="district"
+          autocomplete="off"
+        />
+        <label for="district">Quận/ huyện</label>
+      </p-iftalabel>
+
+      <p-iftalabel class="form-group">
+        <input
+          id="city"
+          type="text"
+          pInputText
+          formControlName="city"
+          autocomplete="off"
+        />
+        <label for="city">Tỉnh/ thành phố</label>
+      </p-iftalabel>
+    </div>
+
+    <div class="default-address">
+      <label>
+        <input type="checkbox" formControlName="defaultAddress" />
+        Mặc định
+      </label>
+    </div>
+
+    <div class="btn">
+      <button type="submit">
+        {{ isNewAddress ? "Thêm mới" : "Cập nhật" }}
+      </button>
+      <button
+        type="button"
+        class="cancel-btn"
+        *ngIf="!isNewAddress"
+        (click)="createNewAddress()"
+      >
+        Hủy
+      </button>
+    </div>
+  </form>
+</div>

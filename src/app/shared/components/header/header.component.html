@@ -27,17 +27,17 @@
 
   <nav class="auth-nav">
     <ul class="auth-nav-list">
-      <li *ngIf="user.authStatus != 'AUTH'" class="login-btn">
+      <li *ngIf="!isLoggedIn" class="login-btn">
         <a (click)="login()">ĐĂNG NHẬP</a>
       </li>
-      <li *ngIf="user.authStatus != 'AUTH'" class="register-btn">
+      <li *ngIf="!isLoggedIn" class="register-btn">
         <a>ĐĂNG KÝ</a>
       </li>
     </ul>
   </nav>
 
-  <div class="menu" *ngIf="user.authStatus == 'AUTH'">
-    <i class="pi pi-user" (click)="visible = true"></i>
+  <div class="menu" *ngIf="isLoggedIn">
+    <i class="pi pi-user" (click)="openProfileDrawer()"></i>
     <i class="pi pi-shopping-cart"></i>
     <p-drawer
       [(visible)]="visible"
@@ -46,15 +46,20 @@
       [style]="{ width: '350px' }"
     >
       <div class="profile-drawer">
-        <h2 class="title-drawer">Hi, Phan Đạt</h2>
+        <h2 class="title-drawer">
+          Hi, {{ profile?.first_name }} {{ profile?.last_name }}
+        </h2>
         <p-divider></p-divider>
         <div class="spending-info">
           <p>
-            Chi tiêu thêm <strong class="target-cash">500.000đ</strong> để lên
-            hạng
+            Tích luỹ thêm
+            <strong class="target-cash">{{
+              profile?.points_to_next_level
+            }}</strong>
+            điểm để lên hạng
             <strong>BẠC</strong>
           </p>
-          <p-progressbar [value]="percent" />
+          <p-progressbar [value]="profile?.percent" />
         </div>
 
         <div class="man-club">
@@ -62,7 +67,8 @@
             Hiện tại bạn có: <br />
             <span class="wallet"
               ><i class="pi pi-money-bill"></i>
-              <strong class="coin">0</strong> 4Mancash</span
+              <strong class="coin">{{ profile?.total_coins }}</strong>
+              4Mancash</span
             >
           </p>
           <button>Về 4Man</button>
@@ -81,25 +87,25 @@
         </div>
 
         <div class="nav-manage">
-          <div class="nav-manage-item">
+          <a routerLink="/my-order" class="nav-manage-item">
             <i class="pi pi-history"></i>
-            <a routerLink="/my-order">Lịch sử đơn hàng</a>
-          </div>
+            <p>Lịch sử đơn hàng</p>
+          </a>
 
-          <div class="nav-manage-item">
+          <a routerLink="/my-order" class="nav-manage-item">
             <i class="pi pi-address-book"></i>
-            <a routerLink="/my-order">Sổ địa chỉ</a>
-          </div>
+            <p>Sổ địa chỉ</p></a
+          >
 
-          <div class="nav-manage-item">
+          <button (click)="accountManagement()" class="nav-manage-item">
             <i class="pi pi-cog"></i>
-            <a routerLink="/my-setting">Cài đặt tài khoản</a>
-          </div>
+            <p>Cài đặt bảo mật</p>
+          </button>
 
-          <div class="nav-manage-item">
+          <a routerLink="/address" class="nav-manage-item">
             <i class="pi pi-question-circle"></i>
-            <a routerLink="/address">FAQ & Chính sách</a>
-          </div>
+            <p>FAQ & Chính sách</p></a
+          >
         </div>
 
         <div class="footer">

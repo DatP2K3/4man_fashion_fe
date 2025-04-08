@@ -1,0 +1,95 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: white; // Default background color
+  border-bottom: 2px solid var(--primary-color);
+
+  &:hover {
+    background: var(--background-color); // Change background on hover
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    i {
+      font-size: 24px;
+      cursor: pointer;
+      color: var(---primary-text-color);
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .logo img {
+    width: 139px;
+  }
+
+  .login-btn {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    background: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 20px;
+  }
+
+  .menu {
+    display: flex;
+    align-items: center;
+
+    i {
+      font-size: 20px;
+      margin-left: 20px;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+
+    .profile-icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+  }
+}
+
+.divider {
+  margin: 0 !important;
+}
+
+// PrimeNG overrides
+::ng-deep .p-progressbar-value {
+  background: var(--primary-color) !important;
+}
+
+.popover-content {
+  display: flex;
+  flex-direction: column;
+
+  .popover-btn {
+    background-color: var(--secondary-text-color);
+    color: var(--primary-text-color);
+    border: none;
+    padding: 14px 25px;
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+      background-color: rgba(12, 110, 214, 0.3) !important;
+    }
+  }
+}
+
+::ng-deep {
+  .p-popover-content {
+    padding: 0 !important;
+  }
+}

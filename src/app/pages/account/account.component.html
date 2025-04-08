@@ -6,63 +6,93 @@
 
   <!-- Main Content -->
   <main class="row">
-    <div class="main-content">
-      <div class="mancash row">
-        <div class="man-club">
-          <h2 class="title-drawer">Hi, Phan Đạt</h2>
-          <p>
-            Hiện tại bạn có: <br />
-            <span class="wallet"
-              ><i class="pi pi-money-bill"></i>
-              <strong class="coin">0</strong> 4Mancash</span
-            >
-          </p>
+    <div class="main-content row">
+      <div class="basic-info">
+        <div class="avatar">
+          <p-avatar
+            class="avatar-img"
+            [image]="avatarUrl"
+            [icon]="!avatarUrl ? 'pi pi-user' : undefined"
+            shape="circle"
+          ></p-avatar>
+          <button class="change-avatar-btn" (click)="triggerFileInput()">
+            Đổi ảnh đại diện
+          </button>
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/*"
+            style="display: none"
+            (change)="onFileSelected($event)"
+          />
         </div>
 
-        <div class="cash-info">
-          <div class="spending-info">
+        <div class="mancash">
+          <div class="man-club">
+            <h2 class="title-drawer">
+              Hi, {{ profile?.first_name }} {{ profile?.last_name }}
+            </h2>
             <p>
-              Chi tiêu thêm <strong class="target-cash">500.000đ</strong> để lên
-              hạng
-              <strong>BẠC</strong>
+              Hiện tại bạn có: <br />
+              <span class="wallet"
+                ><i class="pi pi-money-bill"></i>
+                <strong class="coin">{{ profile?.total_coins }}</strong>
+                4Mancash</span
+              >
             </p>
-            <p-progressbar [value]="percent" />
           </div>
 
-          <button class="row section-invite">
-            Giới thiệu bạn bè <i class="pi pi-user-plus"></i>
-          </button>
+          <div class="cash-info">
+            <div class="spending-info">
+              <p>
+                Tích luỹ thêm
+                <strong class="target-cash">{{
+                  profile?.points_to_next_level
+                }}</strong>
+                điểm để lên hạng
+                <strong>BẠC</strong>
+              </p>
+              <p-progressbar [value]="profile?.percent" />
+            </div>
+            <button class="section-invite">
+              Giới thiệu bạn bè <i class="pi pi-user-plus"></i>
+            </button>
+          </div>
         </div>
       </div>
       <div class="row">
         <div class="col-4">
           <ul class="navbar">
-            <li (click)="changeColor($event)">
-              <a routerLink="/info">Thông tin tài khoản</a
-              ><i class="pi pi-arrow-right"></i>
+            <li [routerLink]="['/account/info']" routerLinkActive="active-nav">
+              <span>Thông tin tài khoản</span>
+              <i class="pi pi-arrow-right"></i>
             </li>
-            <li (click)="changeColor($event)">
-              <a routerLink="/refer-friend">Giới thiệu bạn bè</a
-              ><i class="pi pi-arrow-right"></i>
+            <li [routerLink]="['/account/refer-friend']">
+              <span>Giới thiệu bạn bè</span>
+              <i class="pi pi-arrow-right"></i>
             </li>
-            <li (click)="changeColor($event)">
-              <a routerLink="/orders">Lịch sử đơn hàng</a
-              ><i class="pi pi-arrow-right"></i>
+            <li [routerLink]="['/account/orders']">
+              <span>Lịch sử đơn hàng</span>
+              <i class="pi pi-arrow-right"></i>
             </li>
-            <li (click)="changeColor($event)">
-              <a routerLink="/4mancash-point">Lịch sử 4ManCash</a
-              ><i class="pi pi-arrow-right"></i>
+            <li [routerLink]="['/account/4mancash-point']">
+              <span>Lịch sử 4ManCash</span>
+              <i class="pi pi-arrow-right"></i>
             </li>
-            <li (click)="changeColor($event)">
-              <a routerLink="/user-address">Sổ địa chỉ</a
-              ><i class="pi pi-arrow-right"></i>
+            <li
+              [routerLink]="['/account/address']"
+              routerLinkActive="active-nav"
+            >
+              <span>Sổ địa chỉ</span>
+              <i class="pi pi-arrow-right"></i>
             </li>
-            <li (click)="changeColor($event)">
-              <a routerLink="/faq">Chính sách & câu hỏi thường gặp</a
-              ><i class="pi pi-arrow-right"></i>
+            <li [routerLink]="['/account/faq']">
+              <span>Chính sách & câu hỏi thường gặp</span>
+              <i class="pi pi-arrow-right"></i>
             </li>
             <li (click)="logout()">
-              <span>Đăng xuất</span> <i class="pi pi-arrow-right"></i>
+              <span>Đăng xuất</span>
+              <i class="pi pi-arrow-right"></i>
             </li>
           </ul>
         </div>

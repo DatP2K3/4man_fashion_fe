@@ -1,0 +1,30 @@
+<div class="header">
+  <div class="nav">
+    <i class="pi pi-bars"></i>
+    <div class="logo">
+      <img class="logo-image" src="/assets/images/logo.png" alt="4ManFashion" />
+    </div>
+  </div>
+
+  <div *ngIf="!isLoggedIn" class="login-btn">
+    <a (click)="login()">ĐĂNG NHẬP</a>
+  </div>
+
+  <div class="menu" *ngIf="isLoggedIn">
+    <i
+      class="pi pi-user"
+      #userIcon
+      (click)="overlayPanel.toggle($event, userIcon)"
+    ></i>
+    <p-overlayPanel #overlayPanel>
+      <div class="popover-content">
+        <button class="popover-btn" (click)="accountManagement()">
+          Quản lý bảo mật
+        </button>
+        <p-divider class="divider"></p-divider>
+
+        <button class="popover-btn" (click)="logout()">Đăng xuất</button>
+      </div>
+    </p-overlayPanel>
+  </div>
+</div>

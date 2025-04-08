@@ -13,7 +13,11 @@ import {
 } from 'keycloak-angular';
 
 import Aura from '@primeng/themes/aura';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 import { routes } from './app.routes';
 import {
@@ -52,6 +56,7 @@ export const appConfig: ApplicationConfig = {
       useClass: KeycloakBearerInterceptor,
       multi: true,
     },
+    provideHttpClient(withInterceptorsFromDi()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),

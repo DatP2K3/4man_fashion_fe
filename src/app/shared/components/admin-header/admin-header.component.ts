@@ -1,30 +1,27 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { Profile } from '../../../core/models/Profile';
 import { KeycloakService } from 'keycloak-angular';
-import { NgIf } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
+import { ProfileService } from '../../../core/services/Profile.service';
+import { Subscription } from 'rxjs';
 import { DrawerModule } from 'primeng/drawer';
 import { ProgressBar } from 'primeng/progressbar';
 import { DividerModule } from 'primeng/divider';
-import { Profile } from '../../../core/models/Profile';
-import { Subscription } from 'rxjs';
-import { ProfileService } from '../../../core/services/Profile.service';
-import { AppStateService } from '../../state/AppState.service';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-admin-header',
   imports: [
-    NgIf,
-    RouterModule,
-    ButtonModule,
+    CommonModule,
     DrawerModule,
     ProgressBar,
     DividerModule,
+    OverlayPanelModule,
   ],
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  templateUrl: './admin-header.component.html',
+  styleUrl: './admin-header.component.scss',
 })
-export class HeaderComponent implements OnInit {
+export class AdminHeaderComponent implements OnInit {
   public visible: boolean = false;
   public isLoggedIn = false;
   public profile: Profile | null = null;
@@ -45,6 +42,10 @@ export class HeaderComponent implements OnInit {
 
   public accountManagement() {
     this.keycloak.getKeycloakInstance().accountManagement();
+  }
+
+  public logout() {
+    this.keycloak.logout();
   }
 
   public async openProfileDrawer() {
