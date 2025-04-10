@@ -3,11 +3,12 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background: white; // Default background color
+  background: white;
   border-bottom: 2px solid var(--primary-color);
+  height: 70px;
 
   &:hover {
-    background: var(--background-color); // Change background on hover
+    background: var(--background-color);
   }
 
   .nav {
@@ -18,7 +19,7 @@
     i {
       font-size: 24px;
       cursor: pointer;
-      color: var(---primary-text-color);
+      color: var(--primary-text-color);
 
       &:hover {
         color: var(--primary-color);
@@ -46,17 +47,11 @@
 
     i {
       font-size: 20px;
-      margin-left: 20px;
       cursor: pointer;
 
       &:hover {
         color: var(--primary-color);
       }
-    }
-
-    .profile-icon {
-      font-size: 24px;
-      cursor: pointer;
     }
   }
 }
@@ -91,5 +86,25 @@
 ::ng-deep {
   .p-popover-content {
     padding: 0 !important;
+  }
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    margin: 10px 0;
+
+    a {
+      text-decoration: none;
+      color: var(--primary-text-color);
+      font-size: 16px;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
   }
 }

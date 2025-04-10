@@ -6,11 +6,7 @@ import {
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import {
-  KeycloakAngularModule,
-  KeycloakBearerInterceptor,
-  KeycloakService,
-} from 'keycloak-angular';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 import Aura from '@primeng/themes/aura';
 import {
@@ -24,6 +20,8 @@ import {
   provideClientHydration,
   withEventReplay,
 } from '@angular/platform-browser';
+
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -53,9 +51,10 @@ export const appConfig: ApplicationConfig = {
     KeycloakService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: KeycloakBearerInterceptor,
+      useClass: AuthInterceptor,
       multi: true,
     },
+    // Only include one provideHttpClient with withInterceptorsFromDi
     provideHttpClient(withInterceptorsFromDi()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),

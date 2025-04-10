@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-footer',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './admin-footer.component.html',
-  styleUrl: './admin-footer.component.scss'
+  styleUrl: './admin-footer.component.scss',
 })
 export class AdminFooterComponent {
-
+  currentYear = new Date().getFullYear();
 }

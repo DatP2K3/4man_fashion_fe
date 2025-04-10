@@ -4,6 +4,8 @@ import { AccountComponent } from './pages/account/account.component';
 import { InfoComponent } from './pages/account/components/info/info.component';
 import { AddressComponent } from './pages/account/components/address/address.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { ManageProductComponent } from './pages/admin/components/manage-product/manage-product.component';
+import { EditProductComponent } from './pages/admin/components/edit-product/edit-product.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -12,13 +14,21 @@ export const routes: Routes = [
     path: 'account',
     component: AccountComponent,
     children: [
-      { path: 'info', component: InfoComponent }, // Route cho thông tin tài khoản
-      { path: 'address', component: AddressComponent }, // Route cho sổ địa chỉ
-      { path: 'refer-friend', component: InfoComponent }, // Placeholder for refer-friend
-      { path: 'orders', component: InfoComponent }, // Placeholder for orders
-      { path: '4mancash-point', component: InfoComponent }, // Placeholder for 4mancash-point
-      { path: 'faq', component: InfoComponent }, // Placeholder for FAQ
+      { path: 'info', component: InfoComponent },
+      { path: 'address', component: AddressComponent },
+      { path: 'refer-friend', component: InfoComponent },
+      { path: 'orders', component: InfoComponent },
+      { path: '4mancash-point', component: InfoComponent },
+      { path: 'faq', component: InfoComponent },
     ],
   },
-  { path: 'admin', component: AdminComponent },
+  {
+    path: 'admin',
+    component: AdminComponent,
+    children: [
+      { path: 'products', component: ManageProductComponent },
+      { path: 'products/edit', component: EditProductComponent },
+      { path: 'products/edit/:id', component: EditProductComponent },
+    ],
+  },
 ];

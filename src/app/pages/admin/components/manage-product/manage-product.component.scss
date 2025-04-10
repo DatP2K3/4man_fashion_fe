@@ -1,0 +1,87 @@
+.manage-product-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.manage-product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0;
+    color: var(--primary-text-color);
+    font-size: 1.8rem;
+  }
+}
+
+.manage-product-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+
+  .search-box {
+    width: 300px;
+  }
+}
+
+.product-image {
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+}
+
+.product-badge {
+  border-radius: 5px;
+  padding: 5px 0;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  display: inline-block;
+  width: 120px; /* Độ rộng cố định */
+  text-align: center; /* Căn giữa nội dung */
+
+  &.status-instock {
+    color: var(--secondary-text-color);
+    background-color: var(--primary-color);
+  }
+
+  &.status-outofstock {
+    background-color: #ffcdd2;
+    color: #c63737;
+  }
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+:host ::ng-deep {
+  .p-datatable .p-datatable-thead > tr > th {
+    background-color: var(--background-color);
+    color: var(--primary-text-color);
+    font-weight: 600;
+  }
+
+  .p-button {
+    font-size: 14px;
+  }
+
+  .p-paginator {
+    justify-content: flex-end;
+    padding: 1rem 0;
+  }
+
+  .p-inputtext:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 1px var(--primary-color) !important;
+  }
+
+  .custom-add-button {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+}

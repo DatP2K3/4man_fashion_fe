@@ -1,31 +1,34 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Profile } from '../../../core/models/Profile';
 import { KeycloakService } from 'keycloak-angular';
 import { ProfileService } from '../../../core/services/Profile.service';
 import { Subscription } from 'rxjs';
 import { DrawerModule } from 'primeng/drawer';
-import { ProgressBar } from 'primeng/progressbar';
 import { DividerModule } from 'primeng/divider';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { SidebarModule } from 'primeng/sidebar';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-header',
   imports: [
     CommonModule,
     DrawerModule,
-    ProgressBar,
     DividerModule,
     OverlayPanelModule,
+    SidebarModule,
+    RouterModule,
   ],
   templateUrl: './admin-header.component.html',
   styleUrl: './admin-header.component.scss',
 })
 export class AdminHeaderComponent implements OnInit {
-  public visible: boolean = false;
+  @Output() toggleSidebar = new EventEmitter<void>();
+
+  public sidebarVisible = false;
   public isLoggedIn = false;
   public profile: Profile | null = null;
-  private profileSubscription: Subscription | null = null;
 
   constructor(
     private readonly keycloak: KeycloakService,
@@ -34,6 +37,10 @@ export class AdminHeaderComponent implements OnInit {
 
   public async ngOnInit() {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
+  }
+
+  public onToggleSidebar() {
+    this.toggleSidebar.emit();
   }
 
   public login() {
@@ -46,24 +53,5 @@ export class AdminHeaderComponent implements OnInit {
 
   public logout() {
     this.keycloak.logout();
-  }
-
-  public async openProfileDrawer() {
-    if (this.isLoggedIn) {
-      if (!this.profile) {
-        await this.profileService.getOrInit().subscribe(
-          (response: any) => {
-            if (response && response.data) {
-              this.profile = response.data;
-            }
-            console.log('Profile data:', this.profile);
-          },
-          (error) => {
-            console.error('Error fetching profile data:', error);
-          }
-        );
-      }
-    }
-    this.visible = true;
   }
 }

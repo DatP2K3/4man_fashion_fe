@@ -131,13 +131,13 @@
     }
 
     &:hover {
-      background-color: var(--third-background-color);
+      background-color: var(--primary-color);
       color: var(--secondary-text-color);
     }
   }
 
   .active-nav {
-    background-color: var(--third-background-color);
+    background-color: var(--primary-color);
     color: var(--secondary-text-color);
   }
 }

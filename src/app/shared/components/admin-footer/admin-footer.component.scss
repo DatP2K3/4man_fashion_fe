@@ -1,0 +1,24 @@
+.copyright {
+  text-align: center;
+  padding: 10px 20px;
+  display: flex;
+  background-color: var(--third-background-color);
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  color: #7a7a7a;
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  .certificates {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+
+    img {
+      height: 4rem;
+    }
+  }
+}

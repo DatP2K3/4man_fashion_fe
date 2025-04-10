@@ -1,16 +1,61 @@
-<div class="container-fluid">
+<div class="admin-container">
   <!-- Header -->
-  <header class="row">
-    <app-admin-header></app-admin-header>
-  </header>
+  <div class="admin-header">
+    <app-admin-header (toggleSidebar)="toggleSidebar()"></app-admin-header>
+  </div>
 
-  <!-- Main Content -->
-  <main class="row">
-    <div class="col-12"></div>
-  </main>
+  <!-- Main Content Area (includes sidebar and content) -->
+  <div class="admin-content-area">
+    <!-- Sidebar -->
+    <div class="admin-sidebar" [class.collapsed]="isSidebarCollapsed">
+      <ul class="sidebar-nav">
+        <li>
+          <i class="pi pi-chart-bar"></i>
+          <span *ngIf="!isSidebarCollapsed">Thống kê</span>
+        </li>
+        <li>
+          <i class="pi pi-users"></i>
+          <span *ngIf="!isSidebarCollapsed">Quản lý người dùng</span>
+        </li>
+        <li>
+          <i class="pi pi-shopping-bag"></i>
+          <span *ngIf="!isSidebarCollapsed">Quản lý sản phẩm</span>
+        </li>
+        <li>
+          <i class="pi pi-image"></i>
+          <span *ngIf="!isSidebarCollapsed">Quản lý banner</span>
+        </li>
+        <li>
+          <i class="pi pi-percentage"></i>
+          <span *ngIf="!isSidebarCollapsed">Chiến dịch giảm giá</span>
+        </li>
+        <li>
+          <i class="pi pi-comments"></i>
+          <span *ngIf="!isSidebarCollapsed">Tin nhắn khách hàng</span>
+        </li>
+        <li>
+          <i class="pi pi-file-edit"></i>
+          <span *ngIf="!isSidebarCollapsed">Quản lý bài viết</span>
+        </li>
+        <li>
+          <i class="pi pi-star"></i>
+          <span *ngIf="!isSidebarCollapsed">Quản lý đánh giá</span>
+        </li>
+        <li>
+          <i class="pi pi-shopping-cart"></i>
+          <span *ngIf="!isSidebarCollapsed">Quản lý đơn hàng</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="admin-content" [class.expanded]="isSidebarCollapsed">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 
   <!-- Footer -->
-  <footer class="row">
+  <div class="admin-footer" [class.expanded]="isSidebarCollapsed">
     <app-admin-footer></app-admin-footer>
-  </footer>
+  </div>
 </div>

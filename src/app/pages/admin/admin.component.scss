@@ -1,0 +1,203 @@
+.container-fluid {
+  padding-top: 70px; // Tạo khoảng trống cho header cố định
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: white;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: var(--background-color);
+  height: calc(
+    100vh - 70px
+  ); // Chiều cao sidebar = chiều cao màn hình - chiều cao header
+  position: fixed;
+  top: 70px; // Bắt đầu từ dưới header
+  left: 0;
+  transition: width 0.3s ease;
+  overflow-y: auto; // Cho phép cuộn nếu nội dung sidebar dài
+  z-index: 999; // Đảm bảo hiển thị trên nội dung nhưng dưới header
+
+  &.collapsed {
+    width: 60px;
+  }
+
+  .sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      cursor: pointer;
+
+      i {
+        font-size: 18px;
+        margin-right: 10px;
+      }
+
+      span {
+        white-space: nowrap;
+      }
+
+      &:hover {
+        background-color: var(--primary-color);
+        color: white;
+      }
+    }
+  }
+}
+
+.content {
+  margin-left: 250px;
+  padding: 20px;
+  min-height: calc(
+    100vh - 140px
+  ); // Đảm bảo nội dung đủ cao để footer ở dưới cùng
+  transition: margin-left 0.3s ease;
+
+  &.expanded {
+    margin-left: 60px;
+  }
+}
+
+footer {
+  margin-top: 20px;
+  padding: 15px;
+  position: relative; // Đảm bảo footer không bị ghi đè
+  background-color: var(--background-color);
+  margin-left: 250px; // Cân chỉnh với sidebar
+  transition: margin-left 0.3s ease;
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+// Điều chỉnh margin của footer khi sidebar thu gọn
+.sidebar.collapsed ~ footer {
+  margin-left: 60px;
+}
+
+// Layout chính
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden; // Prevenir scroll horizontal
+}
+
+// Header
+.admin-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 70px; // Altura fija para el header
+  z-index: 1100; // Increased z-index to be higher than sidebar
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+// Khu vực nội dung chính
+.admin-content-area {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  margin-top: 70px; // Espacio para el header fijo
+  position: relative; // Add position context
+}
+
+// Sidebar
+.admin-sidebar {
+  width: 250px;
+  background-color: var(--background-color);
+  transition: width 0.3s ease;
+  position: fixed;
+  top: 70px; // Justo debajo del header
+  left: 0;
+  bottom: 60px; // Stop above footer
+  z-index: 1000; // Lower than header but higher than content
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+
+  &.collapsed {
+    width: 60px;
+  }
+
+  .sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+      i {
+        font-size: 18px;
+        margin-right: 15px;
+        min-width: 20px;
+        text-align: center;
+      }
+
+      span {
+        white-space: nowrap;
+        font-size: 14px;
+      }
+
+      &:hover {
+        background-color: var(--primary-color);
+        color: white;
+      }
+    }
+  }
+}
+
+// Nội dung chính
+.admin-content {
+  flex: 1;
+  padding: 20px;
+  margin-left: 250px; // Margen igual al ancho del sidebar
+  width: calc(100% - 250px); // Ancho = 100% - ancho del sidebar
+  min-height: calc(
+    100vh - 70px - 60px
+  ); // Alto mínimo = viewport - header - footer
+  z-index: 900; // Lower than sidebar
+
+  &.expanded {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+  }
+}
+
+// Footer
+.admin-footer {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: margin-left 0.3s ease;
+  height: 60px; // Altura fija para el footer
+  width: 100%;
+  z-index: 1000; // Same level as sidebar
+  background-color: var(--background-color);
+
+  &.expanded {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+  }
+}

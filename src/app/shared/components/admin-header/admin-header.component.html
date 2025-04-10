@@ -1,6 +1,6 @@
 <div class="header">
   <div class="nav">
-    <i class="pi pi-bars"></i>
+    <i class="pi pi-bars" (click)="onToggleSidebar()"></i>
     <div class="logo">
       <img class="logo-image" src="/assets/images/logo.png" alt="4ManFashion" />
     </div>
@@ -22,7 +22,6 @@
           Quản lý bảo mật
         </button>
         <p-divider class="divider"></p-divider>
-
         <button class="popover-btn" (click)="logout()">Đăng xuất</button>
       </div>
     </p-overlayPanel>

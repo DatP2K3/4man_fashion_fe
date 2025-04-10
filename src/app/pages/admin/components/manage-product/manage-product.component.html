@@ -1,1 +1,97 @@
-<p>manage-product works!</p>
+<div class="manage-product-container">
+  <div class="manage-product-header">
+    <h2>Quản lý sản phẩm</h2>
+    <div class="manage-product-actions">
+      <span class="p-input-icon-left search-box">
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="searchKeyword"
+          (input)="searchProducts()"
+          placeholder="Tìm kiếm sản phẩm..."
+        />
+      </span>
+      <button
+        pButton
+        icon="pi pi-plus"
+        label="Thêm sản phẩm mới"
+        class="p-button-primary custom-add-button"
+        (click)="navigateToAddProduct()"
+      ></button>
+    </div>
+  </div>
+
+  <p-table
+    [value]="filteredProducts"
+    [paginator]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Hiển thị {first} đến {last} của {totalRecords} sản phẩm"
+    [rowsPerPageOptions]="[10, 25, 50]"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 5%">STT</th>
+        <th style="width: 15%">Hình ảnh</th>
+        <th style="width: 25%">Tên sản phẩm</th>
+        <th style="width: 15%">Giá</th>
+        <th style="width: 10%">Số lượng</th>
+        <th style="width: 15%">Trạng thái</th>
+        <th style="width: 15%">Thao tác</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product let-i="rowIndex">
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>
+          <img
+            [src]="product.image"
+            [alt]="product.name"
+            width="80"
+            class="product-image"
+          />
+        </td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price | currency : "VND" : "symbol" : "1.0-0" }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>
+          <span
+            [class]="
+              'product-badge status-' +
+              (product.active ? 'instock' : 'outofstock')
+            "
+          >
+            {{ product.active ? "Đang hoạt động" : "Tạm ngưng" }}
+          </span>
+        </td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success mr-2"
+            (click)="editProduct(product)"
+            pTooltip="Chỉnh sửa sản phẩm"
+          ></button>
+          <button
+            pButton
+            [icon]="product.active ? 'pi pi-ban' : 'pi pi-check-circle'"
+            [class]="
+              'p-button-rounded ' +
+              (product.active ? 'p-button-warning' : 'p-button-success')
+            "
+            (click)="toggleProductVisibility(product)"
+            [pTooltip]="
+              product.active ? 'Tạm ngưng sản phẩm' : 'Kích hoạt sản phẩm'
+            "
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">Không tìm thấy sản phẩm nào.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
