@@ -1,8 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Category } from '../models/Category';
-import { Product } from '../models/Product';
+import { map, Observable } from 'rxjs';
+import { Category } from '../models/Category.model';
+import { Product } from '../models/Product.model';
+import {
+  ProductSearchRequest,
+  ProductSearchResponse,
+} from '@app/core/models/product-search.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,12 +37,38 @@ export class ProductService {
   }
 
   getProductById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/products/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/products/${id}`);
   }
 
   getDescriptionKeysByCategoryId(categoryId: string): Observable<any> {
     return this.http.get(
       `${this.apiUrl}/categories/${categoryId}/description-keys`
     );
+  }
+
+  searchProducts(
+    searchRequest: ProductSearchRequest
+  ): Observable<ProductSearchResponse> {
+    return this.http
+      .post<ProductSearchResponse>(
+        'http://localhost:8686/elasticsearch/api/products/search',
+        searchRequest
+      )
+      .pipe(
+        map((response) => {
+          // Đảm bảo các trường hidden được xử lý đúng nếu tên trường khác nhau
+          return response;
+        })
+      );
+  }
+
+  toggleProductVisibility(productId: string, hidden: boolean): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${productId}/visibility`, {
+      hidden,
+    });
+  }
+
+  updateProduct(product: Product): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/products`, product);
   }
 }

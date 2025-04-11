@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
 import { ProgressBar } from 'primeng/progressbar';
 import { DividerModule } from 'primeng/divider';
-import { Profile } from '../../../core/models/Profile';
+import { Profile } from '../../../core/models/Profile.model';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../../../core/services/Profile.service';
 import { AppStateService } from '../../state/AppState.service';

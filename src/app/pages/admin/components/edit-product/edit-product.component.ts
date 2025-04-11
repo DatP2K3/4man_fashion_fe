@@ -1,4 +1,11 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+  HostListener,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormsModule,
@@ -28,20 +35,35 @@ import { ProductService } from '@app/core/services/Product.service';
 import { CategoryService } from '@app/core/services/Category.service';
 import { FileUploadService } from '@app/core/services/FileUpload.service';
 import { GeminiService } from '@app/core/services/Gemini.service';
-import { Product } from '@app/core/models/Product';
-import { ProductVariant } from '@app/core/models/ProductVariant';
-import { ProductImage } from '@app/core/models/ProductImage';
-import { Category } from '@app/core/models/Category';
+import {
+  Product,
+  ProductImage,
+  ProductVariant,
+} from '@app/core/models/Product.model';
+import { Category } from '@app/core/models/Category.model';
 
 interface Variant {
   name: string;
   options: string[];
+  deleted?: boolean;
+  deletedOptions?: string[];
 }
 
 interface VariantCombination {
   [key: string]: any;
   quantity: number;
   sku: string;
+}
+
+interface CompleteVariantInfo {
+  id?: UUID;
+  product_id?: UUID;
+  productId?: UUID;
+  size?: string;
+  color?: string;
+  quantity: number;
+  sku: string;
+  deleted: boolean;
 }
 
 @Component({
@@ -65,28 +87,43 @@ interface VariantCombination {
     ToastModule,
     CardModule,
   ],
-  providers: [MessageService],
+  providers: [],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.scss',
 })
-export class EditProductComponent implements OnInit {
+export class EditProductComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
 
+  // Form and UI state
   productForm!: FormGroup;
   formSubmitted = false;
   currentSection = 'basic';
   showVariantDialog = false;
   showMoreDescription = false;
+  isEditMode = false;
+  productId: string | null = null;
+  isGeneratingDescription = false;
 
-  // Category data
+  // Data properties
   categories: Category[] = [];
-
-  // Image handling
+  descriptionKeys: string[] = [];
+  descriptionValues: Record<string, string> = {};
   mainImage: string | null = null;
   uploadedImages: ProductImage[] = [];
-  currentImageView: string = 'main';
+  deletedImages: ProductImage[] = [];
+  variants: Variant[] = [];
+  variantCombinations: VariantCombination[] = [];
+  private variantInfoMap: Map<string, CompleteVariantInfo> = new Map();
 
-  // Add image preview object to store different image views
+  // Form inputs
+  currentImageView = 'main';
+  aiDescriptionKeywords = '';
+  newSizeOption = '';
+  newColorOption = '';
+  selectedVariantType: any = null;
+
+  // Options and configuration
+  formErrors = { images: '' };
   imagePreviewUrls: { [key: string]: string } = {
     main: '',
     front: '',
@@ -98,39 +135,23 @@ export class EditProductComponent implements OnInit {
     detail: '',
     size: '',
   };
-
-  // Add mapping to track which image belongs to which view
   imageFileIdMap: { [key: string]: UUID } = {};
-
-  // Variants handling
-  variants: Variant[] = [];
-  variantCombinations: VariantCombination[] = [];
-  selectedVariantType: any = null;
+  filledViewTypes: Set<string> = new Set();
+  availableViewTypes = [
+    'front',
+    'side',
+    'angles',
+    'using',
+    'variant',
+    'back',
+    'detail',
+    'size',
+  ];
   availableVariantTypes = [
     { name: 'Kích cỡ', value: 'size' },
     { name: 'màu sắc', value: 'color' },
   ];
-  newSizeOption: string = '';
-  newColorOption: string = '';
-
-  // Weight units
   weightUnits = [{ name: 'Gram (g)', value: 'g' }];
-
-  // AI Description
-  aiDescriptionKeywords: string = '';
-  isGeneratingDescription: boolean = false;
-
-  // Form validation errors
-  formErrors = {
-    images: '',
-  };
-
-  // Thêm biến để lưu trữ các key mô tả và giá trị
-  descriptionKeys: string[] = [];
-  descriptionValues: Record<string, string> = {};
-
-  // Gemini configuration
-  isGeminiConfigured: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -145,17 +166,44 @@ export class EditProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.loadCategories();
-
-    // Check for edit mode (product ID in route)
-    this.route.params.subscribe((params) => {
-      if (params['id']) {
-        // Load product data for editing
-        // this.loadProductData(params['id']);
-      }
+    this.loadCategories().then(() => {
+      this.route.paramMap.subscribe((params) => {
+        const productId = params.get('id');
+        if (productId) {
+          this.isEditMode = true;
+          this.productId = productId;
+          this.loadProductData(productId);
+        } else {
+          this.isEditMode = false;
+          this.productId = null;
+        }
+      });
     });
+  }
 
-    // Đã xóa đoạn setTimeout để ngăn dialog tự động hiển thị
+  ngOnDestroy(): void {
+    // Clean up resources if needed
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    const sections = ['basic', 'details', 'sales', 'shipping'];
+    let currentActiveSection = '';
+
+    for (const section of sections) {
+      const element = document.getElementById(section);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= 150 && rect.bottom >= 150) {
+          currentActiveSection = section;
+          break;
+        }
+      }
+    }
+
+    if (currentActiveSection) {
+      this.currentSection = currentActiveSection;
+    }
   }
 
   initForm() {
@@ -174,31 +222,42 @@ export class EditProductComponent implements OnInit {
     });
   }
 
-  loadCategories() {
-    this.categoryService.getCategories().subscribe(
-      (res: any) => {
-        this.categories = res.data;
-      },
-      (error: any) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Lỗi',
-          detail: 'Không thể tải danh mục sản phẩm',
-        });
-      }
-    );
+  loadCategories(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.categoryService.getCategories().subscribe({
+        next: (res: any) => {
+          this.categories = res.data;
+          resolve();
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Lỗi',
+            detail: 'Không thể tải danh mục sản phẩm',
+          });
+          resolve(); // Still resolve to continue the flow
+        },
+      });
+    });
   }
 
-  // Section navigation
   scrollToSection(sectionId: string) {
     this.currentSection = sectionId;
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const offset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
+      }
+    }, 100);
   }
 
-  // File handling methods
+  // Image handling methods
   triggerFileInput() {
     if (this.fileInput) {
       this.fileInput.nativeElement.click();
@@ -207,22 +266,18 @@ export class EditProductComponent implements OnInit {
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (file) {
-      if (this.validateImageFile(file)) {
-        this.uploadFile(file);
-      }
+    if (file && this.validateImageFile(file)) {
+      this.uploadFile(file);
     }
   }
 
   validateImageFile(file: File): boolean {
-    // Check file type
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!validTypes.includes(file.type)) {
       this.formErrors.images = 'Chỉ chấp nhận định dạng JPG, JPEG hoặc PNG';
       return false;
     }
 
-    // Check file size (5MB max)
     const maxSize = 5 * 1024 * 1024; // 5MB in bytes
     if (file.size > maxSize) {
       this.formErrors.images = 'Kích thước tệp không được vượt quá 5MB';
@@ -233,30 +288,52 @@ export class EditProductComponent implements OnInit {
     return true;
   }
 
-  uploadFile(file: File) {
-    this.fileUploadService.uploadFile(file).subscribe(
-      (response: any) => {
-        if (response && response.data) {
-          console.log('File upload response:', response);
+  selectImageView(view: string, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
 
+    this.currentImageView = view;
+    this.triggerFileInput();
+  }
+
+  // Add drag and drop functionality
+  onImageDrop(event: DragEvent, view: string) {
+    event.preventDefault();
+
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+
+      // Set the current image view before uploading
+      this.currentImageView = view;
+
+      if (this.validateImageFile(file)) {
+        this.uploadFile(file);
+      }
+    }
+  }
+
+  uploadFile(file: File) {
+    this.fileUploadService.uploadFile(file).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
           // Create a product image object
-          const productImage = new ProductImage();
-          productImage.file_id = response.data.id as UUID;
-          productImage.avatar = this.currentImageView === 'main';
+          const productImage: ProductImage = {
+            file_id: response.data.id as UUID,
+            fileId: response.data.id as UUID,
+            avatar: this.currentImageView === 'main',
+            deleted: false,
+          };
 
           // Store file ID for this view
           this.imageFileIdMap[this.currentImageView] = response.data.id;
-
-          // Add to uploaded images array
           this.uploadedImages.push(productImage);
 
-          // Display preview for the current image view
+          // Display preview
           const reader = new FileReader();
           reader.onload = (e: any) => {
-            // Store the preview URL in the imagePreviewUrls object for the current view
             this.imagePreviewUrls[this.currentImageView] = e.target.result;
-
-            // Also update mainImage if this is the main view
+            this.filledViewTypes.add(this.currentImageView);
             if (this.currentImageView === 'main') {
               this.mainImage = e.target.result;
             }
@@ -270,96 +347,71 @@ export class EditProductComponent implements OnInit {
           });
         }
       },
-      (error: any) => {
+      error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Lỗi',
           detail: 'Không thể tải lên ảnh',
         });
-      }
-    );
-  }
-
-  selectImageView(view: string) {
-    this.currentImageView = view;
-    this.triggerFileInput();
-  }
-
-  // Video handling
-  onVideoSelect(event: any) {
-    // Handle video selection
+      },
+    });
   }
 
   onVideoUpload(event: any) {
     const file = event.files[0];
     if (file) {
-      this.fileUploadService.uploadFile(file).subscribe(
-        (response: any) => {
+      this.fileUploadService.uploadFile(file).subscribe({
+        next: () => {
           this.messageService.add({
             severity: 'success',
             summary: 'Thành công',
             detail: 'Tải lên video thành công',
           });
         },
-        (error: any) => {
+        error: () => {
           this.messageService.add({
             severity: 'error',
             summary: 'Lỗi',
             detail: 'Không thể tải lên video',
           });
-        }
-      );
+        },
+      });
     }
   }
 
-  // Category handling
   onCategoryChange(event: any) {
     if (event.value) {
       const selectedCategoryId = event.value;
-
-      console.log('Selected Category ID:', selectedCategoryId);
-
-      // Lấy category đã chọn
       const selectedCategory = this.categories.find(
         (cat) => cat.id === selectedCategoryId
       );
 
-      console.log('Selected Category:', selectedCategory);
-
+      // Fix: Use optional chaining to safely access nested properties
       if (
-        selectedCategory &&
-        selectedCategory.tag_descriptions &&
+        selectedCategory?.tag_descriptions &&
         selectedCategory.tag_descriptions.length > 0
       ) {
-        console.log('Tag Descriptions:', selectedCategory.tag_descriptions);
-
-        // Sử dụng tag_descriptions từ category đã chọn
         this.descriptionKeys = selectedCategory.tag_descriptions
-          .filter((tag) => tag && tag.name) // Chỉ lấy tag có name
+          .filter((tag) => tag && tag.name)
           .map((tag) => tag.name || '');
 
-        console.log('Description Keys:', this.descriptionKeys);
-
-        // Khởi tạo các giá trị mô tả rỗng cho mỗi key
+        // Initialize description values
         this.descriptionValues = {};
         this.descriptionKeys.forEach((key) => {
           this.descriptionValues[key] = '';
         });
 
-        // Cuộn đến phần chi tiết sản phẩm để người dùng thấy ngay các trường mới
+        // Scroll to details section
         setTimeout(() => {
           this.scrollToSection('details');
         }, 300);
       } else {
-        // Reset nếu không có tag descriptions
         this.descriptionKeys = [];
         this.descriptionValues = {};
-        console.log('No tag descriptions found for this category');
       }
     }
   }
 
-  // Description handling
   toggleShowMore() {
     this.showMoreDescription = !this.showMoreDescription;
   }
@@ -375,10 +427,7 @@ export class EditProductComponent implements OnInit {
     }
 
     this.isGeneratingDescription = true;
-
-    // Clear any existing messages
     this.messageService.clear();
-
     this.messageService.add({
       severity: 'info',
       summary: 'Đang xử lý',
@@ -390,25 +439,13 @@ export class EditProductComponent implements OnInit {
       .generateProductDescription(this.aiDescriptionKeywords)
       .subscribe({
         next: (response: any) => {
-          // Handle successful response from Gemini API
-          if (
-            response &&
-            response.candidates &&
-            response.candidates.length > 0
-          ) {
+          if (response?.candidates?.[0]?.content?.parts?.[0]?.text) {
             const generatedText = response.candidates[0].content.parts[0].text;
-
-            // Set the generated text to the description form control
             this.productForm.get('introduce')?.setValue(generatedText);
 
-            // Ensure the editor updates
             setTimeout(() => {
-              if (this.productForm.get('introduce')) {
-                this.productForm.get('introduce')?.updateValueAndValidity();
-              }
-
+              this.productForm.get('introduce')?.updateValueAndValidity();
               this.isGeneratingDescription = false;
-
               this.messageService.clear();
               this.messageService.add({
                 severity: 'success',
@@ -423,8 +460,7 @@ export class EditProductComponent implements OnInit {
             );
           }
         },
-        error: (error) => {
-          console.error('Error generating AI description:', error);
+        error: () => {
           this.handleDescriptionError(
             'Lỗi khi tạo mô tả. Vui lòng kiểm tra kết nối và thử lại.'
           );
@@ -443,9 +479,8 @@ export class EditProductComponent implements OnInit {
     });
   }
 
-  // Variant handling
+  // Variant handling methods
   showAddVariantDialog() {
-    // Filter available variant types to exclude already selected ones
     this.availableVariantTypes = [
       { name: 'Kích cỡ', value: 'size' },
       { name: 'màu sắc', value: 'color' },
@@ -470,13 +505,40 @@ export class EditProductComponent implements OnInit {
     }
   }
 
-  removeVariant(index: number) {
-    this.variants.splice(index, 1);
-    this.updateVariantCombinations();
+  removeVariant(activeIndex: number) {
+    const activeVariants = this.getActiveVariants();
+    const variantToRemove = activeVariants[activeIndex];
+    const fullIndex = this.variants.findIndex(
+      (v) => v.name === variantToRemove.name && !v.deleted
+    );
+
+    if (fullIndex !== -1) {
+      // Mark variant combinations as deleted
+      const variantName = this.variants[fullIndex].name;
+      this.variantCombinations.forEach((combo) => {
+        if (
+          (variantName === 'Kích cỡ' && combo['kích cỡ']) ||
+          (variantName === 'màu sắc' && combo['màu sắc'])
+        ) {
+          const key = this.createVariantKey(combo);
+          this.variantInfoMap.set(key, {
+            size: combo['kích cỡ'],
+            color: combo['màu sắc'],
+            quantity: combo.quantity,
+            sku: combo.sku,
+            deleted: true,
+          });
+        }
+      });
+
+      // Mark variant as deleted
+      this.variants[fullIndex].deleted = true;
+      this.updateVariantCombinations();
+    }
   }
 
   addSizeOption() {
-    if (this.newSizeOption && this.newSizeOption.trim() !== '') {
+    if (this.newSizeOption?.trim()) {
       const sizeVariant = this.variants.find((v) => v.name === 'Kích cỡ');
       if (sizeVariant && !sizeVariant.options.includes(this.newSizeOption)) {
         sizeVariant.options.push(this.newSizeOption);
@@ -487,7 +549,7 @@ export class EditProductComponent implements OnInit {
   }
 
   addColorOption() {
-    if (this.newColorOption && this.newColorOption.trim() !== '') {
+    if (this.newColorOption?.trim()) {
       const colorVariant = this.variants.find((v) => v.name === 'màu sắc');
       if (colorVariant && !colorVariant.options.includes(this.newColorOption)) {
         colorVariant.options.push(this.newColorOption);
@@ -498,39 +560,83 @@ export class EditProductComponent implements OnInit {
   }
 
   removeOption(variantIndex: number, optionIndex: number) {
+    const optionToRemove = this.variants[variantIndex].options[optionIndex];
+    const variantName = this.variants[variantIndex].name;
+
+    // Store deleted variant info
+    this.variantCombinations.forEach((combo) => {
+      if (
+        (variantName === 'Kích cỡ' && combo['kích cỡ'] === optionToRemove) ||
+        (variantName === 'màu sắc' && combo['màu sắc'] === optionToRemove)
+      ) {
+        const key = this.createVariantKey(combo);
+        this.variantInfoMap.set(key, {
+          size: combo['kích cỡ'],
+          color: combo['màu sắc'],
+          quantity: combo.quantity,
+          sku: combo.sku,
+          deleted: true,
+          ...this.getExistingVariantInfo(key),
+        });
+      }
+    });
+
+    // Track deleted options
+    if (!this.variants[variantIndex].deletedOptions) {
+      this.variants[variantIndex].deletedOptions = [];
+    }
+    this.variants[variantIndex].deletedOptions.push(optionToRemove);
+
+    // Remove from active options
     this.variants[variantIndex].options.splice(optionIndex, 1);
     this.updateVariantCombinations();
   }
 
   updateVariantCombinations() {
-    // Reset combinations
+    // Save existing combinations data
+    const existingCombinations = [...this.variantCombinations];
     this.variantCombinations = [];
 
-    // If no variants or no variant options, return
+    // Get active variants
+    const activeVariants = this.getActiveVariants();
+
+    // If no active variants, return
     if (
-      this.variants.length === 0 ||
-      this.variants.every((v) => v.options.length === 0)
+      !activeVariants.length ||
+      activeVariants.every((v) => !v.options.length)
     ) {
       return;
     }
 
-    // Generate all possible combinations
+    // Generate combinations recursively
     const generateCombinations = (
       variants: Variant[],
       currentIndex: number,
       currentCombination: any
     ) => {
       if (currentIndex === variants.length) {
-        // Add quantity and SKU fields to each combination (no price)
+        // Create new combination
         const combination: VariantCombination = {
           ...currentCombination,
           quantity: 0,
           sku: '',
         };
+
+        // Restore existing data if found
+        const existingCombo = this.findMatchingCombination(
+          combination,
+          existingCombinations
+        );
+        if (existingCombo) {
+          combination.quantity = existingCombo.quantity;
+          combination.sku = existingCombo.sku;
+        }
+
         this.variantCombinations.push(combination);
         return;
       }
 
+      // Generate combinations for each option of current variant
       const variant = variants[currentIndex];
       for (const option of variant.options) {
         const newCombination = {
@@ -541,28 +647,34 @@ export class EditProductComponent implements OnInit {
       }
     };
 
-    // Start generating combinations
-    generateCombinations(this.variants, 0, {});
+    // Start recursive generation
+    generateCombinations(activeVariants, 0, {});
   }
 
-  // Form submission
+  findMatchingCombination(
+    newCombination: VariantCombination,
+    existingCombinations: VariantCombination[]
+  ): VariantCombination | undefined {
+    return existingCombinations.find((existing) => {
+      for (const variant of this.variants) {
+        const variantKey = variant.name.toLowerCase();
+        if (
+          !existing[variantKey] ||
+          existing[variantKey] !== newCombination[variantKey]
+        ) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+
   onSubmit() {
     this.formSubmitted = true;
 
-    console.log('Form validation state:', this.productForm.valid);
-    console.log('Form values:', this.productForm.value);
-    console.log('Form errors:', this.getFormValidationErrors());
-
-    // Check if description keys and values are filled
+    // Handle description validation
     const isDescriptionFilled = Object.keys(this.descriptionValues).length > 0;
-
-    if (
-      this.productForm.invalid &&
-      this.productForm.get('description')?.invalid &&
-      isDescriptionFilled
-    ) {
-      // If only the description field is invalid but we have description values,
-      // set a placeholder to pass validation
+    if (this.productForm.get('description')?.invalid && isDescriptionFilled) {
       this.productForm.get('description')?.setValue('placeholder');
     }
 
@@ -575,42 +687,68 @@ export class EditProductComponent implements OnInit {
       return;
     }
 
-    // Check if at least one image is uploaded
-    if (this.uploadedImages.length === 0) {
-      this.formErrors.images = 'Vui lòng tải lên ít nhất một hình ảnh sản phẩm';
+    // Check if main image is present
+    if (!this.imagePreviewUrls['main']) {
+      this.formErrors.images = 'Vui lòng tải lên ảnh chính của sản phẩm';
       this.messageService.add({
         severity: 'error',
         summary: 'Lỗi',
-        detail: 'Vui lòng tải lên ít nhất một hình ảnh sản phẩm',
+        detail: 'Vui lòng tải lên ảnh chính của sản phẩm',
       });
       return;
     }
 
     // Create product object
     const product = new Product();
+
+    if (this.isEditMode && this.productId) {
+      product.id = this.productId as unknown as UUID;
+    }
+
+    // Set basic product details
     product.name = this.productForm.get('name')?.value;
     product.categoryId = this.productForm.get('categoryId')?.value;
     product.description = { ...this.descriptionValues };
-
-    // Set introduce field
     product.introduce = this.productForm.get('introduce')?.value;
-
     product.weight = this.productForm.get('weight')?.value;
     product.length = this.productForm.get('length')?.value;
     product.width = this.productForm.get('width')?.value;
     product.height = this.productForm.get('height')?.value;
     product.hidden = false;
-    product.productImages = this.uploadedImages;
-
-    // Set price at product level
     product.originPrice = this.productForm.get('price')?.value;
 
-    // Handle variants
+    // Set product images - only include active images
+    if (this.uploadedImages.length > 0) {
+      product.productImages = this.uploadedImages
+        .filter((img) => !img.deleted)
+        .map((img) => {
+          const image: ProductImage = {
+            id: img.id,
+            fileId: img.file_id || img.fileId,
+            file_id: img.file_id,
+            avatar: img.avatar,
+            deleted: false,
+          };
+
+          if (this.isEditMode && this.productId) {
+            image.product_id = this.productId as unknown as UUID;
+            image.productId = this.productId as unknown as UUID;
+          }
+
+          return image;
+        });
+    }
+
+    // Set product variants
     if (this.variantCombinations.length > 0) {
       product.productVariants = this.variantCombinations.map((combination) => {
-        const variant = new ProductVariant();
+        // Replace class instantiation with interface object
+        const variant: ProductVariant = {
+          quantity: combination.quantity,
+          sku: combination.sku,
+          deleted: false,
+        };
 
-        // Set variant properties
         if (combination['kích cỡ']) {
           variant.size = combination['kích cỡ'];
         }
@@ -619,152 +757,428 @@ export class EditProductComponent implements OnInit {
           variant.color = combination['màu sắc'];
         }
 
-        variant.quantity = combination.quantity;
-        variant.sku = combination.sku;
+        // Find existing ID if available
+        const key = this.createVariantKey(combination);
+        const existingInfo = this.variantInfoMap.get(key);
+        if (existingInfo?.id) {
+          variant.id = existingInfo.id;
+        }
+
+        if (this.isEditMode && this.productId) {
+          variant.product_id = this.productId as unknown as UUID;
+          variant.productId = this.productId as unknown as UUID;
+        }
 
         return variant;
       });
     } else {
-      // If no variants, create a default variant with just quantity and SKU
-      const variant = new ProductVariant();
-      variant.quantity = 0;
-      variant.sku = this.productForm.get('sku')?.value || '';
+      // Default variant if none exist
+      // Replace class instantiation with interface object
+      const variant: ProductVariant = {
+        quantity: 0,
+        sku: this.productForm.get('sku')?.value || '',
+        deleted: false,
+      };
+
+      if (this.isEditMode) {
+        const defaultVariant = this.variantInfoMap.get(':');
+        if (defaultVariant?.id) {
+          variant.id = defaultVariant.id;
+        }
+
+        if (this.productId) {
+          variant.product_id = this.productId as unknown as UUID;
+          variant.productId = this.productId as unknown as UUID;
+        }
+      }
+
       product.productVariants = [variant];
     }
-
-    console.log('Product object to save:', product);
 
     // Save product
-    this.productService.createProduct(product).subscribe(
-      (response: any) => {
+    const saveMethod = this.isEditMode
+      ? this.productService.updateProduct(product)
+      : this.productService.createProduct(product);
+
+    saveMethod.subscribe({
+      next: () => {
         this.messageService.add({
           severity: 'success',
           summary: 'Thành công',
-          detail: 'Sản phẩm đã được tạo thành công',
+          detail: this.isEditMode
+            ? 'Sản phẩm đã được cập nhật thành công'
+            : 'Sản phẩm đã được tạo thành công',
         });
         this.router.navigate(['/admin/products']);
       },
-      (error: any) => {
+      error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Lỗi',
-          detail: 'Không thể tạo sản phẩm. Vui lòng thử lại',
+          detail: this.isEditMode
+            ? 'Không thể cập nhật sản phẩm. Vui lòng thử lại'
+            : 'Không thể tạo sản phẩm. Vui lòng thử lại',
         });
-      }
-    );
-  }
-
-  // Save as draft
-  saveDraft() {
-    this.formSubmitted = true;
-
-    // Check if description keys and values are filled
-    const isDescriptionFilled = Object.keys(this.descriptionValues).length > 0;
-
-    if (
-      this.productForm.invalid &&
-      this.productForm.get('description')?.invalid &&
-      isDescriptionFilled
-    ) {
-      // If only the description field is invalid but we have description values,
-      // set a placeholder to pass validation
-      this.productForm.get('description')?.setValue('placeholder');
-    }
-
-    if (this.productForm.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Lỗi',
-        detail: 'Vui lòng điền đầy đủ thông tin bắt buộc',
-      });
-      return;
-    }
-
-    // Create product object (similar to onSubmit)
-    const product = new Product();
-    product.name = this.productForm.get('name')?.value;
-    product.categoryId = this.productForm.get('categoryId')?.value;
-    product.description = { ...this.descriptionValues };
-
-    // Set introduce field
-    product.introduce = this.productForm.get('introduce')?.value;
-
-    product.weight = this.productForm.get('weight')?.value;
-    product.length = this.productForm.get('length')?.value;
-    product.width = this.productForm.get('width')?.value;
-    product.height = this.productForm.get('height')?.value;
-    product.hidden = true; // Mark as draft
-    product.productImages = this.uploadedImages;
-
-    product.originPrice = this.productForm.get('price')?.value;
-
-    // Handle variants (same as in onSubmit)
-    if (this.variantCombinations.length > 0) {
-      product.productVariants = this.variantCombinations.map((combination) => {
-        const variant = new ProductVariant();
-        if (combination['kích cỡ']) {
-          variant.size = combination['kích cỡ'];
-        }
-        if (combination['màu sắc']) {
-          variant.color = combination['màu sắc'];
-        }
-        variant.quantity = combination.quantity;
-        variant.sku = combination.sku;
-        return variant;
-      });
-    } else {
-      const variant = new ProductVariant();
-      variant.quantity = 0;
-      variant.sku = this.productForm.get('sku')?.value || '';
-      product.productVariants = [variant];
-    }
-
-    this.productService.createProduct(product).subscribe(
-      (response: any) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Thành công',
-          detail: 'Đã lưu nháp sản phẩm',
-        });
-        this.router.navigate(['/admin/products']);
       },
-      (error: any) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Lỗi',
-          detail: 'Không thể lưu nháp. Vui lòng thử lại',
-        });
-      }
-    );
+    });
   }
 
   cancel() {
     this.router.navigate(['/admin/products']);
   }
 
-  // Thêm hàm để cập nhật giá trị mô tả khi người dùng nhập
   updateDescriptionValue(key: string, value: string) {
     this.descriptionValues[key] = value;
   }
 
-  // Add this method to the component class
   getSelectedCategoryName(): string {
     const categoryId = this.productForm?.get('categoryId')?.value;
     if (!categoryId) return '';
-
     const selectedCategory = this.categories.find((c) => c.id === categoryId);
     return selectedCategory?.name || '';
   }
 
-  // Helper method to debug form validation errors
   getFormValidationErrors() {
     const errors: any = {};
     Object.keys(this.productForm.controls).forEach((key) => {
       const control = this.productForm.get(key);
-      if (control && control.errors) {
+      if (control?.errors) {
         errors[key] = control.errors;
       }
     });
     return errors;
+  }
+
+  loadProductData(productId: string) {
+    this.productService.getProductById(productId).subscribe({
+      next: (response) => {
+        if (response?.success) {
+          const product = response.data;
+
+          // Set category ID first
+          if (product.categoryId || product.category_id) {
+            const categoryId = product.categoryId || product.category_id;
+            this.productForm.get('categoryId')?.setValue(categoryId);
+
+            // Get description fields from category
+            const selectedCategory = this.categories.find(
+              (cat) => cat.id === categoryId
+            );
+            // Fix: Use optional chaining to safely access nested properties
+            if (
+              selectedCategory?.tag_descriptions &&
+              selectedCategory.tag_descriptions.length > 0
+            ) {
+              this.descriptionKeys = selectedCategory.tag_descriptions
+                .filter((tag) => tag && tag.name)
+                .map((tag) => tag.name || '');
+            }
+          }
+
+          // Fill form data
+          this.productForm.patchValue({
+            name: product.name,
+            introduce: product.introduce,
+            price: product.originPrice || product.origin_price,
+            sku:
+              product.productVariants?.[0]?.sku ||
+              product.product_variants?.[0]?.sku ||
+              '',
+            weight: product.weight,
+            weightUnit: product.weightUnit || 'g',
+            length: product.length,
+            width: product.width,
+            height: product.height,
+          });
+
+          // Set description values
+          if (product.description) {
+            this.descriptionValues = { ...product.description };
+
+            // If no keys from category, use product keys
+            if (!this.descriptionKeys?.length) {
+              this.descriptionKeys = Object.keys(product.description);
+            }
+          }
+
+          // Clear existing data
+          this.variants = [];
+          this.variantCombinations = [];
+          this.uploadedImages = [];
+          this.clearImagePreviews();
+
+          // Load product data
+          if (product.productVariants || product.product_variants) {
+            this.loadProductVariants({
+              ...product,
+              productVariants:
+                product.productVariants || product.product_variants,
+            });
+          }
+
+          if (product.productImages || product.product_images) {
+            this.loadProductImages({
+              ...product,
+              productImages: product.productImages || product.product_images,
+            });
+          }
+        }
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Lỗi',
+          detail: 'Không thể tải thông tin sản phẩm',
+        });
+      },
+    });
+  }
+
+  clearImagePreviews() {
+    for (const viewType of ['main', ...this.availableViewTypes]) {
+      this.imagePreviewUrls[viewType] = '';
+    }
+    this.filledViewTypes.clear();
+  }
+
+  loadProductVariants(product: any) {
+    if (!product.productVariants?.length) return;
+
+    // Filter out deleted variants
+    const activeProductVariants = product.productVariants.filter(
+      (v: any) => !v.deleted
+    );
+
+    // Check for size variants
+    const hasSizes = activeProductVariants.some((v: any) => v.size?.trim());
+    if (hasSizes) {
+      const sizeVariant: Variant = { name: 'Kích cỡ', options: [] };
+      activeProductVariants.forEach((v: any) => {
+        if (v.size?.trim() && !sizeVariant.options.includes(v.size)) {
+          sizeVariant.options.push(v.size);
+        }
+      });
+
+      if (sizeVariant.options.length > 0) {
+        this.variants.push(sizeVariant);
+      }
+    }
+
+    // Check for color variants
+    const hasColors = activeProductVariants.some((v: any) => v.color?.trim());
+    if (hasColors) {
+      const colorVariant: Variant = { name: 'màu sắc', options: [] };
+      activeProductVariants.forEach((v: any) => {
+        if (v.color?.trim() && !colorVariant.options.includes(v.color)) {
+          colorVariant.options.push(v.color);
+        }
+      });
+
+      if (colorVariant.options.length > 0) {
+        this.variants.push(colorVariant);
+      }
+    }
+
+    // Generate combinations
+    if (this.variants.length > 0) {
+      this.updateVariantCombinations();
+
+      // Fill quantities and SKUs
+      if (this.variantCombinations.length > 0) {
+        product.productVariants.forEach((v: any) => {
+          const combo = this.variantCombinations.find(
+            (c) =>
+              (!v.size || c['kích cỡ'] === v.size) &&
+              (!v.color || c['màu sắc'] === v.color)
+          );
+
+          if (combo) {
+            combo.quantity = v.quantity || 0;
+            combo.sku = v.sku || '';
+          }
+        });
+      }
+    }
+
+    // Initialize variant tracking
+    this.variants.forEach((variant) => {
+      variant.deletedOptions = [];
+    });
+
+    // Store all variant info (including deleted)
+    if (product.productVariants.length > 0) {
+      this.variantInfoMap.clear();
+
+      product.productVariants.forEach((v: any) => {
+        if (v.size || v.color) {
+          const key = `${v.size || ''}:${v.color || ''}`;
+          this.variantInfoMap.set(key, {
+            id: v.id,
+            product_id: v.product_id,
+            size: v.size,
+            color: v.color,
+            quantity: v.quantity || 0,
+            sku: v.sku || '',
+            deleted: v.deleted || false,
+          });
+        }
+      });
+    }
+  }
+
+  loadProductImages(product: any) {
+    if (!product.productImages?.length) return;
+
+    // Find avatar image
+    const avatarImage = product.productImages.find(
+      (image: any) => image.avatar
+    );
+    const nonAvatarImages = product.productImages.filter(
+      (image: any) => !image.avatar
+    );
+
+    // Process in order: avatar first, then others
+    const allImagesInOrder = avatarImage
+      ? [avatarImage, ...nonAvatarImages]
+      : nonAvatarImages;
+    let viewTypeIndex = 0;
+
+    // Process each image
+    allImagesInOrder.forEach((image: any) => {
+      const productImage: ProductImage = {
+        id: image.id,
+        file_id: image.fileId || image.file_id,
+        fileId: image.fileId || image.file_id,
+        avatar: image.avatar,
+        product_id: image.product_id || (this.productId as unknown as UUID),
+        deleted: false,
+      };
+
+      this.uploadedImages.push(productImage);
+
+      // Load image preview
+      this.fileUploadService.getFile(image.fileId).subscribe({
+        next: (response) => {
+          if (response?.data) {
+            let viewType = '';
+
+            // Place avatar in main position
+            if (image.avatar) {
+              viewType = 'main';
+              this.mainImage = response.data.url;
+            } else {
+              // Assign next available view type
+              if (viewTypeIndex < this.availableViewTypes.length) {
+                viewType = this.availableViewTypes[viewTypeIndex++];
+              } else {
+                viewType = 'variant'; // Fallback
+              }
+            }
+
+            // Store preview and mapping
+            this.imagePreviewUrls[viewType] = response.data.url;
+            this.imageFileIdMap[viewType] = image.fileId;
+            this.filledViewTypes.add(viewType);
+          }
+        },
+        error: () => {
+          /* Handle silently */
+        },
+      });
+    });
+
+    // Track deleted images
+    this.deletedImages = product.productImages
+      .filter((img: any) => img.deleted === true)
+      .map((img: any) => {
+        const deletedImage: ProductImage = {
+          id: img.id,
+          file_id: img.fileId || img.file_id,
+          fileId: img.fileId || img.file_id,
+          avatar: img.avatar || false,
+          product_id: img.product_id || (this.productId as unknown as UUID),
+          deleted: true,
+        };
+        return deletedImage;
+      });
+  }
+
+  getActiveVariants(): Variant[] {
+    return this.variants.filter((v) => !v.deleted);
+  }
+
+  private createVariantKey(combination: VariantCombination): string {
+    const size = combination['kích cỡ'] || '';
+    const color = combination['màu sắc'] || '';
+    return `${size}:${color}`;
+  }
+
+  removeImage(imageView: string, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    const fileId = this.imageFileIdMap[imageView];
+    if (fileId) {
+      const imageIndex = this.uploadedImages.findIndex(
+        (img) => img.file_id === fileId || img.fileId === fileId
+      );
+
+      if (imageIndex !== -1) {
+        const imageToRemove = this.uploadedImages[imageIndex];
+
+        // Preserve ID for backend
+        if (imageToRemove.id) {
+          const deletedImg: ProductImage = {
+            id: imageToRemove.id,
+            file_id: imageToRemove.file_id,
+            fileId: imageToRemove.fileId,
+            avatar: imageToRemove.avatar,
+            deleted: true,
+          };
+
+          if (this.productId) {
+            deletedImg.product_id = this.productId as unknown as UUID;
+            deletedImg.productId = this.productId as unknown as UUID;
+          }
+          this.deletedImages.push(deletedImg);
+        }
+
+        // Remove from active images
+        this.uploadedImages.splice(imageIndex, 1);
+
+        // Clear previews
+        this.imagePreviewUrls[imageView] = '';
+        delete this.imageFileIdMap[imageView];
+        this.filledViewTypes.delete(imageView);
+
+        if (imageView === 'main') {
+          this.mainImage = null;
+        }
+      }
+    }
+  }
+
+  private getExistingVariantInfo(key: string): Partial<CompleteVariantInfo> {
+    const existing = this.variantInfoMap.get(key);
+    if (existing?.id) {
+      return {
+        id: existing.id,
+        product_id: existing.product_id,
+      };
+    }
+    return {};
+  }
+
+  getActiveVariantCombinations(): VariantCombination[] {
+    if (!this.variantCombinations?.length) {
+      return [];
+    }
+
+    return this.variantCombinations.filter((combination) => {
+      const key = this.createVariantKey(combination);
+      const variantInfo = this.variantInfoMap.get(key);
+      return !variantInfo || !variantInfo.deleted;
+    });
   }
 }

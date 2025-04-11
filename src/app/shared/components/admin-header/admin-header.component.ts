@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { Profile } from '../../../core/models/Profile';
+import { Profile } from '../../../core/models/Profile.model';
 import { KeycloakService } from 'keycloak-angular';
 import { ProfileService } from '../../../core/services/Profile.service';
 import { Subscription } from 'rxjs';

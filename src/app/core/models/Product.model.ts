@@ -1,5 +1,25 @@
-import { ProductVariant } from './ProductVariant';
-import { ProductImage } from './ProductImage';
+import { UUID } from 'crypto';
+
+export interface ProductImage {
+  id?: UUID;
+  product_id?: UUID;
+  productId?: string;
+  file_id?: UUID;
+  fileId?: string;
+  avatar?: boolean;
+  deleted?: boolean;
+}
+
+export interface ProductVariant {
+  id?: UUID;
+  product_id?: UUID;
+  productId?: string;
+  size?: string;
+  color?: string;
+  quantity?: number;
+  sku?: string;
+  deleted?: boolean;
+}
 
 export class Product {
   public id?: string; // UUID

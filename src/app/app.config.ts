@@ -22,6 +22,7 @@ import {
 } from '@angular/platform-browser';
 
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -54,6 +55,8 @@ export const appConfig: ApplicationConfig = {
       useClass: AuthInterceptor,
       multi: true,
     },
+    MessageService,
+    ConfirmationService,
     // Only include one provideHttpClient with withInterceptorsFromDi
     provideHttpClient(withInterceptorsFromDi()),
     provideZoneChangeDetection({ eventCoalescing: true }),

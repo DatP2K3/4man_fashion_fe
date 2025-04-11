@@ -4,7 +4,7 @@ import { SHARED_COMPONENTS } from '../../shared/shared.config';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
 import { AppStateService } from '../../shared/state/AppState.service';
-import { Profile } from '../../core/models/Profile';
+import { Profile } from '../../core/models/Profile.model';
 import { AvatarModule } from 'primeng/avatar';
 import { ProfileService } from '../../core/services/Profile.service';
 import { Router } from '@angular/router';

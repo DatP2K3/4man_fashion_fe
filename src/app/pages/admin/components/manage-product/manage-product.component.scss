@@ -25,6 +25,15 @@
 
   .search-box {
     width: 300px;
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid var(--primary-color);
+      font-size: 14px;
+      color: var(--primary-text-color);
+    }
   }
 }
 
@@ -73,6 +82,22 @@
   .p-paginator {
     justify-content: flex-end;
     padding: 1rem 0;
+    display: flex !important;
+    visibility: visible !important;
+
+    .p-paginator-element {
+      min-width: 2.5rem;
+      height: 2.5rem;
+
+      &.p-highlight {
+        background-color: var(--primary-color);
+        color: #ffffff;
+      }
+    }
+
+    .p-paginator-pages {
+      display: flex !important;
+    }
   }
 
   .p-inputtext:focus {
@@ -83,5 +108,38 @@
   .custom-add-button {
     background-color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
+  }
+
+  .p-datatable-loading-overlay {
+    display: none !important;
+  }
+
+  .p-datatable .p-datatable-tbody > tr {
+    background-color: #ffffff;
+    min-height: 3rem;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  // Ensure the rows per page dropdown has the highest z-index
+  .p-paginator-rpp-options {
+    z-index: 1000 !important;
+  }
+
+  // Target the dropdown overlay to ensure it appears on top
+  .p-dropdown-panel {
+    z-index: 9999 !important;
+  }
+
+  // Target the dropdown items inside the paginator
+  .p-paginator .p-dropdown {
+    position: relative;
+    z-index: 1000;
+
+    .p-dropdown-items-wrapper {
+      z-index: 9999 !important;
+    }
   }
 }

@@ -6,10 +6,12 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { IftaLabelModule } from 'primeng/iftalabel';
-import { Profile } from '../../../../core/models/Profile';
+import {
+  Profile,
+  ShippingAddress,
+} from '../../../../core/models/Profile.model';
 import { AppStateService } from '../../../../shared/state/AppState.service';
 import { ProfileService } from '../../../../core/services/Profile.service';
-import { ShippingAddress } from '../../../../core/models/ShippingAddress';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown'; // Thêm import này
 

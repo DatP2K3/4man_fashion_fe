@@ -24,11 +24,17 @@
   <p-table
     [value]="filteredProducts"
     [paginator]="true"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    [tableStyle]="{ 'min-width': '50rem' }"
-    currentPageReportTemplate="Hiển thị {first} đến {last} của {totalRecords} sản phẩm"
+    [rows]="searchRequest.size"
+    [totalRecords]="totalRecords"
     [rowsPerPageOptions]="[10, 25, 50]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Hiển thị {first} đến {last} của {totalRecords} sản phẩm"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    (onPage)="onPageChange($event)"
+    [alwaysShowPaginator]="true"
+    [lazy]="true"
+    [first]="((searchRequest.page || 1) - 1) * (searchRequest.size || 10)"
+    styleClass="p-datatable-responsive"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -36,33 +42,39 @@
         <th style="width: 15%">Hình ảnh</th>
         <th style="width: 25%">Tên sản phẩm</th>
         <th style="width: 15%">Giá</th>
-        <th style="width: 10%">Số lượng</th>
+        <th style="width: 10%">Đã bán</th>
         <th style="width: 15%">Trạng thái</th>
         <th style="width: 15%">Thao tác</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-product let-i="rowIndex">
       <tr>
-        <td>{{ i + 1 }}</td>
+        <td>
+          {{
+            ((searchRequest.page || 1) - 1) * (searchRequest.size || 10) + i + 1
+          }}
+        </td>
         <td>
           <img
-            [src]="product.image"
+            [src]="getProductImageUrl(product)"
             [alt]="product.name"
             width="80"
             class="product-image"
           />
         </td>
         <td>{{ product.name }}</td>
-        <td>{{ product.price | currency : "VND" : "symbol" : "1.0-0" }}</td>
-        <td>{{ product.quantity }}</td>
+        <td>
+          {{ product.originPrice | currency : "VND" : "symbol" : "1.0-0" }}
+        </td>
+        <td>{{ product.totalSold }}</td>
         <td>
           <span
             [class]="
               'product-badge status-' +
-              (product.active ? 'instock' : 'outofstock')
+              (!product.hidden ? 'instock' : 'outofstock')
             "
           >
-            {{ product.active ? "Đang hoạt động" : "Tạm ngưng" }}
+            {{ !product.hidden ? "Đang hoạt động" : "Tạm ngưng" }}
           </span>
         </td>
         <td>
@@ -75,14 +87,14 @@
           ></button>
           <button
             pButton
-            [icon]="product.active ? 'pi pi-ban' : 'pi pi-check-circle'"
+            [icon]="!product.hidden ? 'pi pi-ban' : 'pi pi-check-circle'"
             [class]="
               'p-button-rounded ' +
-              (product.active ? 'p-button-warning' : 'p-button-success')
+              (!product.hidden ? 'p-button-warning' : 'p-button-success')
             "
             (click)="toggleProductVisibility(product)"
             [pTooltip]="
-              product.active ? 'Tạm ngưng sản phẩm' : 'Kích hoạt sản phẩm'
+              !product.hidden ? 'Tạm ngưng sản phẩm' : 'Kích hoạt sản phẩm'
             "
           ></button>
         </td>

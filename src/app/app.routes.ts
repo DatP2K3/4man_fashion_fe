@@ -6,6 +6,8 @@ import { AddressComponent } from './pages/account/components/address/address.com
 import { AdminComponent } from './pages/admin/admin.component';
 import { ManageProductComponent } from './pages/admin/components/manage-product/manage-product.component';
 import { EditProductComponent } from './pages/admin/components/edit-product/edit-product.component';
+// Fix the import statement by being more specific with the path
+import { ManageBannerComponent } from './pages/admin/manage-banner/manage-banner.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -29,6 +31,7 @@ export const routes: Routes = [
       { path: 'products', component: ManageProductComponent },
       { path: 'products/edit', component: EditProductComponent },
       { path: 'products/edit/:id', component: EditProductComponent },
+      { path: 'banners', component: ManageBannerComponent },
     ],
   },
 ];

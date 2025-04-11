@@ -1,11 +1,11 @@
 <p-toast position="top-right" [baseZIndex]="9999"></p-toast>
 
 <div class="add-product-container">
-  <h1>Thêm sản phẩm mới</h1>
-
   <div class="product-form">
     <!-- Left sidebar with sections -->
     <div class="sidebar">
+      <h1>{{ isEditMode ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm mới" }}</h1>
+
       <div
         class="nav-section"
         [class.active]="currentSection === 'basic'"
@@ -50,138 +50,382 @@
         <div id="basic" class="section">
           <div class="section-header">Thông tin cơ bản</div>
 
-          <!-- Product Images -->
+          <!-- Product Images Section -->
           <div class="form-group required">
             <label>Hình ảnh sản phẩm</label>
-            <div class="image-upload-container">
-              <div class="main-image-upload" (click)="selectImageView('main')">
-                <div
-                  *ngIf="!imagePreviewUrls['main']"
-                  class="upload-placeholder"
-                >
-                  <i class="pi pi-image"></i>
-                  <span>Tải lên ảnh chính</span>
-                  <p>Kích thước: 600 × 600 px.</p>
-                  <p>Kích thước tập tin tối đa: 5 MB.</p>
-                  <p>Định dạng: JPG, JPEG, PNG.</p>
-                </div>
-                <img
-                  *ngIf="imagePreviewUrls['main']"
-                  [src]="imagePreviewUrls['main']"
-                  alt="Main product image"
-                  class="preview-image"
-                />
-              </div>
 
-              <div class="image-options">
-                <div class="image-option" (click)="selectImageView('front')">
-                  <div *ngIf="!imagePreviewUrls['front']" class="option-icon">
-                    <i class="pi pi-image"></i>
+            <div class="unified-image-upload-layout">
+              <!-- Main layout showing all product views at once -->
+              <div class="image-layout-container">
+                <!-- Left column: Main image and large images -->
+                <div class="layout-left-column">
+                  <!-- Main product image -->
+                  <div
+                    class="main-image-upload"
+                    (click)="selectImageView('main')"
+                    (dragover)="$event.preventDefault()"
+                    (drop)="onImageDrop($event, 'main')"
+                  >
+                    <div
+                      *ngIf="!imagePreviewUrls['main']"
+                      class="image-placeholder large"
+                    >
+                      <div class="position-indicator">Ảnh chính</div>
+                      <i class="pi pi-image"></i>
+                      <p>Kích thước: 600 × 600 px</p>
+                      <p class="drag-hint">Kéo thả hoặc nhấn để tải ảnh lên</p>
+                    </div>
+                    <div
+                      *ngIf="imagePreviewUrls['main']"
+                      class="image-preview-container"
+                    >
+                      <div class="position-indicator">Ảnh chính</div>
+                      <img
+                        [src]="imagePreviewUrls['main']"
+                        alt="Main image"
+                        class="preview-image"
+                      />
+                      <div class="image-actions">
+                        <button
+                          class="replace-button"
+                          (click)="selectImageView('main', $event)"
+                        >
+                          <i class="pi pi-refresh"></i>
+                        </button>
+                        <button
+                          class="remove-button"
+                          (click)="removeImage('main', $event)"
+                        >
+                          <i class="pi pi-times"></i>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <img
-                    *ngIf="imagePreviewUrls['front']"
-                    [src]="imagePreviewUrls['front']"
-                    alt="Front view"
-                    class="option-preview"
-                  />
-                  <span>Chính diện</span>
-                </div>
-                <div class="image-option" (click)="selectImageView('side')">
-                  <div *ngIf="!imagePreviewUrls['side']" class="option-icon">
-                    <i class="pi pi-image"></i>
-                  </div>
-                  <img
-                    *ngIf="imagePreviewUrls['side']"
-                    [src]="imagePreviewUrls['side']"
-                    alt="Side view"
-                    class="option-preview"
-                  />
-                  <span>Cạnh bên</span>
-                </div>
-                <div class="image-option" (click)="selectImageView('angles')">
-                  <div *ngIf="!imagePreviewUrls['angles']" class="option-icon">
-                    <i class="pi pi-image"></i>
-                  </div>
-                  <img
-                    *ngIf="imagePreviewUrls['angles']"
-                    [src]="imagePreviewUrls['angles']"
-                    alt="Other angles"
-                    class="option-preview"
-                  />
-                  <span>Các góc độ khác</span>
-                </div>
-                <div class="image-option" (click)="selectImageView('using')">
-                  <div *ngIf="!imagePreviewUrls['using']" class="option-icon">
-                    <i class="pi pi-image"></i>
-                  </div>
-                  <img
-                    *ngIf="imagePreviewUrls['using']"
-                    [src]="imagePreviewUrls['using']"
-                    alt="In use"
-                    class="option-preview"
-                  />
-                  <span>Đang sử dụng</span>
-                </div>
-              </div>
 
-              <div class="additional-image-options">
-                <div class="image-option" (click)="selectImageView('variant')">
-                  <div *ngIf="!imagePreviewUrls['variant']" class="option-icon">
-                    <i class="pi pi-image"></i>
+                  <!-- Detail and size chart images -->
+                  <div class="secondary-images-row">
+                    <div
+                      class="detail-image-upload"
+                      (click)="selectImageView('detail')"
+                      (dragover)="$event.preventDefault()"
+                      (drop)="onImageDrop($event, 'detail')"
+                    >
+                      <div
+                        *ngIf="!imagePreviewUrls['detail']"
+                        class="image-placeholder"
+                      >
+                        <div class="position-indicator">Chi tiết sản phẩm</div>
+                        <i class="pi pi-image"></i>
+                        <p class="drag-hint">Kéo thả hoặc nhấn</p>
+                      </div>
+                      <div
+                        *ngIf="imagePreviewUrls['detail']"
+                        class="image-preview-container"
+                      >
+                        <div class="position-indicator">Chi tiết sản phẩm</div>
+                        <img
+                          [src]="imagePreviewUrls['detail']"
+                          alt="Detail image"
+                          class="preview-image"
+                        />
+                        <div class="image-actions">
+                          <button
+                            class="replace-button"
+                            (click)="selectImageView('detail', $event)"
+                          >
+                            <i class="pi pi-refresh"></i>
+                          </button>
+                          <button
+                            class="remove-button"
+                            (click)="removeImage('detail', $event)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="size-image-upload"
+                      (click)="selectImageView('size')"
+                      (dragover)="$event.preventDefault()"
+                      (drop)="onImageDrop($event, 'size')"
+                    >
+                      <div
+                        *ngIf="!imagePreviewUrls['size']"
+                        class="image-placeholder"
+                      >
+                        <div class="position-indicator">Bảng kích thước</div>
+                        <i class="pi pi-image"></i>
+                        <p class="drag-hint">Kéo thả hoặc nhấn</p>
+                      </div>
+                      <div
+                        *ngIf="imagePreviewUrls['size']"
+                        class="image-preview-container"
+                      >
+                        <div class="position-indicator">Bảng kích thước</div>
+                        <img
+                          [src]="imagePreviewUrls['size']"
+                          alt="Size chart"
+                          class="preview-image"
+                        />
+                        <div class="image-actions">
+                          <button
+                            class="replace-button"
+                            (click)="selectImageView('size', $event)"
+                          >
+                            <i class="pi pi-refresh"></i>
+                          </button>
+                          <button
+                            class="remove-button"
+                            (click)="removeImage('size', $event)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <img
-                    *ngIf="imagePreviewUrls['variant']"
-                    [src]="imagePreviewUrls['variant']"
-                    alt="Variant"
-                    class="option-preview"
-                  />
-                  <span>Biến thể</span>
                 </div>
-                <div class="image-option" (click)="selectImageView('back')">
-                  <div *ngIf="!imagePreviewUrls['back']" class="option-icon">
-                    <i class="pi pi-image"></i>
+
+                <!-- Right column: Smaller view images -->
+                <div class="layout-right-column">
+                  <!-- Product angle views -->
+                  <div class="view-images-grid">
+                    <div
+                      class="view-image-item"
+                      (click)="selectImageView('front')"
+                      (dragover)="$event.preventDefault()"
+                      (drop)="onImageDrop($event, 'front')"
+                    >
+                      <div
+                        *ngIf="!imagePreviewUrls['front']"
+                        class="image-placeholder small"
+                      >
+                        <div class="position-indicator">Chính diện</div>
+                        <i class="pi pi-image"></i>
+                      </div>
+                      <div
+                        *ngIf="imagePreviewUrls['front']"
+                        class="image-preview-container"
+                      >
+                        <div class="position-indicator">Chính diện</div>
+                        <img
+                          [src]="imagePreviewUrls['front']"
+                          alt="Front view"
+                          class="preview-image"
+                        />
+                        <div class="image-actions">
+                          <button
+                            class="remove-button"
+                            (click)="removeImage('front', $event)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="view-image-item"
+                      (click)="selectImageView('back')"
+                      (dragover)="$event.preventDefault()"
+                      (drop)="onImageDrop($event, 'back')"
+                    >
+                      <div
+                        *ngIf="!imagePreviewUrls['back']"
+                        class="image-placeholder small"
+                      >
+                        <div class="position-indicator">Mặt sau</div>
+                        <i class="pi pi-image"></i>
+                      </div>
+                      <div
+                        *ngIf="imagePreviewUrls['back']"
+                        class="image-preview-container"
+                      >
+                        <div class="position-indicator">Mặt sau</div>
+                        <img
+                          [src]="imagePreviewUrls['back']"
+                          alt="Back view"
+                          class="preview-image"
+                        />
+                        <div class="image-actions">
+                          <button
+                            class="remove-button"
+                            (click)="removeImage('back', $event)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="view-image-item"
+                      (click)="selectImageView('side')"
+                      (dragover)="$event.preventDefault()"
+                      (drop)="onImageDrop($event, 'side')"
+                    >
+                      <div
+                        *ngIf="!imagePreviewUrls['side']"
+                        class="image-placeholder small"
+                      >
+                        <div class="position-indicator">Cạnh bên</div>
+                        <i class="pi pi-image"></i>
+                      </div>
+                      <div
+                        *ngIf="imagePreviewUrls['side']"
+                        class="image-preview-container"
+                      >
+                        <div class="position-indicator">Cạnh bên</div>
+                        <img
+                          [src]="imagePreviewUrls['side']"
+                          alt="Side view"
+                          class="preview-image"
+                        />
+                        <div class="image-actions">
+                          <button
+                            class="remove-button"
+                            (click)="removeImage('side', $event)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="view-image-item"
+                      (click)="selectImageView('angles')"
+                      (dragover)="$event.preventDefault()"
+                      (drop)="onImageDrop($event, 'angles')"
+                    >
+                      <div
+                        *ngIf="!imagePreviewUrls['angles']"
+                        class="image-placeholder small"
+                      >
+                        <div class="position-indicator">Các góc khác</div>
+                        <i class="pi pi-image"></i>
+                      </div>
+                      <div
+                        *ngIf="imagePreviewUrls['angles']"
+                        class="image-preview-container"
+                      >
+                        <div class="position-indicator">Các góc khác</div>
+                        <img
+                          [src]="imagePreviewUrls['angles']"
+                          alt="Other angles"
+                          class="preview-image"
+                        />
+                        <div class="image-actions">
+                          <button
+                            class="remove-button"
+                            (click)="removeImage('angles', $event)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <img
-                    *ngIf="imagePreviewUrls['back']"
-                    [src]="imagePreviewUrls['back']"
-                    alt="Background"
-                    class="option-preview"
-                  />
-                  <span>Phối cảnh nền</span>
-                </div>
-                <div class="image-option" (click)="selectImageView('detail')">
-                  <div *ngIf="!imagePreviewUrls['detail']" class="option-icon">
-                    <i class="pi pi-image"></i>
+
+                  <!-- Models and variants -->
+                  <div class="additional-images-row">
+                    <div
+                      class="model-image-upload"
+                      (click)="selectImageView('using')"
+                      (dragover)="$event.preventDefault()"
+                      (drop)="onImageDrop($event, 'using')"
+                    >
+                      <div
+                        *ngIf="!imagePreviewUrls['using']"
+                        class="image-placeholder"
+                      >
+                        <div class="position-indicator">Người mẫu</div>
+                        <i class="pi pi-image"></i>
+                        <p class="drag-hint">Kéo thả hoặc nhấn</p>
+                      </div>
+                      <div
+                        *ngIf="imagePreviewUrls['using']"
+                        class="image-preview-container"
+                      >
+                        <div class="position-indicator">Người mẫu</div>
+                        <img
+                          [src]="imagePreviewUrls['using']"
+                          alt="Model wearing"
+                          class="preview-image"
+                        />
+                        <div class="image-actions">
+                          <button
+                            class="replace-button"
+                            (click)="selectImageView('using', $event)"
+                          >
+                            <i class="pi pi-refresh"></i>
+                          </button>
+                          <button
+                            class="remove-button"
+                            (click)="removeImage('using', $event)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="variant-image-upload"
+                      (click)="selectImageView('variant')"
+                      (dragover)="$event.preventDefault()"
+                      (drop)="onImageDrop($event, 'variant')"
+                    >
+                      <div
+                        *ngIf="!imagePreviewUrls['variant']"
+                        class="image-placeholder"
+                      >
+                        <div class="position-indicator">Biến thể màu sắc</div>
+                        <i class="pi pi-image"></i>
+                        <p class="drag-hint">Kéo thả hoặc nhấn</p>
+                      </div>
+                      <div
+                        *ngIf="imagePreviewUrls['variant']"
+                        class="image-preview-container"
+                      >
+                        <div class="position-indicator">Biến thể màu sắc</div>
+                        <img
+                          [src]="imagePreviewUrls['variant']"
+                          alt="Color variants"
+                          class="preview-image"
+                        />
+                        <div class="image-actions">
+                          <button
+                            class="replace-button"
+                            (click)="selectImageView('variant', $event)"
+                          >
+                            <i class="pi pi-refresh"></i>
+                          </button>
+                          <button
+                            class="remove-button"
+                            (click)="removeImage('variant', $event)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <img
-                    *ngIf="imagePreviewUrls['detail']"
-                    [src]="imagePreviewUrls['detail']"
-                    alt="Detail"
-                    class="option-preview"
-                  />
-                  <span>Ảnh chụp cận</span>
-                </div>
-                <div class="image-option" (click)="selectImageView('size')">
-                  <div *ngIf="!imagePreviewUrls['size']" class="option-icon">
-                    <i class="pi pi-image"></i>
-                  </div>
-                  <img
-                    *ngIf="imagePreviewUrls['size']"
-                    [src]="imagePreviewUrls['size']"
-                    alt="Size"
-                    class="option-preview"
-                  />
-                  <span>Kích thước</span>
                 </div>
               </div>
-              <input
-                type="file"
-                #fileInput
-                hidden
-                accept="image/jpeg,image/jpg,image/png"
-                (change)="onFileSelected($event)"
-              />
             </div>
+
+            <!-- Hidden file input element -->
+            <input
+              type="file"
+              #fileInput
+              hidden
+              accept="image/jpeg,image/jpg,image/png"
+              (change)="onFileSelected($event)"
+            />
+
             <div *ngIf="formErrors.images" class="error-message">
               {{ formErrors.images }}
             </div>
@@ -393,7 +637,7 @@
             <!-- Variant Name Input -->
             <div
               class="variant-input"
-              *ngFor="let variant of variants; let i = index"
+              *ngFor="let variant of getActiveVariants(); let i = index"
             >
               <div class="variant-header">
                 <label>{{ variant.name }}</label>
@@ -468,7 +712,7 @@
             </div>
 
             <!-- Add New Variant Button -->
-            <div *ngIf="variants.length < 2" class="add-variant">
+            <div *ngIf="getActiveVariants().length < 2" class="add-variant">
               <p-button
                 label="+ Thêm biến thể"
                 styleClass="p-button-text p-button-primary"
@@ -487,14 +731,20 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th *ngFor="let variant of variants">{{ variant.name }}</th>
+                    <!-- Change this line to use getActiveVariants() instead of variants -->
+                    <th *ngFor="let variant of getActiveVariants()">
+                      {{ variant.name }}
+                    </th>
                     <th>Số lượng</th>
                     <th>SKU người bán</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-combination let-i="rowIndex">
                   <tr>
-                    <td *ngFor="let variant of variants; let j = index">
+                    <!-- Also change this line to use getActiveVariants() -->
+                    <td
+                      *ngFor="let variant of getActiveVariants(); let j = index"
+                    >
                       {{ combination[variant.name.toLowerCase()] }}
                     </td>
                     <td>
@@ -603,7 +853,7 @@
           ></p-button>
           <p-button
             type="submit"
-            label="Đăng"
+            [label]="isEditMode ? 'Cập nhật' : 'Đăng'"
             styleClass="p-button-primary"
           ></p-button>
         </div>
