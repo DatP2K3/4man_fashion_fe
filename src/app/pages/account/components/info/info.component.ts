@@ -45,9 +45,9 @@ export class InfoComponent implements OnInit {
       if (profile) {
         this.infoForm.patchValue({
           email: profile?.email,
-          firstName: profile?.first_name,
-          lastName: profile?.last_name,
-          phoneNumber: profile?.phone_number,
+          firstName: profile?.firstName,
+          lastName: profile?.lastName,
+          phoneNumber: profile?.phoneNumber,
           dob: profile.dob ? new Date(profile.dob) : undefined,
         });
 
@@ -89,9 +89,9 @@ export class InfoComponent implements OnInit {
       this.profile = response.data;
       this.infoForm.patchValue({
         email: this.profile?.email,
-        firstName: this.profile?.first_name,
-        lastName: this.profile?.last_name,
-        phoneNumber: this.profile?.phone_number,
+        firstName: this.profile?.firstName,
+        lastName: this.profile?.lastName,
+        phoneNumber: this.profile?.phoneNumber,
         dob: this.profile?.dob ? new Date(this.profile.dob) : undefined,
       });
     });

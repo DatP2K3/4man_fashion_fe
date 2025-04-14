@@ -16,17 +16,17 @@ export interface ShippingAddress {
 export interface Profile {
   id?: UUID;
   email?: string;
-  first_name?: string;
-  last_name?: string;
-  phone_number?: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
   dob?: Date;
-  avatar_file_id?: UUID;
-  membership_tier_name?: string;
-  next_membershipTier_name?: string;
-  list_shipping_address?: Array<{ address: ShippingAddress }>;
-  points_to_next_level?: number;
+  avatarFileId?: UUID;
+  memberShipTierName?: string;
+  nextMembershipTierName?: string;
+  listShippingAddress?: Array<{ address: ShippingAddress }>;
+  pointsToNextLevel?: number;
   points?: number;
-  total_points?: number;
-  total_coins?: number;
+  totalPoints?: number;
+  totalCoins?: number;
   percent?: number;
 }

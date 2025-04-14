@@ -645,9 +645,9 @@
   padding: 15px;
 
   i {
-    font-size: 32px;
-    color: #bbb;
-    margin-bottom: 10px;
+    font-size: 24px; /* Standardized icon size for all placeholders */
+    color: #999;
+    margin-bottom: 8px;
   }
 
   span {
@@ -663,9 +663,11 @@
     margin: 2px 0;
   }
 
+  /* Apply consistent styling for small placeholders */
   &.small {
     i {
-      font-size: 24px;
+      font-size: 24px; /* Same size for consistency */
+      margin-bottom: 5px;
     }
 
     span {
@@ -677,9 +679,11 @@
     }
   }
 
-  &.medium {
+  /* Style for main image placeholder only */
+  &.large {
     i {
-      font-size: 28px;
+      font-size: 32px; /* Larger only for main image */
+      margin-bottom: 10px;
     }
   }
 }
@@ -741,16 +745,20 @@
   .image-layout-container {
     display: flex;
     gap: 20px;
+    align-items: stretch; // Ensure both columns stretch to equal height
 
     .layout-left-column {
-      flex: 0 0 60%;
+      flex: 0 0 50%;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       gap: 15px;
+      flex-direction: column;
+      aspect-ratio: 1/1; // Force square aspect ratio
 
       .main-image-upload {
+        flex: 2; // Take 2/3 of the available height
         width: 100%;
-        height: 400px;
+        aspect-ratio: 1/1; // Force square aspect ratio
         border: 2px dashed #ddd;
         border-radius: 8px;
         background-color: #f8f8f8;
@@ -758,6 +766,7 @@
         overflow: hidden;
         cursor: pointer;
         transition: border-color 0.2s;
+        align-self: center; // Center the container if it doesn't take full width
 
         &:hover {
           border-color: #1890ff;
@@ -765,13 +774,14 @@
       }
 
       .secondary-images-row {
+        flex: 1; // Take 1/3 of the available height
         display: flex;
         gap: 15px;
-        height: 180px;
 
         .detail-image-upload,
         .size-image-upload {
           flex: 1;
+          aspect-ratio: 1/1; // Ensure square aspect ratio
           border: 2px dashed #ddd;
           border-radius: 8px;
           background-color: #f8f8f8;
@@ -788,41 +798,21 @@
     }
 
     .layout-right-column {
-      flex: 0 0 40%;
+      flex: 0 0 50%;
       display: flex;
       flex-direction: column;
       gap: 15px;
 
-      .view-images-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        gap: 10px;
-        height: 300px;
-
-        .view-image-item {
-          border: 2px dashed #ddd;
-          border-radius: 8px;
-          background-color: #f8f8f8;
-          position: relative;
-          overflow: hidden;
-          cursor: pointer;
-          transition: border-color 0.2s;
-
-          &:hover {
-            border-color: #1890ff;
-          }
-        }
-      }
-
-      .additional-images-row {
+      .image-group {
         display: flex;
-        gap: 10px;
-        height: 280px;
+        gap: 15px;
+        flex: 1; // Each group takes equal vertical space
 
+        .view-image-item,
         .model-image-upload,
         .variant-image-upload {
           flex: 1;
+          aspect-ratio: 1/1; // Force square aspect ratio
           border: 2px dashed #ddd;
           border-radius: 8px;
           background-color: #f8f8f8;
@@ -851,9 +841,9 @@
     text-align: center;
 
     i {
-      font-size: 30px;
+      font-size: 24px; /* Standardized size to match other placeholders */
       color: #999;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     p {
@@ -863,22 +853,22 @@
     }
 
     .drag-hint {
-      margin-top: 10px;
+      margin-top: 5px;
       font-style: italic;
       color: #999;
     }
 
     &.small {
       i {
-        font-size: 24px;
+        font-size: 24px; /* Same size for consistency */
         margin-bottom: 5px;
       }
     }
 
     &.large {
       i {
-        font-size: 40px;
-        margin-bottom: 15px;
+        font-size: 32px; /* Larger size only for main image */
+        margin-bottom: 10px;
       }
     }
   }

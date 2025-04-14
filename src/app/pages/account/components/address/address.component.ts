@@ -66,17 +66,17 @@ export class AddressComponent implements OnInit {
 
         // Cập nhật danh sách địa chỉ
         if (
-          profile.list_shipping_address &&
-          profile.list_shipping_address.length > 0
+          profile.listShippingAddress &&
+          profile.listShippingAddress.length > 0
         ) {
-          console.log('address:', profile.list_shipping_address);
+          console.log('address:', profile.listShippingAddress);
           // Xử lý cấu trúc dữ liệu
-          if ('address' in profile.list_shipping_address[0]) {
-            this.addresses = profile.list_shipping_address.map(
+          if ('address' in profile.listShippingAddress[0]) {
+            this.addresses = profile.listShippingAddress.map(
               (item: any) => item.address
             );
           } else {
-            this.addresses = profile.list_shipping_address as ShippingAddress[];
+            this.addresses = profile.listShippingAddress as ShippingAddress[];
           }
           console.log('Addresses:', this.addresses);
           // Cập nhật addressOptions cho dropdown

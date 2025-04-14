@@ -388,10 +388,10 @@ export class EditProductComponent implements OnInit, OnDestroy {
 
       // Fix: Use optional chaining to safely access nested properties
       if (
-        selectedCategory?.tag_descriptions &&
-        selectedCategory.tag_descriptions.length > 0
+        selectedCategory?.tagDescriptions &&
+        selectedCategory.tagDescriptions.length > 0
       ) {
-        this.descriptionKeys = selectedCategory.tag_descriptions
+        this.descriptionKeys = selectedCategory.tagDescriptions
           .filter((tag) => tag && tag.name)
           .map((tag) => tag.name || '');
 
@@ -765,7 +765,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
         }
 
         if (this.isEditMode && this.productId) {
-          variant.product_id = this.productId as unknown as UUID;
           variant.productId = this.productId as unknown as UUID;
         }
 
@@ -787,7 +786,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
         }
 
         if (this.productId) {
-          variant.product_id = this.productId as unknown as UUID;
           variant.productId = this.productId as unknown as UUID;
         }
       }
@@ -866,10 +864,10 @@ export class EditProductComponent implements OnInit, OnDestroy {
             );
             // Fix: Use optional chaining to safely access nested properties
             if (
-              selectedCategory?.tag_descriptions &&
-              selectedCategory.tag_descriptions.length > 0
+              selectedCategory?.tagDescriptions &&
+              selectedCategory.tagDescriptions.length > 0
             ) {
-              this.descriptionKeys = selectedCategory.tag_descriptions
+              this.descriptionKeys = selectedCategory.tagDescriptions
                 .filter((tag) => tag && tag.name)
                 .map((tag) => tag.name || '');
             }

@@ -7,7 +7,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { ManageProductComponent } from './pages/admin/components/manage-product/manage-product.component';
 import { EditProductComponent } from './pages/admin/components/edit-product/edit-product.component';
 // Fix the import statement by being more specific with the path
-import { ManageBannerComponent } from './pages/admin/manage-banner/manage-banner.component';
+import { ManageBannerComponent } from './pages/admin/components/manage-banner/manage-banner.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -28,10 +28,10 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     children: [
-      { path: 'products', component: ManageProductComponent },
-      { path: 'products/edit', component: EditProductComponent },
-      { path: 'products/edit/:id', component: EditProductComponent },
-      { path: 'banners', component: ManageBannerComponent },
+      { path: 'manage-products', component: ManageProductComponent },
+      { path: 'manage-product/edit', component: EditProductComponent },
+      { path: 'manage-products/edit/:id', component: EditProductComponent },
+      { path: 'manage-banners', component: ManageBannerComponent },
     ],
   },
 ];

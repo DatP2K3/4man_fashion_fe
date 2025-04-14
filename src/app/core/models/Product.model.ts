@@ -12,8 +12,7 @@ export interface ProductImage {
 
 export interface ProductVariant {
   id?: UUID;
-  product_id?: UUID;
-  productId?: string;
+  productId?: UUID;
   size?: string;
   color?: string;
   quantity?: number;

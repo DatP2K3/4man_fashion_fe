@@ -9,39 +9,39 @@
     <!-- Sidebar -->
     <div class="admin-sidebar" [class.collapsed]="isSidebarCollapsed">
       <ul class="sidebar-nav">
-        <li>
+        <li routerLink="/admin/dashboard" routerLinkActive="active">
           <i class="pi pi-chart-bar"></i>
           <span *ngIf="!isSidebarCollapsed">Thống kê</span>
         </li>
-        <li>
+        <li routerLink="/admin/users" routerLinkActive="active">
           <i class="pi pi-users"></i>
           <span *ngIf="!isSidebarCollapsed">Quản lý người dùng</span>
         </li>
-        <li>
+        <li routerLink="/admin/manage-products" routerLinkActive="active">
           <i class="pi pi-shopping-bag"></i>
           <span *ngIf="!isSidebarCollapsed">Quản lý sản phẩm</span>
         </li>
-        <li>
+        <li routerLink="/admin/manage-banners" routerLinkActive="active">
           <i class="pi pi-image"></i>
           <span *ngIf="!isSidebarCollapsed">Quản lý banner</span>
         </li>
-        <li>
+        <li routerLink="/admin/discounts" routerLinkActive="active">
           <i class="pi pi-percentage"></i>
           <span *ngIf="!isSidebarCollapsed">Chiến dịch giảm giá</span>
         </li>
-        <li>
+        <li routerLink="/admin/messages" routerLinkActive="active">
           <i class="pi pi-comments"></i>
           <span *ngIf="!isSidebarCollapsed">Tin nhắn khách hàng</span>
         </li>
-        <li>
+        <li routerLink="/admin/articles" routerLinkActive="active">
           <i class="pi pi-file-edit"></i>
           <span *ngIf="!isSidebarCollapsed">Quản lý bài viết</span>
         </li>
-        <li>
+        <li routerLink="/admin/reviews" routerLinkActive="active">
           <i class="pi pi-star"></i>
           <span *ngIf="!isSidebarCollapsed">Quản lý đánh giá</span>
         </li>
-        <li>
+        <li routerLink="/admin/orders" routerLinkActive="active">
           <i class="pi pi-shopping-cart"></i>
           <span *ngIf="!isSidebarCollapsed">Quản lý đơn hàng</span>
         </li>

@@ -190,8 +190,8 @@
 
                 <!-- Right column: Smaller view images -->
                 <div class="layout-right-column">
-                  <!-- Product angle views -->
-                  <div class="view-images-grid">
+                  <!-- Group 1: Main view angles (front and back) -->
+                  <div class="image-group">
                     <div
                       class="view-image-item"
                       (click)="selectImageView('front')"
@@ -204,6 +204,7 @@
                       >
                         <div class="position-indicator">Chính diện</div>
                         <i class="pi pi-image"></i>
+                        <p class="drag-hint">Kéo thả hoặc nhấn</p>
                       </div>
                       <div
                         *ngIf="imagePreviewUrls['front']"
@@ -238,6 +239,7 @@
                       >
                         <div class="position-indicator">Mặt sau</div>
                         <i class="pi pi-image"></i>
+                        <p class="drag-hint">Kéo thả hoặc nhấn</p>
                       </div>
                       <div
                         *ngIf="imagePreviewUrls['back']"
@@ -259,7 +261,10 @@
                         </div>
                       </div>
                     </div>
+                  </div>
 
+                  <!-- Group 2: Additional angles (side and angles) -->
+                  <div class="image-group">
                     <div
                       class="view-image-item"
                       (click)="selectImageView('side')"
@@ -272,6 +277,7 @@
                       >
                         <div class="position-indicator">Cạnh bên</div>
                         <i class="pi pi-image"></i>
+                        <p class="drag-hint">Kéo thả hoặc nhấn</p>
                       </div>
                       <div
                         *ngIf="imagePreviewUrls['side']"
@@ -306,6 +312,7 @@
                       >
                         <div class="position-indicator">Các góc khác</div>
                         <i class="pi pi-image"></i>
+                        <p class="drag-hint">Kéo thả hoặc nhấn</p>
                       </div>
                       <div
                         *ngIf="imagePreviewUrls['angles']"
@@ -329,8 +336,8 @@
                     </div>
                   </div>
 
-                  <!-- Models and variants -->
-                  <div class="additional-images-row">
+                  <!-- Group 3: Model and variant images -->
+                  <div class="image-group">
                     <div
                       class="model-image-upload"
                       (click)="selectImageView('using')"

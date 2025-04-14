@@ -57,8 +57,8 @@ export class AccountComponent implements OnInit {
   }
 
   private loadAvatar() {
-    if (this.profile?.avatar_file_id) {
-      this.profileService.getAvatar(this.profile.avatar_file_id).subscribe({
+    if (this.profile?.avatarFileId) {
+      this.profileService.getAvatar(this.profile.avatarFileId).subscribe({
         next: (res) => (this.avatarUrl = res.data.url),
         error: (error) => {
           console.error('Error fetching avatar URL:', error);
@@ -95,7 +95,7 @@ export class AccountComponent implements OnInit {
     this.profileService.uploadAvatar(file).subscribe({
       next: (response) => {
         if (this.profile) {
-          this.profile.avatar_file_id = response.fileId;
+          this.profile.avatarFileId = response.fileId;
         }
       },
       error: (error) => console.error('Error uploading avatar:', error),

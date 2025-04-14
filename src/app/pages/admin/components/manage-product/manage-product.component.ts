@@ -162,11 +162,11 @@ export class ManageProductComponent implements OnInit, OnDestroy {
   }
 
   navigateToAddProduct() {
-    this.router.navigate(['/admin/products/edit']);
+    this.router.navigate(['/admin/manage-products/edit']);
   }
 
   editProduct(product: Product) {
-    this.router.navigate(['/admin/products/edit', product.id]);
+    this.router.navigate(['/admin/manage-products/edit', product.id]);
   }
 
   toggleProductVisibility(product: Product) {
