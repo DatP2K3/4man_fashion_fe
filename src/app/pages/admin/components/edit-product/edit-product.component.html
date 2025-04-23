@@ -496,11 +496,7 @@
           <div class="section-header">Chi tiết sản phẩm</div>
 
           <!-- Product Technical Specifications from tag_descriptions -->
-          <div
-            class="form-group"
-            *ngIf="descriptionKeys && descriptionKeys.length > 0"
-          >
-            <label>Thông số kỹ thuật</label>
+          <div class="form-group">
             <div class="description-fields">
               <p-card>
                 <ng-template pTemplate="header">
@@ -508,14 +504,21 @@
                     class="flex justify-content-between align-items-center p-3 bg-primary text-white"
                   >
                     <span
-                      >Thông số kỹ thuật theo hạng mục "{{
-                        getSelectedCategoryName()
-                      }}"</span
+                      >Thông số kỹ thuật
+                      {{
+                        productForm.get("categoryId")?.value
+                          ? 'theo hạng mục "' + getSelectedCategoryName() + '"'
+                          : ""
+                      }}</span
                     >
                   </div>
                 </ng-template>
 
-                <div class="p-fluid p-grid p-formgrid">
+                <!-- When category is selected and has specifications -->
+                <div
+                  *ngIf="descriptionKeys && descriptionKeys.length > 0"
+                  class="p-fluid p-grid p-formgrid"
+                >
                   <div class="p-field mb-3" *ngFor="let key of descriptionKeys">
                     <label [for]="'desc_' + key">{{ key }}</label>
                     <input
@@ -527,6 +530,51 @@
                       [ngModelOptions]="{ standalone: true }"
                     />
                   </div>
+                </div>
+
+                <!-- When no category is selected -->
+                <div
+                  *ngIf="!productForm.get('categoryId')?.value"
+                  class="p-3 text-center"
+                >
+                  <i
+                    class="pi pi-tag"
+                    style="
+                      font-size: 2rem;
+                      color: var(--primary-color);
+                      margin-bottom: 1rem;
+                    "
+                  ></i>
+                  <p>
+                    Vui lòng chọn danh mục sản phẩm để hiển thị các thông số kỹ
+                    thuật liên quan.
+                  </p>
+                </div>
+
+                <!-- When category is selected but has no specifications -->
+                <div
+                  *ngIf="
+                    productForm.get('categoryId')?.value &&
+                    (!descriptionKeys || descriptionKeys.length === 0)
+                  "
+                  class="p-3 text-center"
+                >
+                  <i
+                    class="pi pi-info-circle"
+                    style="
+                      font-size: 2rem;
+                      color: var(--primary-color);
+                      margin-bottom: 1rem;
+                    "
+                  ></i>
+                  <p>
+                    Danh mục "{{ getSelectedCategoryName() }}" không có thông số
+                    kỹ thuật được định nghĩa.
+                  </p>
+                  <p>
+                    Vui lòng chọn danh mục khác hoặc tiếp tục với các thông tin
+                    khác.
+                  </p>
                 </div>
               </p-card>
             </div>

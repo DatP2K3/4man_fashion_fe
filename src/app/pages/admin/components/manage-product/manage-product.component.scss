@@ -13,7 +13,7 @@
 
   h2 {
     margin: 0;
-    color: var(--primary-text-color);
+    color: var(--primary-color);
     font-size: 1.8rem;
   }
 }
@@ -42,14 +42,14 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   object-fit: cover;
   aspect-ratio: 1/1; /* Force square aspect ratio */
-  width: 100%; /* Take full width of container */
+  width: 80px; /* Take full width of container */
   height: auto; /* Height will be calculated based on aspect ratio */
 }
 
 // Container for the image to ensure consistent dimensions
 .product-image-container {
-  width: 80px; /* Set fixed width */
-  height: 80px; /* Same as width to make it square */
+  width: 30px; /* Set fixed width */
+  height: 30px; /* Same as width to make it square */
   display: flex;
   align-items: center;
   justify-content: center;

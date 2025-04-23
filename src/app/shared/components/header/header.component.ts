@@ -1,27 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
-import { NgIf } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { DrawerModule } from 'primeng/drawer';
-import { ProgressBar } from 'primeng/progressbar';
-import { DividerModule } from 'primeng/divider';
 import { Profile } from '../../../core/models/Profile.model';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../../../core/services/Profile.service';
-import { AppStateService } from '../../state/AppState.service';
 
 @Component({
   selector: 'app-header',
-  imports: [
-    NgIf,
-    RouterModule,
-    ButtonModule,
-    DrawerModule,
-    ProgressBar,
-    DividerModule,
-  ],
   templateUrl: './header.component.html',
+  standalone: false,
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {

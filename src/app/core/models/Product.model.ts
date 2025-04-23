@@ -2,9 +2,7 @@ import { UUID } from 'crypto';
 
 export interface ProductImage {
   id?: UUID;
-  product_id?: UUID;
   productId?: string;
-  file_id?: UUID;
   fileId?: string;
   avatar?: boolean;
   deleted?: boolean;

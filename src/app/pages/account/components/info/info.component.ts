@@ -1,14 +1,12 @@
-import { IftaLabelModule } from 'primeng/iftalabel';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { AppStateService } from '../../../../shared/state/AppState.service';
 import { Profile } from '../../../../core/models/Profile.model';
-import { DatePickerModule } from 'primeng/datepicker';
 import { ProfileService } from '../../../../core/services/Profile.service';
 
 @Component({
   selector: 'app-info',
-  imports: [ReactiveFormsModule, IftaLabelModule, DatePickerModule],
+  standalone: false,
   templateUrl: './info.component.html',
   styleUrl: './info.component.scss',
 })

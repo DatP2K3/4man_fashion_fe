@@ -6,7 +6,7 @@ import { DrawerModule } from 'primeng/drawer';
 
 @Component({
   selector: 'app-footer',
-  imports: [CommonModule, ButtonModule, DrawerModule, DividerModule],
+  standalone: false,
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',
 })

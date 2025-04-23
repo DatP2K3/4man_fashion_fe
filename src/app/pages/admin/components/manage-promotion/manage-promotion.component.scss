@@ -1,0 +1,510 @@
+.manage-promotion-container {
+  padding: 1rem;
+
+  h1 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+}
+
+.promotion-types {
+  margin-bottom: 2rem;
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -0.5rem;
+
+    .col-6 {
+      flex: 0 0 calc(50% - 1rem);
+      margin: 0 0.5rem;
+
+      @media screen and (max-width: 768px) {
+        flex: 0 0 100%;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  // Styling for PrimeNG cards
+  ::ng-deep .p-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s;
+    height: 100%;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .p-card-body {
+      padding: 1rem;
+    }
+  }
+
+  .promo-card-content {
+    h2 {
+      font-size: 1.6rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 1.5rem;
+      min-height: 3rem;
+    }
+
+    .promo-actions {
+      display: flex;
+      gap: 0.5rem;
+
+      // Larger create buttons
+      ::ng-deep .create-button {
+        font-size: 1.1rem;
+        padding: 0.75rem 2rem;
+        font-weight: 500;
+        height: auto;
+
+        &.p-button {
+          .p-button-label {
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    // Override PrimeNG button color
+    ::ng-deep .p-button.p-button-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+
+      &:hover,
+      &:focus {
+        background-color: var(--primary-color);
+        opacity: 0.9;
+        border-color: var(--primary-color);
+      }
+    }
+  }
+}
+
+// Tab styling - Enhanced with more primary color and !important overrides
+::ng-deep .p-tabview {
+  .p-tabview-nav {
+    border-bottom-color: #dee2e6;
+
+    li {
+      margin-right: 0.25rem;
+
+      .p-tabview-nav-link {
+        padding: 0.75rem 1.25rem;
+        font-weight: 500;
+
+        &:not(.p-disabled):focus {
+          box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.2) !important;
+        }
+      }
+
+      &.p-highlight {
+        .p-tabview-nav-link {
+          background-color: #ffffff !important;
+          border-color: var(--primary-color) !important;
+          color: var(--primary-color) !important;
+        }
+      }
+
+      &:not(.p-highlight):not(.p-disabled):hover {
+        .p-tabview-nav-link {
+          border-color: rgba(var(--primary-color-rgb), 0.5) !important;
+          color: var(--primary-color) !important;
+        }
+      }
+    }
+  }
+
+  // Override the tab bottom indicator bar
+  .p-tabview-ink-bar {
+    background-color: var(--primary-color) !important;
+  }
+
+  .p-tabview-panels {
+    border-color: #dee2e6;
+
+    &:focus {
+      outline-color: var(--primary-color) !important;
+    }
+  }
+
+  .p-tabview-selected-icon,
+  .p-tabview-close-icon {
+    color: var(--primary-color) !important;
+  }
+}
+
+// Table styling
+.promotion-list-container {
+  margin: 1rem;
+  margin-top: 1rem;
+
+  // New filter container styling
+  .filter-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+
+  .type-filter {
+    width: 180px;
+    font-size: 1.4rem;
+
+    ::ng-deep .p-dropdown {
+      width: 100%;
+
+      &:focus {
+        border-color: var(--primary-color);
+      }
+
+      .p-dropdown-label {
+        font-weight: normal;
+      }
+    }
+  }
+
+  .search-box {
+    max-width: 50rem;
+
+    input {
+      width: 200px;
+
+      padding: 5px 10px;
+      font-size: 1.4rem;
+      &:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
+      }
+    }
+
+    .pi-search {
+      color: var(--primary-color);
+    }
+  }
+
+  // Status badge styling - Enhanced with consistent sizing and larger font
+  .status-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 1.2rem; // Increased font size
+    font-weight: 600; // Made font bolder
+    display: inline-block;
+    min-width: 120px; // Set minimum width for consistency
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .status-active {
+    background-color: #e3f2fd;
+    color: #0288d1;
+  }
+
+  .status-inactive {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+
+  .status-upcoming {
+    background-color: #e8f5e9;
+    color: #388e3c;
+  }
+
+  .status-ended {
+    background-color: #eceff1;
+    color: #546e7a;
+  }
+
+  // Action buttons container
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+
+    // Increase icon size in action buttons
+    ::ng-deep .p-button {
+      width: 2.5rem;
+      height: 2.5rem;
+
+      .pi {
+        font-size: 1.8rem;
+      }
+
+      &.p-button-danger .pi-trash {
+        color: #f44336;
+      }
+
+      &:hover .pi {
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+// Paginator styling
+::ng-deep .p-paginator {
+  .p-paginator-current {
+    color: var(--primary-color);
+  }
+
+  .p-paginator-element {
+    min-width: 2.25rem;
+    height: 2.25rem;
+
+    &.p-highlight {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    &:not(.p-highlight):hover {
+      background-color: rgba(var(--primary-color-rgb), 0.1);
+    }
+  }
+}
+
+// Override PrimeNG table styling
+::ng-deep .p-datatable {
+  .p-datatable-header,
+  .p-datatable-thead > tr > th {
+    background-color: #f8f9fa;
+  }
+
+  .p-sortable-column.p-highlight {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    color: var(--primary-color);
+
+    .p-sortable-column-icon {
+      color: var(--primary-color);
+    }
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.04);
+  }
+}
+
+// Toast message styling
+::ng-deep .p-toast {
+  .p-toast-message-success {
+    border-left-color: var(--primary-color);
+
+    .p-toast-message-icon {
+      color: var(--primary-color);
+    }
+  }
+}
+
+// Confirmation dialog styling
+::ng-deep .p-confirm-dialog {
+  .p-dialog-header {
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .p-confirm-dialog-accept {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+
+    &:hover {
+      background-color: var(--primary-color);
+      opacity: 0.9;
+    }
+  }
+}
+
+/* Fix for tab colors - corrected selector and more specificity */
+::ng-deep {
+  /* Tab list styling with maximum specificity */
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background-color: #ffffff !important;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+  }
+
+  /* Active tab bottom border */
+  .p-tabview .p-tabview-nav .p-tabview-ink-bar {
+    background-color: var(--primary-color) !important;
+  }
+
+  /* Hover state for inactive tabs */
+  .p-tabview
+    .p-tabview-nav
+    li:not(.p-highlight):not(.p-disabled):hover
+    .p-tabview-nav-link {
+    background-color: rgba(var(--primary-color-rgb), 0.04) !important;
+    border-color: rgba(var(--primary-color-rgb), 0.3) !important;
+    color: var(--primary-color) !important;
+  }
+
+  /* Focus state for tabs */
+  .p-tabview .p-tabview-nav .p-tabview-nav-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.2) !important;
+  }
+
+  /* Tab header container */
+  .p-tabview .p-tabview-nav {
+    border-bottom-color: var(--primary-color) !important;
+    border-width: 0 0 2px 0 !important;
+  }
+}
+
+::ng-deep .p-tablist-tab-list {
+  .p-tab-active {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+}
+
+/* Enhanced tab underline overrides - targeting all possible underline implementations */
+::ng-deep {
+  /* Force underline colors through multiple selectors */
+  .p-tabview .p-tabview-nav {
+    border-bottom-color: var(--primary-color) !important;
+    border-width: 0 0 2px 0 !important;
+  }
+
+  /* Target the ink bar specifically with very high specificity */
+  .p-tabview .p-tabview-nav .p-tabview-ink-bar,
+  .p-tabview-nav .p-tabview-ink-bar,
+  .p-tabview-ink-bar,
+  .p-tabview .p-tabview-nav li .p-tabview-ink-bar,
+  body .p-tabview .p-tabview-nav .p-tabview-ink-bar {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  /* Target any pseudo-elements that might be used for the underline */
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link::after,
+  .p-tabview .p-tabview-nav li.p-highlight::after {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  /* Target active tab bottom border specifically */
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    border-bottom-color: var(--primary-color) !important;
+    border-bottom-width: 2px !important;
+  }
+
+  /* Target PrimeNG v9+ styles (uses different classes) */
+  .p-tabview-selected,
+  .p-tabview .p-tabview-nav-link.p-tabview-selected,
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link.p-tabview-selected {
+    border-bottom-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+  }
+}
+
+/* DIRECT PrimeNG v19 TAB UNDERLINE OVERRIDE */
+::ng-deep {
+  /* This targets exactly the tab underline in PrimeNG v19 */
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    border-bottom: 2px solid var(--primary-color) !important;
+  }
+
+  /* Force all active tab selectors */
+  .p-tabview .p-tabview-nav .p-tabview-selected,
+  .p-tabview .p-tabview-nav .p-highlight,
+  .p-tabview .p-tabview-nav li .p-tabview-selected,
+  .p-tabview .p-tabview-nav li.p-highlight,
+  .p-tabview-selected,
+  .p-tabview-nav-selected {
+    border-bottom-color: var(--primary-color) !important;
+  }
+
+  /* Extremely specific selectors to override any defaults */
+  body .p-component .p-tabview .p-tabview-nav,
+  html body .p-tabview .p-tabview-nav {
+    border-width: 0 0 2px 0 !important;
+    border-color: #dee2e6 !important; /* Make nav border subtle */
+  }
+
+  /* This should target any animated underlines that are absolutely positioned */
+  .p-tabview .p-tabview-nav .p-tabview-ink-bar,
+  .p-tabview .p-tabview-nav::after,
+  .p-tabview-ink-bar,
+  .p-tabview-nav-ink-bar {
+    display: none !important; /* Hide any automatic ink bars */
+  }
+
+  /* PrimeNG v19 specific indicator styling */
+  .p-tabview-header-action::after,
+  .p-tabview-header.p-highlight::after {
+    background-color: var(--primary-color) !important;
+    height: 2px !important;
+  }
+
+  /* Override any animations */
+  .p-tabview .p-tabview-nav li.p-highlight::before,
+  .p-tabview .p-tabview-nav li.p-highlight::after {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  .p-tablist-active-bar.ng-star-inserted {
+    background-color: var(--primary-color) !important;
+  }
+}
+
+/* p-dropdown styling override to use primary color */
+::ng-deep {
+  .p-dropdown.p-focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(12, 110, 214, 0.3) !important; /* Tùy chỉnh shadow nếu cần */
+  }
+
+  .p-dropdown {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
+
+    .p-select-open {
+      border: var(--primary-color) !important;
+    }
+
+    .p-dropdown-label {
+      font-size: 1.4rem;
+      padding: 12px;
+      color: var(--primary-text-color);
+    }
+
+    .p-dropdown-trigger {
+      color: var(--primary-color);
+    }
+
+    .p-dropdown-panel {
+      border-radius: 8px;
+      margin-top: 5px;
+      border: 1px solid var(--primary-color);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+
+      .p-dropdown-items {
+        padding: 0;
+      }
+    }
+
+    .p-select-option {
+      &:hover {
+        background-color: rgba(12, 110, 214, 0.3) !important;
+        color: var(--primary-text-color) !important;
+      }
+    }
+    .p-select-option-selected {
+      background-color: rgba(12, 110, 214, 0.3) !important;
+      color: var(--primary-text-color) !important;
+    }
+
+    &:hover {
+      border-color: var(--primary-color) !important;
+    }
+  }
+}

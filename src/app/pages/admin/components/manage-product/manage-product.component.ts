@@ -13,19 +13,11 @@ import { ProductSearchRequest } from '../../../../core/models/product-search.mod
 import { Product } from '../../../../core/models/Product.model';
 import { ProductService } from '@app/core/services/Product.service';
 import { FileUploadService } from '../../../../core/services/FileUpload.service';
+import { UUID } from 'node:crypto';
 
 @Component({
   selector: 'app-manage-product',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TableModule,
-    ButtonModule,
-    InputTextModule,
-    TooltipModule,
-    HttpClientModule,
-  ],
+  standalone: false,
   templateUrl: './manage-product.component.html',
   styleUrl: './manage-product.component.scss',
 })
@@ -37,11 +29,15 @@ export class ManageProductComponent implements OnInit, OnDestroy {
 
   private searchSubject = new Subject<string>();
   private searchSubscription!: Subscription;
+  private refreshSubscription!: Subscription;
 
   searchRequest: ProductSearchRequest = {
-    page: 1,
-    size: 10,
-    sortField: 'name.sort',
+    keyword: '',
+    categoryId: '',
+    hidden: false,
+    sortBy: 'name.sort',
+    pageIndex: 1,
+    pageSize: 10,
     sortDirection: 'asc',
   };
 
@@ -52,9 +48,38 @@ export class ManageProductComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private fileUploadService: FileUploadService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    // Subscribe to refresh signals
+    this.refreshSubscription = this.productService.refreshNeeded$.subscribe(
+      (refresh) => {
+        if (refresh) {
+          this.loadProducts(); // Reload products when triggered
+        }
+      }
+    );
+  }
 
   ngOnInit() {
+    // Check if we need to refresh from localStorage
+    const needsRefresh =
+      localStorage.getItem('product_list_needs_refresh') === 'true';
+    if (needsRefresh) {
+      this.loadProducts();
+      localStorage.removeItem('product_list_needs_refresh');
+    } else {
+      this.loadProducts();
+    }
+
+    // Subscribe to refresh signals
+    this.refreshSubscription = this.productService.refreshNeeded$.subscribe(
+      (refresh) => {
+        if (refresh) {
+          this.loadProducts();
+          this.productService.resetRefreshState();
+        }
+      }
+    );
+
     // Set up debounce for search
     this.searchSubscription = this.searchSubject
       .pipe(
@@ -63,7 +88,7 @@ export class ManageProductComponent implements OnInit, OnDestroy {
       )
       .subscribe((keyword) => {
         this.searchRequest.keyword = keyword;
-        this.searchRequest.page = 1; // Reset to first page on new search
+        this.searchRequest.pageIndex = 1; // Reset to first page on new search
         this.loadProducts();
       });
 
@@ -74,6 +99,10 @@ export class ManageProductComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.searchSubscription) {
       this.searchSubscription.unsubscribe();
+    }
+    // Unsubscribe to prevent memory leaks
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
     }
   }
 
@@ -98,21 +127,21 @@ export class ManageProductComponent implements OnInit, OnDestroy {
     );
 
     // Update search request with new pagination parameters
-    this.searchRequest.page = pageNumber;
-    this.searchRequest.size = event.rows;
+    this.searchRequest.pageIndex = pageNumber;
+    this.searchRequest.pageSize = event.rows;
 
     // Completely clear the image cache on page change
     this.productImageCache = new Map<string, string>();
 
     // Call API with updated parameters
-    console.log(`Fetching page ${this.searchRequest.page} from server...`);
+    console.log(`Fetching page ${this.searchRequest.pageIndex} from server...`);
     this.loadProducts();
   }
 
   loadProducts() {
     // Ensure we have valid parameters
-    this.searchRequest.page = Number(this.searchRequest.page) || 1;
-    this.searchRequest.size = Number(this.searchRequest.size) || 10;
+    this.searchRequest.pageIndex = Number(this.searchRequest.pageIndex) || 1;
+    this.searchRequest.pageSize = Number(this.searchRequest.pageSize) || 10;
 
     console.log(`API Request: ${JSON.stringify(this.searchRequest)}`);
 
@@ -121,7 +150,10 @@ export class ManageProductComponent implements OnInit, OnDestroy {
 
     this.productService.searchProducts(requestParams).subscribe({
       next: (response) => {
-        console.log(`Response for page ${this.searchRequest.page}:`, response);
+        console.log(
+          `Response for page ${this.searchRequest.pageIndex}:`,
+          response
+        );
 
         if (response.success) {
           // Check if the data is different from what we already have
@@ -143,7 +175,7 @@ export class ManageProductComponent implements OnInit, OnDestroy {
           this.totalRecords = response.pageable.totalElements;
 
           console.log(
-            `Updated UI with ${this.products.length} products for page ${this.searchRequest.page}`
+            `Updated UI with ${this.products.length} products for page ${this.searchRequest.pageIndex}`
           );
 
           // Force UI update
@@ -202,7 +234,7 @@ export class ManageProductComponent implements OnInit, OnDestroy {
       this.productImageCache.set(product.id, defaultImage);
 
       // Fetch the actual image
-      this.fileUploadService.getFile(product.avatarId).subscribe({
+      this.fileUploadService.getFile(product.avatarId as UUID).subscribe({
         next: (response) => {
           if (response && response.data) {
             // Update the cache with the actual image URL
@@ -225,5 +257,10 @@ export class ManageProductComponent implements OnInit, OnDestroy {
 
     // Default case
     return 'assets/images/products/default.jpg';
+  }
+
+  // Add method to manually refresh the list
+  refreshProductList() {
+    this.loadProducts();
   }
 }

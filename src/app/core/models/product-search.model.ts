@@ -2,9 +2,9 @@ export interface ProductSearchRequest {
   keyword?: string;
   categoryId?: string;
   hidden?: boolean;
-  page?: number;
-  size?: number;
-  sortField?: string;
+  pageIndex?: number;
+  pageSize?: number;
+  sortBy?: string;
   sortDirection?: string;
 }
 

@@ -32,24 +32,7 @@ import { UUID } from 'node:crypto';
 
 @Component({
   selector: 'app-manage-banner',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    ToastModule,
-    ConfirmDialogModule,
-    CardModule,
-    ButtonModule,
-    TabViewModule,
-    TableModule,
-    DialogModule,
-    InputTextModule,
-    DropdownModule,
-    InputNumberModule,
-    FileUploadModule,
-    ProgressSpinnerModule, // Add this module to the imports array
-  ],
+  standalone: false,
   providers: [MessageService, ConfirmationService],
   templateUrl: './manage-banner.component.html',
   styleUrl: './manage-banner.component.scss',
@@ -246,7 +229,7 @@ export class ManageBannerComponent implements OnInit, OnDestroy {
             // Resolve file URL if we have a fileId
             if (banner.fileId) {
               // Get image URL from FileUploadService
-              this.uploadFileService.getFile(banner.fileId).subscribe(
+              this.uploadFileService.getFile(banner.fileId as UUID).subscribe(
                 (res) => {
                   if (res && res.data) {
                     processedBanner.imageUrl = res.data.url;

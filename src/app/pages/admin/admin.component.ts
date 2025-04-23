@@ -6,12 +6,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin',
-  imports: [
-    CommonModule,
-    AdminHeaderComponent,
-    AdminFooterComponent,
-    RouterOutlet,
-  ],
+  standalone: false,
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
 })

@@ -5,9 +5,10 @@
 :root {
   --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif !important;
-  --primary-color: #0c6ed6;
-  --primary-color-rgb: 12, 110, 214; // Chỉnh sửa tên biến (sửa từ 3 dấu gạch ngang thành 2)
-  --secondary-color: black;
+  --primary-color: #1976d2; /* Màu chính của ứng dụng */
+  --primary-color-rgb: 25, 118, 210; /* RGB của màu chính */
+  --primary-color-dark: #1565c0; /* Phiên bản tối hơn của màu chính */
+  --secondary-color: #64748b;
   --success-color: #0c6ed6;
   --danger-color: #ee4f22;
   --warning-color: #eaf608;
@@ -16,6 +17,8 @@
   --background-color: #fff;
   --secondary-background-color: #ececec;
   --third-background-color: #000000;
+  --surface-card: #ffffff;
+  --text-color: #1e293b;
 }
 
 // Ghi đè các class của PrimeNG button

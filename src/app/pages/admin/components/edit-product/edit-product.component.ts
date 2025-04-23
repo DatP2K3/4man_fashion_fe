@@ -68,25 +68,7 @@ interface CompleteVariantInfo {
 
 @Component({
   selector: 'app-edit-product',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    InputTextModule,
-    InputNumberModule,
-    FileUploadModule,
-    DropdownModule,
-    CheckboxModule,
-    DividerModule,
-    EditorModule,
-    DialogModule,
-    TableModule,
-    ChipModule,
-    ToastModule,
-    CardModule,
-  ],
+  standalone: false,
   providers: [],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.scss',
@@ -319,7 +301,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
         if (response && response.data) {
           // Create a product image object
           const productImage: ProductImage = {
-            file_id: response.data.id as UUID,
             fileId: response.data.id as UUID,
             avatar: this.currentImageView === 'main',
             deleted: false,
@@ -357,28 +338,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
     });
   }
 
-  onVideoUpload(event: any) {
-    const file = event.files[0];
-    if (file) {
-      this.fileUploadService.uploadFile(file).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Thành công',
-            detail: 'Tải lên video thành công',
-          });
-        },
-        error: () => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Lỗi',
-            detail: 'Không thể tải lên video',
-          });
-        },
-      });
-    }
-  }
-
   onCategoryChange(event: any) {
     if (event.value) {
       const selectedCategoryId = event.value;
@@ -386,14 +345,20 @@ export class EditProductComponent implements OnInit, OnDestroy {
         (cat) => cat.id === selectedCategoryId
       );
 
+      console.log('Selected category:', selectedCategory); // Debug log
+
       // Fix: Use optional chaining to safely access nested properties
       if (
         selectedCategory?.tagDescriptions &&
         selectedCategory.tagDescriptions.length > 0
       ) {
+        console.log('Tag descriptions:', selectedCategory.tagDescriptions); // Debug log
+
         this.descriptionKeys = selectedCategory.tagDescriptions
           .filter((tag) => tag && tag.name)
           .map((tag) => tag.name || '');
+
+        console.log('Description keys after mapping:', this.descriptionKeys); // Debug log
 
         // Initialize description values
         this.descriptionValues = {};
@@ -401,11 +366,14 @@ export class EditProductComponent implements OnInit, OnDestroy {
           this.descriptionValues[key] = '';
         });
 
-        // Scroll to details section
+        // Force change detection if needed
         setTimeout(() => {
+          console.log('Description keys after timeout:', this.descriptionKeys); // Debug log
+          // Scroll to details section
           this.scrollToSection('details');
         }, 300);
       } else {
+        console.log('No tag descriptions found for this category'); // Debug log
         this.descriptionKeys = [];
         this.descriptionValues = {};
       }
@@ -724,14 +692,12 @@ export class EditProductComponent implements OnInit, OnDestroy {
         .map((img) => {
           const image: ProductImage = {
             id: img.id,
-            fileId: img.file_id || img.fileId,
-            file_id: img.file_id,
+            fileId: img.fileId,
             avatar: img.avatar,
             deleted: false,
           };
 
           if (this.isEditMode && this.productId) {
-            image.product_id = this.productId as unknown as UUID;
             image.productId = this.productId as unknown as UUID;
           }
 
@@ -807,7 +773,47 @@ export class EditProductComponent implements OnInit, OnDestroy {
             ? 'Sản phẩm đã được cập nhật thành công'
             : 'Sản phẩm đã được tạo thành công',
         });
-        this.router.navigate(['/admin/products']);
+
+        // Force storage update first to ensure it's set before any navigation
+        localStorage.setItem(
+          'product_list_needs_refresh',
+          Date.now().toString()
+        );
+
+        // Create a default search request with correct typing
+        const defaultSearchRequest = {
+          keyword: '',
+          categoryId: undefined,
+          page: 0,
+          pageSize: 10,
+          minPrice: undefined,
+          maxPrice: undefined,
+          sort: 'createdAt',
+          direction: 'DESC',
+        };
+
+        // Trigger refresh via the service
+        this.productService.triggerRefresh();
+
+        // Store search params in localStorage
+        localStorage.setItem(
+          'product_search_request',
+          JSON.stringify(defaultSearchRequest)
+        );
+
+        // Use timeout to ensure all async operations complete before navigation
+        setTimeout(() => {
+          console.log('Navigating to manage-products page...');
+
+          // Navigate to the manage-products page with a forced reload
+          this.router
+            .navigate(['/admin/manage-products'])
+            .then(() => {
+              console.log('Navigation complete, reloading page for fresh data');
+              window.location.reload();
+            })
+            .catch((err) => console.error('Navigation error:', err));
+        }, 300);
       },
       error: () => {
         this.messageService.add({
@@ -822,7 +828,8 @@ export class EditProductComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.router.navigate(['/admin/products']);
+    // Use the same path as in onSubmit for consistency
+    this.router.navigate(['/admin/manage-products']);
   }
 
   updateDescriptionValue(key: string, value: string) {
@@ -872,16 +879,13 @@ export class EditProductComponent implements OnInit, OnDestroy {
                 .map((tag) => tag.name || '');
             }
           }
-
+          console.log('Loaded product:', product); // Debug log
           // Fill form data
           this.productForm.patchValue({
             name: product.name,
             introduce: product.introduce,
-            price: product.originPrice || product.origin_price,
-            sku:
-              product.productVariants?.[0]?.sku ||
-              product.product_variants?.[0]?.sku ||
-              '',
+            price: product.originPrice,
+            sku: product.productVariants?.[0]?.sku || '',
             weight: product.weight,
             weightUnit: product.weightUnit || 'g',
             length: product.length,
@@ -1045,10 +1049,9 @@ export class EditProductComponent implements OnInit, OnDestroy {
     allImagesInOrder.forEach((image: any) => {
       const productImage: ProductImage = {
         id: image.id,
-        file_id: image.fileId || image.file_id,
-        fileId: image.fileId || image.file_id,
+        fileId: image.fileId,
         avatar: image.avatar,
-        product_id: image.product_id || (this.productId as unknown as UUID),
+        productId: this.productId as unknown as UUID,
         deleted: false,
       };
 
@@ -1091,10 +1094,9 @@ export class EditProductComponent implements OnInit, OnDestroy {
       .map((img: any) => {
         const deletedImage: ProductImage = {
           id: img.id,
-          file_id: img.fileId || img.file_id,
-          fileId: img.fileId || img.file_id,
+          fileId: img.fileId,
           avatar: img.avatar || false,
-          product_id: img.product_id || (this.productId as unknown as UUID),
+          productId: this.productId as unknown as UUID,
           deleted: true,
         };
         return deletedImage;
@@ -1119,7 +1121,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
     const fileId = this.imageFileIdMap[imageView];
     if (fileId) {
       const imageIndex = this.uploadedImages.findIndex(
-        (img) => img.file_id === fileId || img.fileId === fileId
+        (img) => img.fileId === fileId
       );
 
       if (imageIndex !== -1) {
@@ -1129,14 +1131,12 @@ export class EditProductComponent implements OnInit, OnDestroy {
         if (imageToRemove.id) {
           const deletedImg: ProductImage = {
             id: imageToRemove.id,
-            file_id: imageToRemove.file_id,
             fileId: imageToRemove.fileId,
             avatar: imageToRemove.avatar,
             deleted: true,
           };
 
           if (this.productId) {
-            deletedImg.product_id = this.productId as unknown as UUID;
             deletedImg.productId = this.productId as unknown as UUID;
           }
           this.deletedImages.push(deletedImg);

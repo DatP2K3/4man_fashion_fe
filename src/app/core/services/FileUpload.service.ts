@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UUID } from 'node:crypto';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -20,7 +21,7 @@ export class FileUploadService {
     return this.http.post<{ fileId: string }>(this.apiUploadFileUrl, formData);
   }
 
-  getFile(fileId: string): Observable<any> {
+  getFile(fileId: UUID): Observable<any> {
     return this.http.get<any>(`${this.apiGetFileUrl}/${fileId}`);
   }
 }

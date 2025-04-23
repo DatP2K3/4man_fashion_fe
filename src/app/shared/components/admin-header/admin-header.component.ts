@@ -12,14 +12,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-header',
-  imports: [
-    CommonModule,
-    DrawerModule,
-    DividerModule,
-    OverlayPanelModule,
-    SidebarModule,
-    RouterModule,
-  ],
+  standalone: false,
   templateUrl: './admin-header.component.html',
   styleUrl: './admin-header.component.scss',
 })

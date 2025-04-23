@@ -24,7 +24,7 @@
   <p-table
     [value]="filteredProducts"
     [paginator]="true"
-    [rows]="searchRequest.size"
+    [rows]="searchRequest.pageSize"
     [totalRecords]="totalRecords"
     [rowsPerPageOptions]="[10, 25, 50]"
     [showCurrentPageReport]="true"
@@ -33,7 +33,9 @@
     (onPage)="onPageChange($event)"
     [alwaysShowPaginator]="true"
     [lazy]="true"
-    [first]="((searchRequest.page || 1) - 1) * (searchRequest.size || 10)"
+    [first]="
+      ((searchRequest.pageIndex || 1) - 1) * (searchRequest.pageSize || 10)
+    "
     styleClass="p-datatable-responsive"
   >
     <ng-template pTemplate="header">
@@ -51,7 +53,10 @@
       <tr>
         <td>
           {{
-            ((searchRequest.page || 1) - 1) * (searchRequest.size || 10) + i + 1
+            ((searchRequest.pageIndex || 1) - 1) *
+              (searchRequest.pageSize || 10) +
+              i +
+              1
           }}
         </td>
         <td>

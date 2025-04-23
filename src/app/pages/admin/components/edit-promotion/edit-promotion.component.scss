@@ -1,0 +1,631 @@
+// Main container
+.edit-promotion-container {
+  padding: 1.5rem;
+  min-height: calc(100vh - 100px);
+
+  // Header styling
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .back-button {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-right: 15px;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #0c6ed6;
+        color: #fff;
+      }
+
+      .pi {
+        font-size: 16px;
+      }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+  }
+
+  // Form container
+  .form-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin: 0 auto; // Căn giữa form
+
+    // Section header
+    .section {
+      margin-bottom: 2rem;
+
+      h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #eee;
+      }
+
+      // Form field styling
+      .form-field {
+        margin-bottom: 1.5rem;
+
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+          color: #333;
+        }
+
+        .input-container {
+          position: relative;
+          margin-bottom: 0.25rem;
+          max-width: 100%; // Changed from 600px to 100%
+
+          input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 1.4rem; // Thêm font-size 1.4rem cho input
+          }
+
+          .char-count {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            font-size: 12px;
+            color: #888;
+          }
+        }
+
+        // Date range styling
+        .date-range {
+          display: flex;
+          gap: 0; // Remove gap between fields
+          align-items: flex-start;
+          position: relative;
+          margin-bottom: 20px; // Add bottom margin for error messages
+          max-width: 100%; // Changed from 600px to 100%
+
+          .p-field {
+            position: relative;
+
+            .p-calendar {
+              width: 100%;
+              min-height: 38px; // Đảm bảo chiều cao đồng nhất
+            }
+
+            .p-error {
+              position: absolute; // Sử dụng absolute để không ảnh hưởng layout
+              bottom: -20px; // Điều chỉnh vị trí xuống dưới calendar
+              left: 0;
+              white-space: nowrap;
+              font-size: 12px;
+              z-index: 1; // Đảm bảo hiển thị trên các phần tử khác
+            }
+
+            &:first-child {
+              .p-calendar ::ng-deep .p-inputtext {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+              }
+            }
+
+            &:last-child {
+              .p-calendar ::ng-deep .p-inputtext {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+              }
+            }
+          }
+
+          .separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            padding: 0 5px;
+            height: 28px; // Match height of calendar input
+            margin: 0;
+            top: 14px;
+            position: relative;
+            transform: translateY(-50%); // Center precisely
+            z-index: 1; // Ensure it appears above inputs if needed
+            font-weight: 500;
+          }
+        }
+
+        // Thêm padding-bottom cho form-field chứa date-range để đủ không gian cho message lỗi
+        .form-field:has(.date-range) {
+          margin-bottom: 2.5rem; // Tăng margin để có không gian cho error message
+        }
+
+        // Discount type options
+        .discount-type {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          margin-bottom: 1rem;
+
+          .p-field-radiobutton {
+            padding: 1rem;
+            width: 48%;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+
+            &:hover {
+              border-color: #0c6ed6;
+              background-color: rgba(12, 110, 214, 0.02);
+            }
+
+            label {
+              display: inline;
+              margin-left: 0.5rem;
+              cursor: pointer;
+            }
+
+            .discount-desc {
+              margin-top: 0.5rem;
+              margin-left: 1.75rem;
+              font-size: 13px;
+              color: #666;
+            }
+          }
+        }
+
+        // Discount value input styling
+        .discount-value {
+          margin-top: 10px;
+          max-width: 100%; // Changed from 300px to 100%
+
+          .p-inputgroup {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            width: 100%;
+
+            input {
+              flex: 1;
+              height: 38px;
+              border-top-right-radius: 0 !important;
+              border-bottom-right-radius: 0 !important;
+              margin-right: 0 !important;
+            }
+
+            .p-inputgroup-addon {
+              height: 38px;
+              min-width: 38px;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+              background-color: #f5f5f5;
+              border: 1px solid #ced4da;
+              border-left: none;
+              border-top-right-radius: 4px !important;
+              border-bottom-right-radius: 4px !important;
+              font-weight: 500;
+            }
+          }
+
+          .p-error {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+          }
+        }
+
+        // Error message styling
+        .p-error {
+          color: #e24c4c;
+          font-size: 12px;
+          margin-top: 0.25rem;
+        }
+      }
+    }
+
+    // Form actions
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+      max-width: 100%; // Changed from 600px to 100%
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+// PrimeNG overrides
+:host ::ng-deep {
+  // Button styling
+  .p-button {
+    padding: 10px 10px !important; // Increase padding for bigger buttons
+    font-size: 1.2rem !important; // Larger font size
+    height: auto; // Allow height to adjust based on content
+    min-height: 3rem; // Ensure minimum height
+
+    // Make icons larger if present
+    .pi {
+      font-size: 1.2rem;
+    }
+
+    &.p-button-outlined {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+
+      &:hover {
+        background: rgba(var(--primary-color-rgb, 12, 110, 214), 0.04);
+      }
+    }
+
+    &:not(.p-button-outlined):not(.p-button-text) {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+
+      &:hover {
+        background: var(--primary-color-darker, #0a5cb3);
+        border-color: var(--primary-color-darker, #0a5cb3);
+      }
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff,
+        0 0 0 4px rgba(var(--primary-color-rgb, 12, 110, 214), 0.3);
+    }
+  }
+
+  // Form actions specific button styling
+  .form-actions {
+    .p-button {
+      min-width: 140px; // Set minimum width for better proportions
+    }
+  }
+
+  // Input focus styling
+  .p-inputtext:enabled:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px rgba(var(--primary-color-rgb, 12, 110, 214), 0.2);
+  }
+
+  // Calendar styling
+  .p-calendar {
+    width: 100%;
+
+    .p-inputtext {
+      width: 100%;
+    }
+
+    .p-datepicker-trigger {
+      color: var(--primary-color);
+    }
+
+    .p-datepicker {
+      .p-datepicker-header {
+        .p-datepicker-title {
+          .p-datepicker-month,
+          .p-datepicker-year {
+            color: var(--primary-color);
+          }
+        }
+      }
+
+      .p-datepicker-calendar {
+        td > span.p-highlight {
+          background: var(--primary-color);
+        }
+      }
+    }
+  }
+
+  // Dropdown styling
+  .p-dropdown.p-focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(12, 110, 214, 0.3) !important; /* Tùy chỉnh shadow nếu cần */
+  }
+
+  .p-dropdown {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
+
+    .p-select-open {
+      border: var(--primary-color) !important;
+    }
+
+    .p-dropdown-label {
+      font-size: 1.4rem;
+      padding: 12px;
+      color: var(--primary-text-color);
+    }
+
+    .p-dropdown-trigger {
+      color: var(--primary-color);
+    }
+
+    .p-dropdown-panel {
+      border-radius: 8px;
+      margin-top: 5px;
+      border: 1px solid var(--primary-color);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+
+      .p-dropdown-items {
+        padding: 0;
+      }
+
+      .p-dropdown-header {
+        padding: 0.5rem;
+
+        .p-dropdown-filter-container {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          position: relative;
+
+          .p-dropdown-filter {
+            width: 100%;
+            padding: 0.75rem;
+            padding-right: 2.5rem; // Make room for icon
+            font-size: 1.4rem;
+          }
+        }
+      }
+    }
+
+    .p-select-option {
+      &:hover {
+        background-color: rgba(12, 110, 214, 0.3) !important;
+        color: var(--primary-text-color) !important;
+      }
+    }
+    .p-select-option-selected {
+      background-color: rgba(12, 110, 214, 0.3) !important;
+      color: var(--primary-text-color) !important;
+    }
+
+    &:hover {
+      border-color: var(--primary-color) !important;
+    }
+    .p-inputicon {
+      .p-component.p-iconwrapper {
+        display: none !important;
+      }
+    }
+  }
+
+  // RadioButton styling
+  .p-radiobutton {
+    .p-radiobutton-box {
+      &.p-highlight {
+        border-color: #0c6ed6;
+        background: #0c6ed6;
+      }
+
+      &:not(.p-disabled):hover {
+        border-color: #0c6ed6;
+      }
+
+      &:not(.p-disabled).p-focus {
+        border-color: #0c6ed6;
+        box-shadow: 0 0 0 1px rgba(12, 110, 214, 0.2);
+      }
+    }
+
+    .p-radiobutton-input {
+      &:checked + .p-radiobutton-box {
+        background: #0c6ed6;
+        border-color: #0c6ed6;
+
+        &:after {
+          background: #fff;
+        }
+      }
+    }
+  }
+
+  // Toast styling
+  .p-toast {
+    .p-toast-message.p-toast-message-success {
+      .p-toast-message-icon,
+      .p-toast-summary {
+        color: #0c6ed6;
+      }
+    }
+  }
+
+  // Đảm bảo input group hiển thị đúng
+  .p-inputgroup {
+    display: flex !important;
+    width: 100% !important;
+
+    input,
+    .p-inputtext {
+      flex: 1 1 auto !important;
+      width: 1% !important; // Hack để đảm bảo flexbox hoạt động đúng
+    }
+
+    .p-inputgroup-addon {
+      flex: 0 0 auto !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+  }
+
+  // Fix number input arrows styling
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 1.5em;
+    margin-right: 5px;
+  }
+
+  // Đặt font-size cho tất cả các input trong PrimeNG components
+  .p-inputtext,
+  .p-dropdown-label,
+  .p-calendar input,
+  .p-inputgroup input {
+    font-size: 1.4rem !important;
+  }
+
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    font-size: 1.4rem;
+  }
+
+  // Override PrimeNG calendar for date range usage
+  .date-range {
+    .p-calendar {
+      .p-inputtext {
+        border-radius: 4px;
+      }
+
+      &:first-child .p-inputtext {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+      }
+
+      &:last-child .p-inputtext {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .p-select-overlay {
+    width: 100% !important;
+
+    .p-select-filter {
+      padding: 0.75rem;
+      font-size: 1.4rem;
+      border-color: var(--primary-color) !important;
+    }
+
+    .p-inputicon {
+      display: none !important;
+    }
+
+    .p-select-option {
+      &:hover {
+        background-color: rgba(12, 110, 214, 0.3) !important;
+        color: var(--primary-text-color) !important;
+      }
+    }
+    .p-select-option-selected {
+      background-color: rgba(12, 110, 214, 0.3) !important;
+      color: var(--primary-text-color) !important;
+    }
+
+    &:hover {
+      border-color: var(--primary-color) !important;
+    }
+  }
+}
+
+// Responsive styling
+@media (max-width: 768px) {
+  .edit-promotion-container {
+    padding: 1rem;
+
+    .form-container {
+      padding: 1.5rem;
+
+      .form-field {
+        .date-range {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .edit-promotion-container {
+    .header {
+      h1 {
+        font-size: 20px;
+      }
+    }
+
+    .form-actions {
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .p-button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.simple-paginator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+
+  .paginator-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .paginator-button {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      border: 1px solid #dee2e6;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+
+      &:not(:disabled):hover {
+        background-color: rgba(12, 110, 214, 0.1);
+      }
+    }
+
+    .paginator-info {
+      color: #666;
+      font-size: 0.875rem;
+    }
+  }
+
+  .paginator-pagesize {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #666;
+
+    select {
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #dee2e6;
+      border-radius: 3px;
+    }
+  }
+}

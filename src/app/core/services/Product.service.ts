@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, BehaviorSubject } from 'rxjs';
 import { Category } from '../models/Category.model';
 import { Product } from '../models/Product.model';
 import {
@@ -13,6 +13,10 @@ import {
 })
 export class ProductService {
   private apiUrl = 'http://localhost:8686/product/api';
+
+  // Add refresh mechanism
+  private refreshNeededSubject = new BehaviorSubject<boolean>(false);
+  refreshNeeded$ = this.refreshNeededSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -46,6 +50,10 @@ export class ProductService {
     );
   }
 
+  getProducts(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/products-with-no-discount`);
+  }
+
   searchProducts(
     searchRequest: ProductSearchRequest
   ): Observable<ProductSearchResponse> {
@@ -70,5 +78,15 @@ export class ProductService {
 
   updateProduct(product: Product): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/products`, product);
+  }
+
+  // Method to trigger a refresh
+  triggerRefresh() {
+    this.refreshNeededSubject.next(true);
+  }
+
+  // Reset refresh state
+  resetRefreshState() {
+    this.refreshNeededSubject.next(false);
   }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-footer',
-  imports: [CommonModule],
+  standalone: false,
   templateUrl: './admin-footer.component.html',
   styleUrl: './admin-footer.component.scss',
 })

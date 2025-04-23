@@ -130,10 +130,11 @@ footer {
   background-color: var(--background-color);
   transition: width 0.3s ease;
   position: fixed;
-  top: 70px; // Justo debajo del header
+  top: 0; // Bắt đầu từ đỉnh màn hình
   left: 0;
-  bottom: 60px; // Stop above footer
-  z-index: 1000; // Lower than header but higher than content
+  height: 100vh; // Chiều cao full màn hình
+  padding-top: 70px; // Để nội dung không bị che bởi header
+  z-index: 999; // Thấp hơn header (1100) nhưng cao hơn nội dung
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
   overflow-y: auto;
 

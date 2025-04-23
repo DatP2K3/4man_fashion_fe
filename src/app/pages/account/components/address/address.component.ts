@@ -17,14 +17,7 @@ import { DropdownModule } from 'primeng/dropdown'; // Thêm import này
 
 @Component({
   selector: 'app-address',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    IftaLabelModule,
-    CommonModule,
-    DropdownModule,
-    FormsModule,
-  ], // Thêm DropdownModule
+  standalone: false,
   templateUrl: './address.component.html',
   styleUrl: './address.component.scss',
 })
@@ -83,7 +76,7 @@ export class AddressComponent implements OnInit {
           this.addressOptions = [
             { label: '+ Thêm địa chỉ mới', value: 'new' },
             ...this.addresses.map((address, index) => ({
-              label: `${address.recipient_name} - ${address.address_line1}, ${address.ward}, ${address.city}`,
+              label: `${address.recipientName} - ${address.addressLine1}, ${address.ward}, ${address.city}`,
               value: index,
             })),
           ];
@@ -117,14 +110,14 @@ export class AddressComponent implements OnInit {
 
     // Điền thông tin vào form
     this.addressForm.patchValue({
-      recipientName: address.recipient_name || '',
-      phoneNumber: address.phone_number || '',
-      addressLine1: address.address_line1 || '',
-      addressLine2: address.address_line2 || '',
+      recipientName: address.recipientName || '',
+      phoneNumber: address.phoneNumber || '',
+      addressLine1: address.addressLine1 || '',
+      addressLine2: address.addressLine2 || '',
       ward: address.ward || '',
       district: address.district || '',
       city: address.city || '',
-      defaultAddress: address.default_address || false,
+      defaultAddress: address.defaultAddress || false,
     });
 
     // Đánh dấu form là đã touch
