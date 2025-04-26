@@ -28,7 +28,7 @@ export class DiscountService {
   }
 
   // Get discount by ID
-  getDiscountById(id: string): Observable<Discount> {
+  getDiscountById(id: string): Observable<any> {
     return this.http
       .get<Discount>(`${this.apiUrl}/${id}`)
       .pipe(catchError(this.handleError));
@@ -44,7 +44,10 @@ export class DiscountService {
   // Update discount
   updateDiscount(id: string, discount: Discount): Observable<Discount> {
     return this.http
-      .put<Discount>(`${this.apiUrl}/${id}`, discount)
+      .put<Discount>(
+        'http://localhost:8686/product/api/products/discounts',
+        discount
+      )
       .pipe(catchError(this.handleError));
   }
 

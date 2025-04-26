@@ -13,10 +13,10 @@ export enum DiscountType {
 export interface Discount {
   id?: string;
   name?: string;
-  productId?: string;
+  productId: string;
   startDate: Date;
   endDate: Date;
-  status: DiscountStatus;
+  status?: DiscountStatus; // Changed to optional since backend will handle this
   discountType: DiscountType;
   discountPercentage?: number;
   discountPrice?: number;

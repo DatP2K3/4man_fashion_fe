@@ -33,93 +33,132 @@
           </small>
         </div>
 
-        <!-- Thời gian khuyến mãi -->
-        <div class="form-field">
-          <label>Thời gian khuyến mãi</label>
-          <div class="date-range">
-            <div class="p-field">
-              <p-calendar
-                formControlName="startDate"
-                [showTime]="true"
-                placeholder="Ngày bắt đầu (GMT+7)"
-                dateFormat="dd/mm/yy"
-                [showIcon]="true"
-              ></p-calendar>
-              <small class="p-error" *ngIf="getErrorMessage('startDate')">
-                {{ getErrorMessage("startDate") }}
+        <!-- New parent container for product info and selection -->
+        <div class="product-selection-container">
+          <!-- Left side: Form inputs for product selection and time -->
+          <div class="product-form-column">
+            <!-- Chọn sản phẩm -->
+            <div class="form-field">
+              <label for="productId" *ngIf="!isEditMode">Chọn sản phẩm</label>
+              <label for="productId" *ngIf="isEditMode">Tên sản phẩm</label>
+              <div class="input-container product-selector" *ngIf="!isEditMode">
+                <p-dropdown
+                  id="productDropdown"
+                  formControlName="productId"
+                  [options]="products"
+                  placeholder="Chọn sản phẩm"
+                  optionLabel="name"
+                  optionValue="id"
+                  [filter]="true"
+                  filterBy="name"
+                  filterPlaceholder="Tìm kiếm sản phẩm"
+                  [showClear]="true"
+                  (onClick)="loadProducts()"
+                  [autoDisplayFirst]="false"
+                  [disabled]="loading"
+                  emptyMessage="Không có sản phẩm nào khả dụng"
+                  emptyFilterMessage="Không tìm thấy sản phẩm"
+                  appendTo="body"
+                  (onChange)="onProductSelect($event)"
+                >
+                  <ng-template pTemplate="selectedItem" let-product>
+                    <div class="simple-product-item" *ngIf="product">
+                      {{ product.name }}
+                    </div>
+                  </ng-template>
+                  <ng-template let-product pTemplate="item">
+                    <div class="simple-product-item">
+                      {{ product.name }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <div class="input-container product-selector" *ngIf="isEditMode">
+                <input
+                  id="productId"
+                  formControlName="productId"
+                  pInputText
+                  class="p-inputtext"
+                  [disabled]="true"
+                  [value]="selectedProduct ? selectedProduct.name : ''"
+                />
+              </div>
+              <small class="p-error" *ngIf="getErrorMessage('productId')">
+                {{ getErrorMessage("productId") }}
               </small>
             </div>
-            <span class="separator">-</span>
-            <div class="p-field">
-              <p-calendar
-                formControlName="endDate"
-                [showTime]="true"
-                placeholder="Ngày kết thúc (GMT+7)"
-                dateFormat="dd/mm/yy"
-                [showIcon]="true"
-              ></p-calendar>
-              <small class="p-error" *ngIf="getErrorMessage('endDate')">
-                {{ getErrorMessage("endDate") }}
-              </small>
+
+            <!-- Thời gian khuyến mãi -->
+            <div class="form-field">
+              <label>Thời gian khuyến mãi</label>
+              <div class="date-range">
+                <div class="p-field">
+                  <p-calendar
+                    formControlName="startDate"
+                    [showTime]="true"
+                    placeholder="Ngày bắt đầu (GMT+7)"
+                    dateFormat="dd/mm/yy"
+                    [showIcon]="true"
+                  ></p-calendar>
+                  <small class="p-error" *ngIf="getErrorMessage('startDate')">
+                    {{ getErrorMessage("startDate") }}
+                  </small>
+                </div>
+                <span class="separator">-</span>
+                <div class="p-field">
+                  <p-calendar
+                    formControlName="endDate"
+                    [showTime]="true"
+                    placeholder="Ngày kết thúc (GMT+7)"
+                    dateFormat="dd/mm/yy"
+                    [showIcon]="true"
+                  ></p-calendar>
+                  <small class="p-error" *ngIf="getErrorMessage('endDate')">
+                    {{ getErrorMessage("endDate") }}
+                  </small>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Chọn sản phẩm -->
-        <div class="form-field">
-          <label for="productId">Chọn sản phẩm</label>
-          <div class="input-container product-selector">
-            <p-dropdown
-              id="productDropdown"
-              formControlName="productId"
-              [options]="products"
-              placeholder="Chọn sản phẩm"
-              optionLabel="name"
-              optionValue="id"
-              [filter]="true"
-              filterBy="name"
-              filterPlaceholder="Tìm kiếm sản phẩm"
-              [showClear]="true"
-              (onClick)="loadProducts()"
-              [autoDisplayFirst]="false"
-              [disabled]="loading"
-              emptyMessage="Không có sản phẩm nào khả dụng"
-              emptyFilterMessage="Không tìm thấy sản phẩm"
-              appendTo="body"
-            >
-              <ng-template pTemplate="selectedItem" let-product>
-                <div class="simple-product-item" *ngIf="product">
-                  {{ product.name }}
-                </div>
-              </ng-template>
-
-              <ng-template let-product pTemplate="item">
-                <div class="simple-product-item">
-                  {{ product.name }}
-                </div>
-              </ng-template>
-            </p-dropdown>
+          <!-- Right side: Product image - Always displayed -->
+          <div class="product-image-column">
+            <!-- Product Image -->
+            <div class="product-image-wrapper">
+              <label>Ảnh sản phẩm</label>
+              <div
+                class="product-image-container"
+                [class.placeholder]="
+                  !selectedProduct || !selectedProduct.imageUrl
+                "
+              >
+                <img
+                  *ngIf="selectedProduct && selectedProduct.imageUrl"
+                  [src]="selectedProduct.imageUrl"
+                  alt="Ảnh sản phẩm"
+                  class="product-image-preview"
+                />
+                <!-- Placeholder will be shown via CSS when no image is available -->
+              </div>
+            </div>
           </div>
-          <small class="p-error" *ngIf="getErrorMessage('productId')">
-            {{ getErrorMessage("productId") }}
-          </small>
         </div>
 
         <!-- Loại giảm giá -->
         <div class="form-field">
           <label>Loại giảm giá</label>
           <div class="discount-type">
-            <div class="p-field-radiobutton" *ngFor="let type of discountTypes">
+            <div class="p-field-radiobutton" *ngFor="let case of discountCases">
               <p-radioButton
-                [inputId]="type.value"
-                [value]="type.value"
+                [inputId]="case.value"
+                [value]="case.value"
                 formControlName="discountType"
               >
               </p-radioButton>
-              <label [for]="type.value">{{ type.label }}</label>
+              <label [for]="case.value">{{ case.label }}</label>
               <p class="discount-desc">
                 {{
-                  type.value === "PERCENTAGE"
+                  case.value === "PERCENTAGE"
                     ? "Giá được giảm theo một tỷ lệ phần trăm đã đặt."
                     : "Giá là một mức giá chiết khấu đã đặt."
                 }}
@@ -127,47 +166,77 @@
             </div>
           </div>
 
-          <!-- Input cho từng loại giảm giá -->
-          <div
-            class="discount-value"
-            [ngSwitch]="promotionForm.get('discountType')?.value"
-          >
-            <!-- Percentage input -->
-            <div *ngSwitchCase="'PERCENTAGE'" class="input-row">
-              <div class="p-inputgroup">
+          <!-- Row for discount value and original price -->
+          <div class="form-row">
+            <!-- Hiển thị giá gốc sản phẩm - Chỉ đọc (ALWAYS VISIBLE) -->
+            <div class="form-field column">
+              <label>Giá gốc sản phẩm</label>
+              <div class="input-container readonly-field">
                 <input
-                  type="number"
+                  type="text"
                   pInputText
-                  formControlName="discountPercentage"
-                  placeholder="Nhập phần trăm giảm giá"
-                  min="1"
-                  max="100"
+                  [value]="
+                    selectedProduct
+                      ? formatPrice(selectedProduct.price)
+                      : 'Chọn sản phẩm để xem giá'
+                  "
+                  readonly
+                  class="readonly-input standard-height"
+                  [ngClass]="{ 'placeholder-text': !selectedProduct }"
                 />
-                <span class="p-inputgroup-addon">%</span>
               </div>
-              <small
-                class="p-error"
-                *ngIf="getErrorMessage('discountPercentage')"
-              >
-                {{ getErrorMessage("discountPercentage") }}
-              </small>
             </div>
 
-            <!-- Fixed price input -->
-            <div *ngSwitchCase="'FIXED_PRICE'" class="input-row">
-              <div class="p-inputgroup">
-                <input
-                  type="number"
-                  pInputText
-                  formControlName="discountPrice"
-                  placeholder="Nhập giá cố định"
-                  min="1"
-                />
-                <span class="p-inputgroup-addon">₫</span>
+            <!-- Input cho từng loại giảm giá (NOW ON RIGHT) -->
+            <div
+              class="form-field column"
+              [ngSwitch]="promotionForm.get('discountCase')?.value"
+            >
+              <!-- Percentage input -->
+              <div *ngSwitchCase="'PERCENTAGE'">
+                <label>Giá trị giảm</label>
+                <div class="input-container">
+                  <div class="custom-input-with-suffix">
+                    <input
+                      type="number"
+                      pInputText
+                      formControlName="discountPercentage"
+                      placeholder="Nhập phần trăm giảm giá"
+                      min="1"
+                      max="100"
+                      class="standard-height"
+                    />
+                    <span class="input-suffix">%</span>
+                  </div>
+                </div>
+                <small
+                  class="p-error"
+                  *ngIf="getErrorMessage('discountPercentage')"
+                >
+                  {{ getErrorMessage("discountPercentage") }}
+                </small>
               </div>
-              <small class="p-error" *ngIf="getErrorMessage('discountPrice')">
-                {{ getErrorMessage("discountPrice") }}
-              </small>
+
+              <!-- Fixed price input -->
+              <div *ngSwitchCase="'FIXED_PRICE'">
+                <label>Giá sau giảm</label>
+                <div class="input-container">
+                  <div class="custom-input-with-suffix">
+                    <input
+                      type="number"
+                      pInputText
+                      formControlName="discountPrice"
+                      placeholder="Nhập giá cố định"
+                      min="1"
+                      class="standard-height"
+                    />
+                    <span class="input-suffix">đ</span>
+                  </div>
+                </div>
+                <small class="p-error" *ngIf="getErrorMessage('discountPrice')">
+                  {{ getErrorMessage("discountPrice") }}
+                </small>
+              </div>
             </div>
           </div>
         </div>

@@ -97,11 +97,12 @@
         // Date range styling
         .date-range {
           display: flex;
+          justify-content: space-between;
           gap: 0; // Remove gap between fields
           align-items: flex-start;
           position: relative;
           margin-bottom: 20px; // Add bottom margin for error messages
-          max-width: 100%; // Changed from 600px to 100%
+          max-width: 450px; // Changed from 600px to 100%
 
           .p-field {
             position: relative;
@@ -142,7 +143,7 @@
             color: #666;
             padding: 0 5px;
             height: 28px; // Match height of calendar input
-            margin: 0;
+            margin-right: 15px;
             top: 14px;
             position: relative;
             transform: translateY(-50%); // Center precisely
@@ -161,11 +162,12 @@
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+          gap: 30px; // Add a specific gap between discount type options
           margin-bottom: 1rem;
 
           .p-field-radiobutton {
             padding: 1rem;
-            width: 48%;
+            width: calc(50% - 15px); // Calculate width accounting for gap
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             margin-bottom: 0.75rem;
@@ -194,34 +196,46 @@
         // Discount value input styling
         .discount-value {
           margin-top: 10px;
-          max-width: 100%; // Changed from 300px to 100%
+          max-width: 100%;
 
           .p-inputgroup {
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
             width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+
+            &:hover {
+              box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            }
 
             input {
               flex: 1;
-              height: 38px;
+              height: 42px; // Increased height for better visibility
               border-top-right-radius: 0 !important;
               border-bottom-right-radius: 0 !important;
               margin-right: 0 !important;
+              font-weight: 500;
+              border-width: 1.5px; // Slightly thicker border
             }
 
             .p-inputgroup-addon {
-              height: 38px;
-              min-width: 38px;
+              height: 42px; // Match input height
+              min-width: 40px; // Slightly wider for better visibility
               display: flex !important;
               align-items: center !important;
               justify-content: center !important;
-              background-color: #f5f5f5;
-              border: 1px solid #ced4da;
+              background-color: #f8f9fa; // Lighter background
+              border: 1.5px solid #ced4da; // Match input border thickness
               border-left: none;
               border-top-right-radius: 4px !important;
               border-bottom-right-radius: 4px !important;
-              font-weight: 500;
+              font-weight: 600; // Bolder text
+              font-size: 15px; // Larger font size
+              color: #495057; // Darker color for better contrast
             }
           }
 
@@ -540,6 +554,30 @@
   }
 }
 
+// Add these styles for the input fields with icons
+
+.p-input-icon-right {
+  width: 100%;
+
+  i {
+    font-size: 14px;
+    color: #666;
+
+    // Special styling for the đ symbol
+    &:not(.pi) {
+      font-style: normal;
+      font-weight: 500;
+      right: 10px;
+    }
+  }
+
+  input.percentage-input,
+  input.price-input {
+    width: 100%;
+    padding-right: 30px; // Make room for the symbol
+  }
+}
+
 // Responsive styling
 @media (max-width: 768px) {
   .edit-promotion-container {
@@ -626,6 +664,406 @@
       padding: 0.25rem 0.5rem;
       border: 1px solid #dee2e6;
       border-radius: 3px;
+    }
+  }
+}
+
+// Add these styles to your existing CSS
+
+.readonly-input {
+  background-color: #f8f9fa;
+  color: #495057;
+  cursor: not-allowed;
+  border: 1px solid #ced4da;
+}
+
+.product-image-container {
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.product-image-preview {
+  max-height: 150px;
+  max-width: 100%;
+  object-fit: cover; // Changed from contain to cover
+  width: 100%; // Make image take full width
+  height: 100%; // Make image take full height
+}
+
+.readonly-field {
+  position: relative;
+}
+
+// Add these new styles for the row layout
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px; // Increased negative margin to create more consistent spacing
+  align-items: flex-start; // Align items at the top
+
+  .column {
+    padding: 0 15px; // Increased padding to match the negative margin
+    flex: 1;
+    min-width: 250px;
+    transition: all 0.3s ease;
+
+    // Add subtle highlighting to columns on hover
+    &:hover .input-container {
+      background-color: rgba(12, 110, 214, 0.02);
+      border-radius: 4px;
+    }
+  }
+
+  .product-image-field {
+    flex: 0 0 200px;
+  }
+}
+
+.product-image-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  img.product-image-preview {
+    max-width: 100%;
+    max-height: 120px;
+    object-fit: cover; // Changed from contain to cover
+    width: 100%; // Make image take full width
+    height: 100%; // Make image take full height
+  }
+}
+
+// Make sure the date-range maintains its layout
+.date-range {
+  display: flex;
+  align-items: center;
+
+  .p-field {
+    flex: 1;
+  }
+
+  .separator {
+    margin: 0 10px;
+  }
+}
+
+// Add this custom style to position the suffix inside the input fields
+
+.custom-input-with-suffix {
+  position: relative;
+  width: 100%;
+  transition: all 0.2s ease;
+
+  &:hover input {
+    border-color: var(--primary-color);
+  }
+
+  input {
+    width: 100%;
+    padding-right: 35px; // More space for the suffix
+    height: 42px; // Taller input for better visibility
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-width: 1.5px; // Slightly thicker border
+
+    &:focus + .input-suffix {
+      color: var(--primary-color);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(12, 110, 214, 0.15);
+    }
+  }
+
+  .input-suffix {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px; // Larger size
+    color: #666;
+    font-weight: 600; // Bolder text
+    pointer-events: none;
+    z-index: 1;
+    transition: color 0.2s ease;
+  }
+}
+
+// Style for readonly inputs
+.readonly-input {
+  background-color: #f8f9fa;
+  color: #495057;
+  cursor: not-allowed;
+  border: 1.5px solid #e9ecef; // Lighter border
+  font-weight: 500; // Bolder text for readability
+  font-size: 1.4rem;
+}
+
+// Form row enhancements
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px; // Increased negative margin to create more consistent spacing
+  align-items: flex-start; // Align items at the top
+
+  .column {
+    padding: 0 15px; // Increased padding to match the negative margin
+    flex: 1;
+    min-width: 250px;
+    transition: all 0.3s ease;
+
+    // Add subtle highlighting to columns on hover
+    &:hover .input-container {
+      background-color: rgba(12, 110, 214, 0.02);
+      border-radius: 4px;
+    }
+
+    // Ensure all form fields within columns align properly
+    .form-field,
+    .input-container {
+      width: 100%; // Full width
+    }
+
+    // Ensure labels align
+    label {
+      margin-bottom: 8px;
+      height: 20px; // Fixed height for labels
+    }
+  }
+}
+
+// Add these styles for the new product selection layout
+
+.product-selection-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 2rem;
+
+  .product-form-column {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .form-field {
+      margin-bottom: 0; // Override default margin since we're using gap
+    }
+  }
+
+  .product-image-column {
+    flex: 0 0 auto;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    // Always show both image and price sections
+    .product-image-wrapper {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .product-image-container {
+        height: 180px; // Fixed height
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1.5px solid #dee2e6;
+        border-radius: 8px;
+        padding: 0; // Remove padding to allow full image fill
+        background-color: #f8f9fa;
+        position: relative;
+        overflow: hidden; // Hide overflow for cover fit
+
+        img.product-image-preview {
+          width: 100%; // Make image take full width
+          height: 100%; // Make image take full height
+          max-width: none; // Remove max-width constraint
+          max-height: none; // Remove max-height constraint
+          object-fit: cover; // Use cover to fill entire container
+        }
+
+        // Default image when no product image is available
+        &:empty::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #f0f0f0;
+          background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23cccccc"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>');
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: 60px 60px;
+        }
+
+        // Remove placeholder class and its styling since we'll always show an image or the default
+        &.placeholder {
+          background: none;
+
+          &::before,
+          &::after {
+            content: none;
+          }
+        }
+      }
+    }
+
+    // Price display - always shown
+    .product-price-wrapper {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .original-price-container {
+        padding: 0.75rem;
+        background-color: #f8f9fa;
+        border: 1.5px solid #dee2e6;
+        border-radius: 8px;
+        text-align: center;
+        min-height: 60px; // Ensure minimum height
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .price-value {
+          font-size: 1.4rem;
+          font-weight: 600;
+          color: #333;
+          margin: 0;
+
+          &.placeholder {
+            color: #999;
+            font-style: italic;
+            font-weight: normal;
+          }
+        }
+
+        .price-label {
+          font-size: 0.9rem;
+          color: #666;
+          margin-top: 0.25rem;
+        }
+      }
+    }
+  }
+}
+
+// Enhance the product price wrapper to ensure it's always visible
+.product-selection-container {
+  // ...existing code...
+
+  .product-image-column {
+    // ...existing code...
+
+    // Price display - ensure always visible
+    .product-price-wrapper {
+      display: flex !important; // Force display
+      flex-direction: column;
+      visibility: visible !important; // Ensure visibility
+      opacity: 1 !important; // Ensure opacity
+      height: auto !important; // Ensure height is automatic
+      min-height: 80px; // Minimum height
+
+      label {
+        display: block !important; // Force display
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .original-price-container {
+        padding: 0.75rem;
+        background-color: #f8f9fa;
+        border: 1.5px solid #dee2e6;
+        border-radius: 8px;
+        text-align: center;
+        min-height: 60px;
+        display: flex !important; // Force display
+        flex-direction: column;
+        justify-content: center;
+
+        // Default content when empty
+        &:empty::before {
+          content: "Giá sản phẩm";
+          font-style: italic;
+          color: #999;
+          font-weight: normal;
+        }
+
+        .price-value {
+          font-size: 1.4rem;
+          font-weight: 600;
+          color: #333;
+          margin: 0;
+
+          // Style for price placeholder - always ensure content
+          &.placeholder,
+          &:empty::before {
+            content: "Chưa có giá";
+            color: #999;
+            font-style: italic;
+            font-weight: normal;
+            display: block;
+          }
+        }
+
+        .price-label {
+          font-size: 0.9rem;
+          color: #666;
+          margin-top: 0.25rem;
+        }
+      }
+    }
+  }
+}
+
+// ...existing code...
+
+// Style for placeholder text in readonly inputs
+.placeholder-text {
+  color: #999 !important;
+  font-style: italic;
+}
+
+// Ensure the readonly field is always properly displayed
+.readonly-field {
+  width: 100%;
+
+  input.readonly-input {
+    width: 100%;
+    background-color: #f8f9fa;
+    color: #495057;
+    cursor: not-allowed;
+    border: 1.5px solid #e9ecef;
+    font-weight: 500;
+    font-size: 1.4rem;
+    height: 42px;
+    padding: 0.75rem;
+    box-sizing: border-box;
+
+    &.placeholder-text {
+      color: #999 !important;
+      font-style: italic;
     }
   }
 }

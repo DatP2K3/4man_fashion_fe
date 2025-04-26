@@ -1,3 +1,4 @@
+import { FileUploadService } from './../../../../core/services/FileUpload.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,19 +26,13 @@ export class EditPromotionComponent implements OnInit {
   maxNameLength = 50;
   products: any[] = []; // All products
   productsLoaded = false; // Track if products have been loaded
-  // Pagination
-  pageSize: number = 10;
-  currentPage: number = 0;
-  totalProducts: number = 0;
-  filterValue: string = '';
+  selectedProduct: any = null; // Hold selected product details
+
   // Enum cho loại giảm giá
-  discountTypes = [
+  discountCases = [
     { label: 'Tỷ lệ phần trăm giảm giá', value: 'PERCENTAGE' },
     { label: 'Giá cố định', value: 'FIXED_PRICE' },
   ];
-
-  // Add this property to make Math available in template
-  Math = Math;
 
   constructor(
     private fb: FormBuilder,
@@ -45,7 +40,8 @@ export class EditPromotionComponent implements OnInit {
     private router: Router,
     private discountService: DiscountService,
     private messageService: MessageService,
-    private productService: ProductService // Add ProductService
+    private productService: ProductService,
+    private fileUploadService: FileUploadService
   ) {
     // Khởi tạo form
     this.promotionForm = this.fb.group({
@@ -55,7 +51,8 @@ export class EditPromotionComponent implements OnInit {
       ],
       startDate: [null, Validators.required],
       endDate: [null, Validators.required],
-      discountType: ['PERCENTAGE', Validators.required],
+      discountType: [null, Validators.required],
+      discountCase: ['PERCENTAGE', Validators.required],
       discountPercentage: [0],
       discountPrice: [0],
       productId: ['', Validators.required],
@@ -63,15 +60,24 @@ export class EditPromotionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
-    this.isEditMode = !!this.id; // Fix typo in property name
+    const urlSegments = this.router.url.split('/');
+    this.id =
+      urlSegments[urlSegments.length - 1] !== 'edit'
+        ? urlSegments[urlSegments.length - 1]
+        : null;
 
+    this.isEditMode = !!this.id;
+
+    // Always load products first
+    this.loadProducts();
+
+    // Then load promotion details if in edit mode
     if (this.isEditMode) {
-      this.loadPromotionDetails(); // Fix function name
+      this.loadPromotionDetails();
     }
 
     // Thêm validator cho discountPercentage khi chọn loại PERCENTAGE
-    this.promotionForm.get('discountType')?.valueChanges.subscribe((type) => {
+    this.promotionForm.get('discountCase')?.valueChanges.subscribe((type) => {
       if (type === 'PERCENTAGE') {
         this.promotionForm
           .get('discountPercentage')
@@ -88,7 +94,7 @@ export class EditPromotionComponent implements OnInit {
         this.promotionForm.get('discountPercentage')?.clearValidators();
       }
       this.promotionForm.get('discountPercentage')?.updateValueAndValidity();
-      this.promotionForm.get('discountPrice')?.updateValueAndValidity(); // Fix unclosed string
+      this.promotionForm.get('discountPrice')?.updateValueAndValidity();
     });
   }
 
@@ -97,16 +103,32 @@ export class EditPromotionComponent implements OnInit {
 
     this.loading = true;
     this.discountService.getDiscountById(this.id).subscribe({
-      next: (promotion) => {
+      next: (res) => {
+        const promotion = res.data;
+        // Set form values with promotion data
         this.promotionForm.patchValue({
           name: promotion.name || '',
-          startDate: new Date(promotion.startDate),
-          endDate: new Date(promotion.endDate),
+          startDate: promotion.startDate ? new Date(promotion.startDate) : null,
+          endDate: promotion.endDate ? new Date(promotion.endDate) : null,
           discountType: promotion.discountType,
           discountPercentage: promotion.discountPercentage || 0,
           discountPrice: promotion.discountPrice || 0,
-          productId: promotion.productId || '',
+          // Don't set productId yet
         });
+
+        if (this.promotionForm.get('discountPercentage')?.value) {
+          this.promotionForm.get('discountCase')?.setValue('PERCENTAGE');
+        } else {
+          this.promotionForm.get('discountCase')?.setValue('FIXED_PRICE');
+        }
+
+        // Load product details for the promotion
+        if (promotion.productId) {
+          // Simply store the productId for reference, we'll set form later
+          const productId = promotion.productId;
+          this.loadProductDetails(productId);
+        }
+
         this.loading = false;
       },
       error: (error) => {
@@ -122,8 +144,9 @@ export class EditPromotionComponent implements OnInit {
   }
 
   loadProducts() {
-    if (this.productsLoaded) return; // Skip if already loaded
+    if (this.productsLoaded) return;
 
+    // Remove the early return for edit mode, always load products from API
     this.loading = true;
     this.productService.getProducts().subscribe({
       next: (res) => {
@@ -144,6 +167,89 @@ export class EditPromotionComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  // New method to handle product selection
+  onProductSelect(event: any) {
+    const productId = event.value;
+    if (productId) {
+      this.loadProductDetails(productId);
+    } else {
+      this.selectedProduct = null;
+    }
+
+    // Update the form value
+    this.promotionForm.patchValue({
+      productId: productId,
+    });
+  }
+
+  // Load product details including price and image
+  loadProductDetails(productId: string) {
+    // First check if we already have this product in our products array
+    const existingProduct = this.products.find((p) => p.id === productId);
+    if (existingProduct && existingProduct.price) {
+      // If we already have detailed product info, use it instead of making API call
+      this.selectedProduct = { ...existingProduct };
+      // Set the product ID in the form now that we have the product details
+      this.promotionForm.get('productId')?.setValue(productId);
+      return;
+    }
+
+    // Otherwise load from API as before
+    this.loading = true;
+    this.productService.getProductById(productId).subscribe({
+      next: (res) => {
+        console.log('Product details:', res.data);
+
+        this.selectedProduct = {
+          id: res.data.id,
+          name: res.data.name,
+          price: res.data.originPrice,
+          imageUrl:
+            res.data.images?.find((img: any) => img.type === 'main')?.url ||
+            res.data.images?.[0]?.url,
+        };
+
+        // Set the product ID in the form now that we have the product details
+        this.promotionForm.get('productId')?.setValue(productId);
+
+        this.fileUploadService.getFile(res.data.avatarId).subscribe({
+          next: (res) => {
+            console.log('Image URL:', res.data.url);
+            this.selectedProduct.imageUrl = res.data.url;
+          },
+          error: (error) => {
+            console.error('Error loading product image:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Lỗi',
+              detail: 'Không thể tải hình ảnh sản phẩm',
+            });
+          },
+        });
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading product details:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Lỗi',
+          detail: 'Không thể tải thông tin sản phẩm',
+        });
+        this.loading = false;
+      },
+    });
+  }
+
+  // Format price as VND currency
+  formatPrice(price: number): string {
+    return price
+      ? new Intl.NumberFormat('vi-VN', {
+          style: 'currency',
+          currency: 'VND',
+        }).format(price)
+      : '';
   }
 
   onSubmit() {
@@ -171,21 +277,20 @@ export class EditPromotionComponent implements OnInit {
   prepareFormData(): Discount {
     const formValue = this.promotionForm.value;
     const promotionData: Discount = {
+      id: this.id || undefined,
       name: formValue.name,
       startDate: formValue.startDate,
       endDate: formValue.endDate,
-      status: this.determineDiscountStatus(
-        formValue.startDate,
-        formValue.endDate
-      ),
       discountType: formValue.discountType as DiscountType,
       productId: formValue.productId,
     };
 
-    if (formValue.discountType === 'PERCENTAGE') {
+    if (formValue.discountCase === 'PERCENTAGE') {
       promotionData.discountPercentage = formValue.discountPercentage;
+      promotionData.discountPrice = undefined;
     } else {
       promotionData.discountPrice = formValue.discountPrice;
+      promotionData.discountPercentage = undefined;
     }
 
     return promotionData;
