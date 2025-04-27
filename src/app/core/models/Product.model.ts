@@ -1,7 +1,7 @@
 import { UUID } from 'crypto';
 
 export interface ProductImage {
-  id?: UUID;
+  id?: string;
   productId?: string;
   fileId?: string;
   avatar?: boolean;
@@ -9,8 +9,8 @@ export interface ProductImage {
 }
 
 export interface ProductVariant {
-  id?: UUID;
-  productId?: UUID;
+  id?: string;
+  productId?: string;
   size?: string;
   color?: string;
   quantity?: number;
@@ -34,4 +34,8 @@ export class Product {
   public averageRating?: number; // BigDecimal
   public productVariants?: ProductVariant[];
   public productImages?: ProductImage[];
+  public avatarId?: string; // UUID
+  public imageUrl?: string; // URL of the product image
+  public discountPrice?: number; // Price after discount
+  public discountPercentage?: number; // Discount percentage
 }

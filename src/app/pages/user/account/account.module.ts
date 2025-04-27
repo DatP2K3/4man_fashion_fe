@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { AccountComponent } from './account.component';
 import { InfoComponent } from './components/info/info.component';
-import { AddressComponent } from './components/address/address.component';
-import { SharedModule } from '../../shared/shared.module';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -13,6 +10,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DropdownModule } from 'primeng/dropdown';
+import { AccountComponent } from './account.component';
+import { AddressComponent } from './components/address/address.component';
+import { SharedModule } from '@app/shared/shared.module';
 
 const routes: Routes = [
   {

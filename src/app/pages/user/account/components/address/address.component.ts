@@ -5,15 +5,10 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { Profile, ShippingAddress } from '@app/core/models/Profile.model';
+import { ProfileService } from '@app/core/services/Profile.service';
+import { AppStateService } from '@app/shared/state/AppState.service';
 import { IftaLabelModule } from 'primeng/iftalabel';
-import {
-  Profile,
-  ShippingAddress,
-} from '../../../../core/models/Profile.model';
-import { AppStateService } from '../../../../shared/state/AppState.service';
-import { ProfileService } from '../../../../core/services/Profile.service';
-import { CommonModule } from '@angular/common';
-import { DropdownModule } from 'primeng/dropdown'; // Thêm import này
 
 @Component({
   selector: 'app-address',

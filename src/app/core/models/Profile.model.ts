@@ -1,7 +1,7 @@
 import { UUID } from 'node:crypto';
 
 export interface ShippingAddress {
-  id?: UUID;
+  id?: string;
   recipientName?: string;
   phoneNumber?: string;
   addressLine1?: string; // Địa chỉ cụ thể (Số nhà, tên đường)
@@ -9,18 +9,18 @@ export interface ShippingAddress {
   ward?: string; // Phường/Xã
   district?: string; // Quận/Huyện
   city?: string; // Tỉnh/Thành phố
-  profileId?: UUID; // ID của người dùng (Profile)
+  profileId?: string; // ID của người dùng (Profile)
   defaultAddress?: boolean; // Địa chỉ mặc định hay không
 }
 
 export interface Profile {
-  id?: UUID;
+  id?: string;
   email?: string;
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
   dob?: Date;
-  avatarFileId?: UUID;
+  avatarFileId?: string;
   memberShipTierName?: string;
   nextMembershipTierName?: string;
   listShippingAddress?: Array<{ address: ShippingAddress }>;

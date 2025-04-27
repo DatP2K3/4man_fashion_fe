@@ -21,7 +21,7 @@ export class FileUploadService {
     return this.http.post<{ fileId: string }>(this.apiUploadFileUrl, formData);
   }
 
-  getFile(fileId: UUID): Observable<any> {
+  getFile(fileId: string): Observable<any> {
     return this.http.get<any>(`${this.apiGetFileUrl}/${fileId}`);
   }
 }

@@ -7,7 +7,7 @@ export interface TagDescription {
   description?: string;
 }
 export interface Category {
-  id?: UUID;
+  id?: string;
   name?: string;
   productType?: string;
   description?: string;

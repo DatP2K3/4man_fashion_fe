@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AppStateService } from '../../../../shared/state/AppState.service';
-import { Profile } from '../../../../core/models/Profile.model';
-import { ProfileService } from '../../../../core/services/Profile.service';
+import { Profile } from '@app/core/models/Profile.model';
+import { ProfileService } from '@app/core/services/Profile.service';
+import { AppStateService } from '@app/shared/state/AppState.service';
 
 @Component({
   selector: 'app-info',

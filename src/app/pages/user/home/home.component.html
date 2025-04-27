@@ -1,0 +1,141 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+  <!-- Main Content -->
+  <main class="row">
+    <div class="col-12">
+      <!-- Main Slider Section -->
+      <section class="slider-section mb-4">
+        <p-carousel
+          [value]="slides"
+          [numVisible]="1"
+          [numScroll]="1"
+          [circular]="true"
+          [autoplayInterval]="5000"
+        >
+          <ng-template let-slide pTemplate="item">
+            <div class="slide-item">
+              <img [src]="slide.imageUrl" [alt]="slide.title" class="w-100" />
+            </div>
+          </ng-template>
+        </p-carousel>
+      </section>
+
+      <!-- Banner Section - Two Side Banners -->
+      <section class="banner-section mb-4">
+        <div class="row banner-row">
+          <!-- Left Banner -->
+          <div class="col-md-6 mb-3 mb-md-0 left-banner-col">
+            <div class="left-banner" *ngIf="leftBanners.length > 0">
+              <img
+                [src]="leftBanners[0].imageUrl"
+                [alt]="leftBanners[0].title"
+                class="w-100"
+              />
+            </div>
+          </div>
+
+          <!-- Right Banner -->
+          <div class="col-md-6 right-banner-col">
+            <div class="right-banner" *ngIf="rightBanners.length > 0">
+              <img
+                [src]="rightBanners[0].imageUrl"
+                [alt]="rightBanners[0].title"
+                class="w-100"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Products Section -->
+      <section class="products-section">
+        <div class="section-header text-center mb-4">
+          <h2 class="section-title">Featured Products</h2>
+          <p class="section-subtitle">Discover our latest collection</p>
+        </div>
+
+        <div class="product-grid">
+          <div *ngIf="loading" class="text-center p-5">
+            <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            <p>Loading products...</p>
+          </div>
+
+          <div *ngIf="!loading" class="row">
+            <div
+              *ngFor="let product of products"
+              class="col-12 col-sm-6 col-md-3 mb-4"
+            >
+              <div class="product-card h-100">
+                <!-- Sale Badge -->
+                <div class="sale-badge" *ngIf="product.originPrice">
+                  {{ product.discountPercentage }}% OFF
+                </div>
+
+                <!-- Product Image -->
+                <div class="product-image-container">
+                  <img
+                    [src]="product.imageUrl"
+                    [alt]="product.name"
+                    class="product-image"
+                  />
+                  <div class="product-overlay">
+                    <button
+                      pButton
+                      icon="pi pi-shopping-cart"
+                      class="p-button-rounded p-button-text"
+                    ></button>
+                  </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info mt-3">
+                  <h4 class="product-title">{{ product.name }}</h4>
+
+                  <div class="price-container">
+                    <!-- Show original price with different styling based on discount -->
+                    <span
+                      [ngClass]="{
+                        'original-price': product.discountPrice,
+                        'normal-price': !product.discountPrice
+                      }"
+                      >{{
+                        product.originPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}</span
+                    >
+
+                    <!-- Only show discount price when it exists -->
+                    <span class="sale-price" *ngIf="product.discountPrice">{{
+                      product.discountPrice
+                        | currency : "VND" : "symbol" : "1.0-0"
+                    }}</span>
+                  </div>
+
+                  <p-rating
+                    [ngModel]="product.averageRating || 5"
+                    [readonly]="true"
+                    class="mt-2 d-flex justify-content-center"
+                  ></p-rating>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="!loading && products.length === 0"
+            class="text-center p-5"
+          >
+            No products found.
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <!-- Footer -->
+  <footer class="row">
+    <app-footer></app-footer>
+  </footer>
+</div>

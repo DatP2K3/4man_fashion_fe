@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
-import { AppStateService } from '../../shared/state/AppState.service';
-import { Profile } from '../../core/models/Profile.model';
-import { ProfileService } from '../../core/services/Profile.service';
 import { Router } from '@angular/router';
+import { Profile } from '@app/core/models/Profile.model';
+import { ProfileService } from '@app/core/services/Profile.service';
+import { AppStateService } from '@app/shared/state/AppState.service';
 
 @Component({
   selector: 'app-account',

@@ -2,17 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { RouterModule } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { DrawerModule } from 'primeng/drawer';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { DividerModule } from 'primeng/divider';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { AdminHeaderComponent } from './components/admin-header/admin-header.component';
 import { AdminFooterComponent } from './components/admin-footer/admin-footer.component';
+
+// PrimeNG Components
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DrawerModule } from 'primeng/drawer';
+import { DividerModule } from 'primeng/divider';
 import { SidebarModule } from 'primeng/sidebar';
+import { RouterModule } from '@angular/router';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
   declarations: [
@@ -24,22 +23,18 @@ import { SidebarModule } from 'primeng/sidebar';
   imports: [
     CommonModule,
     RouterModule,
-    ButtonModule,
-    DrawerModule,
-    ProgressBarModule,
-    DividerModule,
-    FormsModule,
-    HttpClientModule,
+    // PrimeNG modules
     OverlayPanelModule,
+    DrawerModule,
+    DividerModule,
     SidebarModule,
+    ProgressBarModule,
   ],
   exports: [
     HeaderComponent,
     FooterComponent,
     AdminHeaderComponent,
     AdminFooterComponent,
-    CommonModule,
-    RouterModule,
   ],
 })
 export class SharedModule {}

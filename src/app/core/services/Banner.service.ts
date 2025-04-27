@@ -20,7 +20,7 @@ export class BannerService {
     return this.http.post<Banner>(this.apiUrl, banner);
   }
 
-  deleteBanner(id: UUID): Observable<any> {
+  deleteBanner(id: string): Observable<any> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, null);
   }
 }
