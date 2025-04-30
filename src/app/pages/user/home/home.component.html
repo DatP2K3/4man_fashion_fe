@@ -53,8 +53,7 @@
       <!-- Featured Products Section -->
       <section class="products-section">
         <div class="section-header text-center mb-4">
-          <h2 class="section-title">Featured Products</h2>
-          <p class="section-subtitle">Discover our latest collection</p>
+          <h2 class="section-title">Sản phẩm HOT</h2>
         </div>
 
         <div class="product-grid">
@@ -68,7 +67,11 @@
               *ngFor="let product of products"
               class="col-12 col-sm-6 col-md-3 mb-4"
             >
-              <div class="product-card h-100">
+              <div
+                class="product-card h-100"
+                (click)="navigateToProductDetail(product.id)"
+                style="cursor: pointer"
+              >
                 <!-- Sale Badge -->
                 <div class="sale-badge" *ngIf="product.originPrice">
                   {{ product.discountPercentage }}% OFF
@@ -86,6 +89,7 @@
                       pButton
                       icon="pi pi-shopping-cart"
                       class="p-button-rounded p-button-text"
+                      (click)="$event.stopPropagation()"
                     ></button>
                   </div>
                 </div>
@@ -115,7 +119,7 @@
                   </div>
 
                   <p-rating
-                    [ngModel]="product.averageRating || 5"
+                    [ngModel]="product.averageRating || 0"
                     [readonly]="true"
                     class="mt-2 d-flex justify-content-center"
                   ></p-rating>

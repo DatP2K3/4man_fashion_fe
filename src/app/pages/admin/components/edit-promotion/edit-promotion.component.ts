@@ -61,10 +61,13 @@ export class EditPromotionComponent implements OnInit {
 
   ngOnInit(): void {
     const urlSegments = this.router.url.split('/');
-    this.id =
-      urlSegments[urlSegments.length - 1] !== 'edit'
-        ? urlSegments[urlSegments.length - 1]
-        : null;
+    if (urlSegments[urlSegments.length - 1] == 'promotion') {
+      this.promotionForm.get('discountType')?.setValue(DiscountType.PROMOTION);
+    } else if (urlSegments[urlSegments.length - 1] == 'flash-sale') {
+      this.promotionForm.get('discountType')?.setValue(DiscountType.FLASH_SALE);
+    } else {
+      this.id = urlSegments[urlSegments.length - 1];
+    }
 
     this.isEditMode = !!this.id;
 
@@ -111,15 +114,20 @@ export class EditPromotionComponent implements OnInit {
           startDate: promotion.startDate ? new Date(promotion.startDate) : null,
           endDate: promotion.endDate ? new Date(promotion.endDate) : null,
           discountType: promotion.discountType,
-          discountPercentage: promotion.discountPercentage || 0,
-          discountPrice: promotion.discountPrice || 0,
           // Don't set productId yet
         });
 
-        if (this.promotionForm.get('discountPercentage')?.value) {
-          this.promotionForm.get('discountCase')?.setValue('PERCENTAGE');
+        // Determine and set the discount case based on which value is present
+        if (promotion.discountPercentage) {
+          this.promotionForm.patchValue({
+            discountCase: 'PERCENTAGE',
+            discountPercentage: promotion.discountPercentage,
+          });
         } else {
-          this.promotionForm.get('discountCase')?.setValue('FIXED_PRICE');
+          this.promotionForm.patchValue({
+            discountCase: 'FIXED_PRICE',
+            discountPrice: promotion.discountPrice,
+          });
         }
 
         // Load product details for the promotion

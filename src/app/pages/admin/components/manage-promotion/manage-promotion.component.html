@@ -95,6 +95,7 @@
           <ng-template pTemplate="header">
             <tr>
               <th>Tên khuyến mãi</th>
+              <th>Loại khuyến mãi</th>
               <th>Trạng thái</th>
               <th>Thời gian bắt đầu</th>
               <th>Thời gian kết thúc</th>
@@ -106,6 +107,7 @@
           <ng-template pTemplate="body" let-promotion>
             <tr>
               <td>{{ promotion.name }}</td>
+              <td>{{ getDiscountTypeLabel(promotion.discountType) }}</td>
               <td>
                 <span
                   class="status-badge"

@@ -218,11 +218,11 @@ export class ManagePromotionComponent implements OnInit, OnDestroy {
 
   // Các phương thức điều hướng
   createDiscount() {
-    this.router.navigate(['/admin/manage-promotions/create-discount']);
+    this.router.navigate(['/admin/manage-promotions/promotion']);
   }
 
   createFlashSale() {
-    this.router.navigate(['/admin/manage-promotions/create-flash-sale']);
+    this.router.navigate(['/admin/manage-promotions/flash-sale']);
   }
 
   viewPromotion(promotion: Discount) {
@@ -311,6 +311,18 @@ export class ManagePromotionComponent implements OnInit, OnDestroy {
         return 'Đã kết thúc';
       default:
         return status || 'Không xác định';
+    }
+  }
+
+  // Lấy nhãn hiển thị theo loại khuyến mãi
+  getDiscountTypeLabel(type: string): string {
+    switch (type) {
+      case DiscountType.PROMOTION:
+        return 'Giảm giá sản phẩm';
+      case DiscountType.FLASH_SALE:
+        return 'Flash Sale';
+      default:
+        return type || 'Không xác định';
     }
   }
 

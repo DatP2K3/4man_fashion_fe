@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Banner, BannerType } from '@app/core/models/Banner.model';
 import {
   ProductSearchRequest,
@@ -12,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { RatingModule } from 'primeng/rating';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { UUID } from 'node:crypto';
 import { Product } from '@app/core/models/Product.model';
 
@@ -31,7 +33,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private bannerService: BannerService,
     private productService: ProductService,
-    private fileUploadService: FileUploadService
+    private fileUploadService: FileUploadService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -142,5 +145,13 @@ export class HomeComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  navigateToProductDetail(productId: string | undefined): void {
+    if (productId) {
+      this.router.navigate(['/product-detail', productId]);
+    } else {
+      console.error('Product ID is undefined');
+    }
   }
 }

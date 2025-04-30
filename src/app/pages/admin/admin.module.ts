@@ -42,7 +42,14 @@ const routes: Routes = [
       { path: 'manage-products/edit/:id', component: EditProductComponent },
       { path: 'manage-banners', component: ManageBannerComponent },
       { path: 'manage-promotions', component: ManagePromotionComponent },
-      { path: 'manage-promotions/edit', component: EditPromotionComponent },
+      {
+        path: 'manage-promotions/promotion',
+        component: EditPromotionComponent,
+      },
+      {
+        path: 'manage-promotions/flash-sale',
+        component: EditPromotionComponent,
+      },
       { path: 'manage-promotions/edit/:id', component: EditPromotionComponent },
     ],
   },

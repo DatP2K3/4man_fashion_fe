@@ -1,0 +1,170 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+  <!-- Main Content -->
+  <main class="row">
+    <div class="col-12">
+      <div
+        class="product-detail-container"
+        *ngIf="!loading && product; else loadingTemplate"
+      >
+        <div class="product-images-section">
+          <!-- Main product image -->
+          <div class="product-main-image">
+            <img [src]="selectedImage" alt="{{ product.name }}" />
+          </div>
+          <!-- Thumbnail gallery -->
+          <div class="product-thumbnails">
+            <div
+              class="thumbnail"
+              *ngFor="let img of imageUrls"
+              (click)="changeImage(img)"
+              [class.active]="selectedImage === img"
+            >
+              <img [src]="img" alt="Product thumbnail" />
+            </div>
+          </div>
+        </div>
+
+        <div class="product-info-section">
+          <h1 class="product-title">{{ product.name }}</h1>
+
+          <!-- Price section -->
+          <div class="price-section">
+            <div class="original-price" *ngIf="product.discountPrice">
+              <s>{{
+                product.originPrice | currency : "VND" : "symbol" : "1.0-0"
+              }}</s>
+            </div>
+            <div class="current-price">
+              {{
+                product.discountPrice || product.originPrice
+                  | currency : "VND" : "symbol" : "1.0-0"
+              }}
+            </div>
+            <div class="discount-badge" *ngIf="product.discountPercentage">
+              -{{ product.discountPercentage }}%
+            </div>
+          </div>
+
+          <!-- Size selection -->
+          <div class="product-options">
+            <div class="option-label">Size</div>
+            <div class="size-options">
+              <button
+                *ngFor="let size of availableSizes"
+                class="size-option"
+                [class.selected]="selectedSize === size"
+                (click)="selectSize(size)"
+              >
+                {{ size }}
+              </button>
+              <a href="javascript:void(0)" class="size-guide">Bảng size</a>
+            </div>
+          </div>
+
+          <!-- Color selection -->
+          <div class="product-options">
+            <div class="option-label">Màu</div>
+            <div class="color-options">
+              <button
+                *ngFor="let color of availableColors"
+                class="color-option"
+                [class.selected]="selectedColor === color"
+                (click)="selectColor(color)"
+              >
+                {{ color }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Quantity selector -->
+          <div class="product-options">
+            <div class="option-label">Quantity</div>
+            <div class="quantity-selector">
+              <button class="quantity-btn" (click)="decreaseQuantity()">
+                -
+              </button>
+              <input
+                type="number"
+                class="quantity-input"
+                [(ngModel)]="quantity"
+                min="1"
+                max="100"
+              />
+              <button class="quantity-btn" (click)="increaseQuantity()">
+                +
+              </button>
+            </div>
+          </div>
+
+          <!-- Add to cart button -->
+          <button class="add-to-cart-btn" (click)="addToCart()">
+            Thêm vào giỏ hàng
+          </button>
+
+          <!-- Product details -->
+          <div class="product-details">
+            <h3 class="details-title">Chi tiết sản phẩm</h3>
+            <table class="details-table">
+              <tr *ngFor="let key of product.description | keyvalue">
+                <td>{{ key.key }}:</td>
+                <td>{{ key.value }}</td>
+              </tr>
+              <tr>
+                <td>Chất liệu:</td>
+                <td>Cotton</td>
+              </tr>
+              <tr>
+                <td>Chiều dài tay áo:</td>
+                <td>Cộc tay</td>
+              </tr>
+              <tr>
+                <td>Cổ áo:</td>
+                <td>Cổ tròn</td>
+              </tr>
+              <tr>
+                <td>Phong cách:</td>
+                <td>Basic</td>
+              </tr>
+              <tr>
+                <td>Giặt máy:</td>
+                <td>Có thể</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product description section -->
+      <div class="product-description" *ngIf="!loading && product">
+        <h2>Mô tả sản phẩm</h2>
+        <div class="description-content" [innerHTML]="product.introduce"></div>
+      </div>
+
+      <!-- You may also like section -->
+      <div class="recommendations" *ngIf="!loading">
+        <h2>Có thể bạn cũng thích</h2>
+        <div class="recommendation-items">
+          <div class="recommendation-item" *ngFor="let i of [1, 2, 3, 4]">
+            <div class="placeholder-image"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Loading Template -->
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <p>Đang tải thông tin sản phẩm...</p>
+    </div>
+  </ng-template>
+
+  <!-- Footer -->
+  <footer class="row">
+    <app-footer></app-footer>
+  </footer>
+</div>

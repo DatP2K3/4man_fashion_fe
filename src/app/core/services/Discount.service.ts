@@ -37,7 +37,10 @@ export class DiscountService {
   // Create new discount
   createDiscount(discount: Discount): Observable<Discount> {
     return this.http
-      .post<Discount>(this.apiUrl, discount)
+      .post<Discount>(
+        'http://localhost:8686/product/api/products/discounts',
+        discount
+      )
       .pipe(catchError(this.handleError));
   }
 
@@ -54,7 +57,9 @@ export class DiscountService {
   // Delete discount
   deleteDiscount(id: string): Observable<void> {
     return this.http
-      .delete<void>(`${this.apiUrl}/${id}`)
+      .delete<void>(
+        'http://localhost:8686/product/api/products/discounts/' + id
+      )
       .pipe(catchError(this.handleError));
   }
 

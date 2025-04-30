@@ -17,10 +17,23 @@ export class AuthInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // Skip token for requests with the 'skipAuth' header or to specific domains
+    // Log URL để debug
+    console.log('Intercepting request to:', request.url);
+
+    // Kiểm tra nếu là public endpoint
     if (request.headers.has('skipAuth') || this.isPublicEndpoint(request.url)) {
+      console.log('Skipping auth for public endpoint:', request.url);
       // Remove the skipAuth header before sending the request
-      const headers = request.headers.delete('skipAuth');
+      let headers = request.headers.delete('skipAuth');
+
+      // Nếu là public endpoint, cũng nên xóa Authorization header nếu có
+      if (headers.has('Authorization')) {
+        console.log(
+          'Removing existing Authorization token for public endpoint'
+        );
+        headers = headers.delete('Authorization');
+      }
+
       const newRequest = request.clone({ headers });
       return next.handle(newRequest);
     }
@@ -47,10 +60,18 @@ export class AuthInterceptor implements HttpInterceptor {
   private isPublicEndpoint(url: string): boolean {
     // Define endpoints or domains where you don't want to send auth tokens
     const publicEndpoints = [
-      'https://generativelanguage.googleapis.com', // Gemini API
+      'generativelanguage.googleapis.com', // Gemini API - sử dụng phần host thay vì toàn bộ URL
       // Add other endpoints as needed
     ];
 
-    return publicEndpoints.some((endpoint) => url.startsWith(endpoint));
+    // Kiểm tra kỹ hơn để đảm bảo URL khớp với các endpoint công khai
+    return publicEndpoints.some((endpoint) => {
+      const match = url.includes(endpoint);
+      if (match)
+        console.log(
+          `Endpoint ${url} matched public endpoint pattern ${endpoint}`
+        );
+      return match;
+    });
   }
 }
