@@ -46,7 +46,7 @@
   </div>
 
   <!-- Tab Menu for Promotion Status -->
-  <p-tabView (onChange)="onTabChange($event)">
+  <p-tabView (onChange)="onTabChange($event)" class="promotion-tabs">
     <p-tabPanel *ngFor="let tab of statusOptions" [header]="tab.label">
       <div class="promotion-list-container">
         <!-- Search and Filter Bar -->

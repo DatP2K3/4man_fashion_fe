@@ -1,3 +1,17 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: var(--background-color);
+}
+
+main {
+  margin-top: 80px; // Adjust this value based on your header's actual height
+}
+
 .main-content {
   background-color: var(--secondary-background-color) !important;
   padding: 20px 30px;
@@ -140,4 +154,35 @@
     background-color: var(--primary-color);
     color: var(--secondary-text-color);
   }
+}
+
+/* Pagination z-index fix */
+::ng-deep .p-paginator {
+  position: relative;
+  z-index: 500; /* Higher than footer but lower than header */
+  background-color: var(--background-color);
+
+  .p-paginator-current {
+    color: var(--primary-color);
+  }
+
+  .p-paginator-element {
+    min-width: 2.25rem;
+    height: 2.25rem;
+
+    &.p-highlight {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    &:not(.p-highlight):hover {
+      background-color: rgba(var(--primary-color-rgb), 0.1);
+    }
+  }
+}
+
+/* Ensure footer has a lower z-index */
+footer {
+  position: relative;
+  z-index: 100;
 }

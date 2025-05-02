@@ -38,6 +38,9 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Cuộn lên đầu trang khi component khởi tạo
+    window.scrollTo(0, 0);
+
     this.loadBanners();
     this.loadProducts();
   }

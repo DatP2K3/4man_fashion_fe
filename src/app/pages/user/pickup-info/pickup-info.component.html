@@ -1,0 +1,163 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+
+  <!-- Main Content -->
+  <main class="row">
+    <div class="col-12">
+      <div class="shipping-container">
+        <div class="row">
+          <!-- Shipping Form -->
+          <div class="col-lg-8 col-md-12">
+            <h2 class="section-title">Thông tin nhận hàng</h2>
+
+            <!-- Loading indicator -->
+            <div *ngIf="loading" class="loading-container">
+              <p-progressBar
+                mode="indeterminate"
+                [style]="{ height: '6px' }"
+              ></p-progressBar>
+            </div>
+
+            <div *ngIf="!loading" class="shipping-form">
+              <!-- Address dropdown -->
+              <div class="form-group">
+                <label>Chọn địa chỉ</label>
+                <div class="p-inputgroup">
+                  <p-dropdown
+                    [options]="addressOptions"
+                    [(ngModel)]="selectedAddressId"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Chọn địa chỉ"
+                    [style]="{ width: '100%' }"
+                    (onChange)="onAddressChange($event)"
+                  ></p-dropdown>
+                </div>
+              </div>
+
+              <!-- Address form -->
+              <form
+                [formGroup]="shippingForm"
+                (ngSubmit)="onSubmit()"
+                class="shipping-fields"
+              >
+                <div class="form-group">
+                  <label for="recipientName">Tên người nhận</label>
+                  <input
+                    type="text"
+                    id="recipientName"
+                    formControlName="recipientName"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="phoneNumber">Số điện thoại</label>
+                  <input
+                    type="text"
+                    id="phoneNumber"
+                    formControlName="phoneNumber"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="addressLine1">Số nhà, tên đường</label>
+                  <input
+                    type="text"
+                    id="addressLine1"
+                    formControlName="addressLine1"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="addressLine2">Toà nhà/ căn hộ</label>
+                  <input
+                    type="text"
+                    id="addressLine2"
+                    formControlName="addressLine2"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <label for="ward">Phường/ xã</label>
+                    <input
+                      type="text"
+                      id="ward"
+                      formControlName="ward"
+                      class="form-control"
+                    />
+                  </div>
+
+                  <div class="form-group col-md-4">
+                    <label for="district">Quận/ huyện</label>
+                    <input
+                      type="text"
+                      id="district"
+                      formControlName="district"
+                      class="form-control"
+                    />
+                  </div>
+
+                  <div class="form-group col-md-4">
+                    <label for="city">Tỉnh/ thành phố</label>
+                    <input
+                      type="text"
+                      id="city"
+                      formControlName="city"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="continue-btn">Tiếp tục</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="col-lg-4 col-md-12">
+            <div class="order-summary">
+              <h3>Tổng ({{ cartItems?.length || 3 }} sản phẩm)</h3>
+
+              <div class="summary-item">
+                <span>Tổng giá sản phẩm</span>
+                <span>{{ formatCurrency(subtotal || 600000) }}</span>
+              </div>
+
+              <div class="summary-item">
+                <span>Phí vận chuyển</span>
+                <span>{{ formatCurrency(shippingFee || 30000) }}</span>
+              </div>
+
+              <hr />
+
+              <div class="summary-total">
+                <span>Total</span>
+                <span>{{
+                  formatCurrency((subtotal || 600000) + (shippingFee || 30000))
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast messages -->
+  <p-toast></p-toast>
+
+  <!-- Footer -->
+  <footer class="row">
+    <app-footer></app-footer>
+  </footer>
+</div>

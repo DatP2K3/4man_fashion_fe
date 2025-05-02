@@ -11,6 +11,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { BadgeModule } from 'primeng/badge';
 import { TableModule } from 'primeng/table';
 import { GalleriaModule } from 'primeng/galleria';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [ProductDetailComponent],
@@ -25,6 +26,7 @@ import { GalleriaModule } from 'primeng/galleria';
     BadgeModule,
     TableModule,
     GalleriaModule,
+    ToastModule,
     RouterModule.forChild([{ path: '', component: ProductDetailComponent }]),
   ],
   exports: [ProductDetailComponent],

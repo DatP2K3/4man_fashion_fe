@@ -23,7 +23,7 @@ export interface Profile {
   avatarFileId?: string;
   memberShipTierName?: string;
   nextMembershipTierName?: string;
-  listShippingAddress?: Array<{ address: ShippingAddress }>;
+  listShippingAddress?: Array<ShippingAddress>;
   pointsToNextLevel?: number;
   points?: number;
   totalPoints?: number;

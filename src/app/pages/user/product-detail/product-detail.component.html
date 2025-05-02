@@ -1,9 +1,14 @@
 <div class="container-fluid">
-  <!-- Header -->
+  s
+  <!-- Header - Đã cố định (fixed) -->
   <header class="row">
     <app-header></app-header>
   </header>
-  <!-- Main Content -->
+
+  <!-- Toast Component -->
+  <p-toast styleClass="custom-toast"></p-toast>
+
+  <!-- Main Content - Đã thêm padding-top -->
   <main class="row">
     <div class="col-12">
       <div
@@ -92,16 +97,29 @@
                 class="quantity-input"
                 [(ngModel)]="quantity"
                 min="1"
-                max="100"
+                [max]="getAvailableQuantity()"
               />
               <button class="quantity-btn" (click)="increaseQuantity()">
                 +
               </button>
             </div>
+            <div class="available-qty" *ngIf="getAvailableQuantity() > 0">
+              Còn {{ getAvailableQuantity() }} sản phẩm có sẵn
+            </div>
+            <div
+              class="sold-out text-danger"
+              *ngIf="getAvailableQuantity() <= 0"
+            >
+              Hết hàng
+            </div>
           </div>
 
           <!-- Add to cart button -->
-          <button class="add-to-cart-btn" (click)="addToCart()">
+          <button
+            class="add-to-cart-btn"
+            (click)="addToCart()"
+            [disabled]="getAvailableQuantity() <= 0"
+          >
             Thêm vào giỏ hàng
           </button>
 
@@ -112,26 +130,6 @@
               <tr *ngFor="let key of product.description | keyvalue">
                 <td>{{ key.key }}:</td>
                 <td>{{ key.value }}</td>
-              </tr>
-              <tr>
-                <td>Chất liệu:</td>
-                <td>Cotton</td>
-              </tr>
-              <tr>
-                <td>Chiều dài tay áo:</td>
-                <td>Cộc tay</td>
-              </tr>
-              <tr>
-                <td>Cổ áo:</td>
-                <td>Cổ tròn</td>
-              </tr>
-              <tr>
-                <td>Phong cách:</td>
-                <td>Basic</td>
-              </tr>
-              <tr>
-                <td>Giặt máy:</td>
-                <td>Có thể</td>
               </tr>
             </table>
           </div>
@@ -147,9 +145,75 @@
       <!-- You may also like section -->
       <div class="recommendations" *ngIf="!loading">
         <h2>Có thể bạn cũng thích</h2>
-        <div class="recommendation-items">
-          <div class="recommendation-item" *ngFor="let i of [1, 2, 3, 4]">
-            <div class="placeholder-image"></div>
+        <div class="product-grid">
+          <div class="row">
+            <div
+              *ngFor="let product of recommendedProducts"
+              class="col-12 col-sm-6 col-md-3 mb-4"
+            >
+              <div
+                class="product-card h-100"
+                [routerLink]="['/product-detail', product.id]"
+                style="cursor: pointer"
+              >
+                <!-- Sale Badge -->
+                <div class="sale-badge" *ngIf="product.discountPercentage">
+                  -{{ product.discountPercentage }}% OFF
+                </div>
+
+                <!-- Product Image -->
+                <div class="product-image-container">
+                  <img
+                    [src]="product.imageUrl || 'assets/images/placeholder.jpg'"
+                    [alt]="product.name"
+                    class="product-image"
+                  />
+                  <div class="product-overlay">
+                    <button
+                      pButton
+                      icon="pi pi-shopping-cart"
+                      class="p-button-rounded p-button-text"
+                      (click)="
+                        $event.stopPropagation();
+                        addToCartFromRecommended(product)
+                      "
+                    ></button>
+                  </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info mt-3">
+                  <h4 class="product-title">{{ product.name }}</h4>
+
+                  <div class="price-container">
+                    <span
+                      [ngClass]="{
+                        'original-price': product.discountPrice,
+                        'normal-price': !product.discountPrice
+                      }"
+                    >
+                      {{
+                        product.originPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                    <span class="sale-price" *ngIf="product.discountPrice">
+                      {{
+                        product.discountPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                  </div>
+
+                  <p-rating
+                    [ngModel]="product.averageRating || 0"
+                    [readonly]="true"
+                    class="mt-2 d-flex justify-content-center"
+                  >
+                  </p-rating>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

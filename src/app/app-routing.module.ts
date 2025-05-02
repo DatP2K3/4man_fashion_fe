@@ -28,6 +28,18 @@ const routes: Routes = [
         (m) => m.ProductDetailModule
       ),
   },
+  {
+    path: 'cart',
+    loadChildren: () =>
+      import('./pages/user/cart/cart.module').then((m) => m.CartModule),
+  },
+  {
+    path: 'pickup-info',
+    loadChildren: () =>
+      import('./pages/user/pickup-info/pickup-info.module').then(
+        (m) => m.PickupInfoModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -13,6 +13,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { AccountComponent } from './account.component';
 import { AddressComponent } from './components/address/address.component';
 import { SharedModule } from '@app/shared/shared.module';
+import { ToastModule } from 'primeng/toast';
 
 const routes: Routes = [
   {
@@ -42,6 +43,7 @@ const routes: Routes = [
     DividerModule,
     ReactiveFormsModule,
     FormsModule,
+    ToastModule,
     IftaLabelModule, // Add this for p-iftalabel component
     DatePickerModule, // Add this for p-datepicker component
     DropdownModule, // Add this if using dropdowns in address component
