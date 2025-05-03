@@ -8,6 +8,7 @@ import { ManageBannerComponent } from './components/manage-banner/manage-banner.
 import { ManagePromotionComponent } from './components/manage-promotion/manage-promotion.component';
 import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ManageShopAddressComponent } from './components/manage-shop-address/manage-shop-address.component';
 
 // PrimeNG modules
 import { TableModule } from 'primeng/table';
@@ -22,7 +23,7 @@ import { DividerModule } from 'primeng/divider';
 import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
 import { ChipModule } from 'primeng/chip';
-import { ToastModule } from 'primeng/toast'; // Ensure ToastModule is imported
+import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TabViewModule } from 'primeng/tabview';
@@ -31,6 +32,9 @@ import { EditPromotionComponent } from './components/edit-promotion/edit-promoti
 import { CalendarModule } from 'primeng/calendar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { PaginatorModule } from 'primeng/paginator';
+import { AccordionModule } from 'primeng/accordion';
+import { MessageService } from 'primeng/api';
+import { IftaLabelModule } from 'primeng/iftalabel'; // Add IftaLabelModule import
 
 const routes: Routes = [
   {
@@ -51,6 +55,7 @@ const routes: Routes = [
         component: EditPromotionComponent,
       },
       { path: 'manage-promotions/edit/:id', component: EditPromotionComponent },
+      { path: 'manage-shop-address', component: ManageShopAddressComponent },
     ],
   },
 ];
@@ -62,7 +67,8 @@ const routes: Routes = [
     EditProductComponent,
     ManageBannerComponent,
     ManagePromotionComponent,
-    EditPromotionComponent, // Make sure EditPromotionComponent is declared here
+    EditPromotionComponent,
+    ManageShopAddressComponent, // Add the component to declarations
   ],
   imports: [
     CommonModule,
@@ -71,8 +77,9 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    // Make sure all these PrimeNG modules are imported
     TableModule,
-    ButtonModule, // Ensure ButtonModule is included here
+    ButtonModule,
     InputTextModule,
     TooltipModule,
     InputNumberModule,
@@ -83,7 +90,7 @@ const routes: Routes = [
     EditorModule,
     DialogModule,
     ChipModule,
-    ToastModule, // Make sure ToastModule is included here
+    ToastModule,
     CardModule,
     ConfirmDialogModule,
     TabViewModule,
@@ -91,6 +98,9 @@ const routes: Routes = [
     CalendarModule,
     RadioButtonModule,
     PaginatorModule,
+    AccordionModule,
+    IftaLabelModule, // Add IftaLabelModule for p-iftalabel component
   ],
+  providers: [MessageService],
 })
 export class AdminModule {}
