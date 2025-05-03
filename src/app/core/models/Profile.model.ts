@@ -6,9 +6,12 @@ export interface ShippingAddress {
   phoneNumber?: string;
   addressLine1?: string; // Địa chỉ cụ thể (Số nhà, tên đường)
   addressLine2?: string; // Địa chỉ bổ sung (Tòa nhà, căn hộ)
-  ward?: string; // Phường/Xã
-  district?: string; // Quận/Huyện
-  city?: string; // Tỉnh/Thành phố
+  ward?: string; // Tên phường/xã
+  wardCode?: string; // Mã phường/xã
+  district?: string; // Tên quận/huyện
+  districtId?: string; // ID quận/huyện
+  city?: string; // Tên tỉnh/thành phố
+  cityId?: string; // ID tỉnh/thành phố
   profileId?: string; // ID của người dùng (Profile)
   defaultAddress?: boolean; // Địa chỉ mặc định hay không
 }

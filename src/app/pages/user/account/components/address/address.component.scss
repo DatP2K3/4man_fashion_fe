@@ -113,7 +113,11 @@
   .p-dropdown {
     width: 100%;
     border-radius: 8px;
-    border: 1px solid var(--primary-color);
+    border: 1px solid var(--third-background-color) !important; // Match input border
+    height: 56px !important; // Match input height
+    margin: 10px 0 !important; // Match input margins
+    display: flex;
+    align-items: center; // Add this for overall vertical centering
 
     .p-select-open {
       border: var(--primary-color) !important;
@@ -121,12 +125,28 @@
 
     .p-dropdown-label {
       font-size: 1.4rem;
-      padding: 12px;
+      padding: 0 10px !important; // Equal padding left/right with no top/bottom padding
       color: var(--primary-text-color);
+      display: flex;
+      align-items: center; // Center text vertically
+      justify-content: flex-start; // Left align text horizontally
+      height: 100%;
+      line-height: normal; // Normalize line height
     }
 
     .p-dropdown-trigger {
       color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    // Items in the dropdown panel also get centered
+    .p-dropdown-item {
+      display: flex;
+      align-items: center;
+      min-height: 2.5rem; // Set a minimum height for dropdown items
     }
 
     .p-dropdown-panel {
@@ -154,6 +174,14 @@
     &:hover {
       border-color: var(--primary-color) !important;
     }
+  }
+
+  // Style for dropdown placeholder - ensure it's centered too
+  .p-dropdown .p-dropdown-label.p-placeholder {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    color: #6c757d; // Placeholder color
   }
 
   // Style cho datepicker
@@ -211,5 +239,39 @@
     .p-checkbox-icon {
       color: var(--secondary-text-color);
     }
+  }
+
+  // Style for dropdown label - make it match input labels
+  .p-float-label {
+    margin-top: 8px;
+
+    label {
+      font-size: 1.4rem !important;
+      color: var(--primary-text-color) !important;
+    }
+
+    // Ensure dropdown labels behave like text input labels
+    .p-dropdown + label {
+      top: 0.7rem !important;
+      left: 0.75rem !important;
+      background-color: transparent;
+    }
+
+    .p-dropdown.p-focus + label,
+    .p-dropdown-filled + label {
+      top: -0.75rem !important;
+      font-size: 0.85em !important;
+      background-color: white;
+      padding: 0 4px;
+    }
+  }
+
+  // Style for selected values (below dropdowns)
+  .selected-value {
+    display: block;
+    margin-top: 4px;
+    color: #007bff;
+    font-size: 1.2rem;
+    font-style: italic;
   }
 }

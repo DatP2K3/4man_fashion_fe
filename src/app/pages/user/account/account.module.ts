@@ -14,6 +14,7 @@ import { AccountComponent } from './account.component';
 import { AddressComponent } from './components/address/address.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 const routes: Routes = [
   {
@@ -47,6 +48,9 @@ const routes: Routes = [
     IftaLabelModule, // Add this for p-iftalabel component
     DatePickerModule, // Add this for p-datepicker component
     DropdownModule, // Add this if using dropdowns in address component
+  ],
+  providers: [
+    MessageService, // Add this for toast messages
   ],
 })
 export class AccountModule {}

@@ -53,8 +53,6 @@ export class CartComponent implements OnInit, OnDestroy {
           this.cart = response.data;
 
           if (this.cart && this.cart.id) {
-            console.log('Cart page - Cart loaded with ID:', this.cart.id);
-
             // Prepare to prefetch all images at once
             const avatarIds =
               this.cart?.cartItems
@@ -138,9 +136,6 @@ export class CartComponent implements OnInit, OnDestroy {
       this.displayedCartItems = this.cart.cartItems.filter(
         (item) => !item.deleted
       );
-      console.log(
-        `Displaying ${this.displayedCartItems.length} active items in cart`
-      );
     } else {
       this.displayedCartItems = [];
     }
@@ -163,9 +158,6 @@ export class CartComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
 
-    console.log('Cart page - Removing item from cart with ID:', this.cart.id);
-    console.log('Cart page - User ID for removal:', this.cart.userId);
-
     // Store current imageUrls for all non-deleted cart items to preserve them
     const imageMap = new Map<string, string>();
     this.cart.cartItems!.forEach((item) => {
@@ -180,9 +172,6 @@ export class CartComponent implements OnInit, OnDestroy {
     );
     if (itemToDelete) {
       itemToDelete.deleted = true;
-
-      console.log(`Removing item ${itemToDelete.name} (${itemId}) from cart`);
-
       // Create a new cartItems array WITHOUT the deleted item
       const filteredCartItems = this.cart.cartItems!.filter(
         (item) => !item.deleted
@@ -194,10 +183,6 @@ export class CartComponent implements OnInit, OnDestroy {
         userId: this.cart.userId,
         cartItems: filteredCartItems, // Only sending active items to backend
       };
-
-      console.log(
-        `Filtered cart items: ${filteredCartItems.length} (removed deleted items)`
-      );
 
       // Update cart in backend
       this.cartService.updateCart(cartForUpdate).subscribe({
@@ -266,12 +251,6 @@ export class CartComponent implements OnInit, OnDestroy {
         userId: this.cart.userId,
         cartItems: filteredCartItems, // Only sending active items to backend
       };
-
-      console.log('Update quantity - Cart ID:', cartForUpdate.id);
-      console.log('Update quantity - User ID:', cartForUpdate.userId);
-      console.log(
-        `Sending ${filteredCartItems.length} items to backend (filtered out deleted items)`
-      );
 
       // Update cart in backend
       this.cartService.updateCart(cartForUpdate).subscribe({

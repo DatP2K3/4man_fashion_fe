@@ -65,36 +65,49 @@
 
     <div class="location-fields">
       <p-iftalabel class="form-group">
-        <input
-          id="ward"
-          type="text"
-          pInputText
-          formControlName="ward"
-          autocomplete="off"
-        />
-        <label for="ward">Phường/ xã</label>
+        <p-dropdown
+          #provinceDropdown
+          formControlName="cityId"
+          [options]="provinces"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Chọn tỉnh/thành phố"
+          (onChange)="onProvinceChange($event)"
+          [style]="{ width: '100%' }"
+        ></p-dropdown>
+        <label for="city">Tỉnh/ thành phố</label>
       </p-iftalabel>
 
       <p-iftalabel class="form-group">
-        <input
-          id="district"
-          type="text"
-          pInputText
-          formControlName="district"
-          autocomplete="off"
-        />
+        <p-dropdown
+          #districtDropdown
+          formControlName="districtId"
+          [options]="filteredDistricts"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Chọn quận/huyện"
+          (onChange)="onDistrictChange($event)"
+          [style]="{ width: '100%' }"
+          [disabled]="!addressForm.get('cityId')?.value || isLoadingDistricts"
+          [loading]="isLoadingDistricts"
+        ></p-dropdown>
         <label for="district">Quận/ huyện</label>
       </p-iftalabel>
 
       <p-iftalabel class="form-group">
-        <input
-          id="city"
-          type="text"
-          pInputText
-          formControlName="city"
-          autocomplete="off"
-        />
-        <label for="city">Tỉnh/ thành phố</label>
+        <p-dropdown
+          #wardDropdown
+          formControlName="wardCode"
+          [options]="filteredWards"
+          optionLabel="wardName"
+          optionValue="wardCode"
+          placeholder="Chọn phường/xã"
+          (onChange)="onWardChange($event)"
+          [style]="{ width: '100%' }"
+          [disabled]="!addressForm.get('districtId')?.value || isLoadingWards"
+          [loading]="isLoadingWards"
+        ></p-dropdown>
+        <label for="ward">Phường/ xã</label>
       </p-iftalabel>
     </div>
 
@@ -117,6 +130,7 @@
       >
         Hủy
       </button>
+      <!-- Debug buttons removed -->
     </div>
   </form>
 </div>

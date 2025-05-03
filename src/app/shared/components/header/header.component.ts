@@ -216,7 +216,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (!this.cart || !this.cart.cartItems) {
       return [];
     }
-    console.log('Filtering cart items:', this.cart.cartItems);
     return this.cart.cartItems.filter((item) => !item.deleted);
   }
 
@@ -246,10 +245,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public removeCartItem(itemId: string): void {
     if (!itemId || !this.cart) return;
-
-    // Removed setting isCartLoading = true here to avoid UI flicker
-
-    console.log('Header - Removing item from cart with ID:', this.cart.id);
 
     // Find the item and mark it as deleted for local filtering
     const itemToDelete = this.cart.cartItems!.find(
