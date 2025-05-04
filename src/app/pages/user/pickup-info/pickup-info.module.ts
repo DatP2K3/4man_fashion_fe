@@ -15,6 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { PickupInfoComponent } from './pickup-info.component';
+import { OrderService } from '@app/core/services/Order.service';
 
 @NgModule({
   declarations: [PickupInfoComponent],
@@ -34,7 +35,7 @@ import { PickupInfoComponent } from './pickup-info.component';
     DropdownModule,
     RouterModule.forChild([{ path: '', component: PickupInfoComponent }]),
   ],
-  providers: [MessageService],
+  providers: [MessageService, OrderService],
   exports: [PickupInfoComponent],
 })
 export class PickupInfoModule {}

@@ -7,6 +7,8 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Cart, CartItem } from '@app/core/models/Cart.model';
 import { CartService } from '@app/core/services/Cart.service';
+import { OrderService } from '@app/core/services/Order.service';
+import { OrderFeeDTO } from '@app/core/models/Order.model';
 
 interface AddressOption {
   label: string;
@@ -30,8 +32,11 @@ export class PickupInfoComponent implements OnInit {
   // Cart data
   cart: Cart | null = null;
   cartItems: CartItem[] = [];
-  subtotal: number = 0; // Initialize to 0
-  shippingFee: number = 30000; // Default shipping fee
+
+  // Order fee data
+  orderFee: OrderFeeDTO | null = null;
+  subtotal: number = 0;
+  shippingFee: number = 30000; // Default value until we get data from API
 
   constructor(
     private appState: AppStateService,
@@ -39,7 +44,8 @@ export class PickupInfoComponent implements OnInit {
     private messageService: MessageService,
     private fb: FormBuilder,
     private router: Router,
-    private cartService: CartService // Add CartService
+    private cartService: CartService,
+    private orderService: OrderService
   ) {
     this.shippingForm = this.fb.group({
       recipientName: ['', Validators.required],
@@ -70,7 +76,6 @@ export class PickupInfoComponent implements OnInit {
       if (cart) {
         this.cart = cart;
         this.cartItems = cart.cartItems?.filter((item) => !item.deleted) || [];
-        this.calculateSubtotal();
       } else {
         // If not in state, load from backend
         this.loadCart();
@@ -122,6 +127,7 @@ export class PickupInfoComponent implements OnInit {
           if (address.defaultAddress) {
             this.selectedAddressId = address.id || null;
             this.populateFormWithAddress(address);
+            this.fetchOrderFees(address.id || '');
           }
         }
       });
@@ -130,6 +136,7 @@ export class PickupInfoComponent implements OnInit {
       if (!this.selectedAddressId && this.profile.listShippingAddress[0]) {
         this.selectedAddressId = this.profile.listShippingAddress[0].id || null;
         this.populateFormWithAddress(this.profile.listShippingAddress[0]);
+        this.fetchOrderFees(this.profile.listShippingAddress[0].id || '');
       }
     }
   }
@@ -140,6 +147,11 @@ export class PickupInfoComponent implements OnInit {
     if (selectedId === 'new') {
       // Clear form for new address
       this.shippingForm.reset();
+
+      // Reset fee information
+      this.orderFee = null;
+      this.subtotal = 0;
+      this.shippingFee = 30000;
     } else {
       // Find and populate form with selected address
       const selectedAddress = this.profile?.listShippingAddress?.find(
@@ -148,8 +160,34 @@ export class PickupInfoComponent implements OnInit {
 
       if (selectedAddress) {
         this.populateFormWithAddress(selectedAddress);
+        this.fetchOrderFees(selectedId);
       }
     }
+  }
+
+  fetchOrderFees(addressId: string): void {
+    if (!addressId || addressId === 'new') {
+      return;
+    }
+
+    this.orderService.calculateFee(addressId).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          this.orderFee = response.data;
+          this.subtotal = this.orderFee.totalPrice;
+          this.shippingFee = this.orderFee.shippingFee;
+          console.log('Order fees loaded:', this.orderFee);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching order fees:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to calculate order fees',
+        });
+      },
+    });
   }
 
   populateFormWithAddress(address: ShippingAddress): void {
@@ -172,13 +210,10 @@ export class PickupInfoComponent implements OnInit {
           // Update AppState only if cart is not null
           if (this.cart) {
             this.appState.updateCart(this.cart);
-
             // Make sure we filter out deleted items
             this.cartItems =
               this.cart.cartItems?.filter((item) => !item.deleted) || [];
             console.log('Loaded cart items:', this.cartItems);
-
-            this.calculateSubtotal();
           }
         }
       },
@@ -191,35 +226,6 @@ export class PickupInfoComponent implements OnInit {
         });
       },
     });
-  }
-
-  calculateSubtotal(): void {
-    this.subtotal = 0;
-    console.log('Calculating subtotal for items:', this.cartItems);
-
-    if (!this.cartItems || this.cartItems.length === 0) {
-      console.log('No cart items to calculate total');
-      return;
-    }
-
-    this.cartItems.forEach((item) => {
-      // Make sure we have valid values for price and quantity
-      const price =
-        item.discountPrice > 0
-          ? item.discountPrice
-          : item.originPrice > 0
-          ? item.originPrice
-          : 0;
-      const quantity = item.quantity || 1;
-
-      console.log(`Item: ${item.name}, Price: ${price}, Quantity: ${quantity}`);
-
-      if (price > 0) {
-        this.subtotal += price * quantity;
-      }
-    });
-
-    console.log('Final subtotal calculated:', this.subtotal);
   }
 
   formatCurrency(value: number): string {
