@@ -5,6 +5,7 @@ import { AppStateService } from '@app/shared/state/AppState.service';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ImageCacheService } from '@app/core/services/ImageCache.service';
+import { Router } from '@angular/router'; // Add Router import
 
 @Component({
   selector: 'app-cart',
@@ -22,7 +23,8 @@ export class CartComponent implements OnInit, OnDestroy {
     private cartService: CartService,
     private appState: AppStateService,
     private messageService: MessageService,
-    private imageCacheService: ImageCacheService // Replace FileUploadService with ImageCacheService
+    private imageCacheService: ImageCacheService,
+    private router: Router // Add Router to constructor
   ) {}
 
   ngOnInit(): void {
@@ -281,11 +283,18 @@ export class CartComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Update checkout method to navigate to pickup-info
   checkout(): void {
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Thông báo',
-      detail: 'Chức năng đặt hàng đang được phát triển',
-    });
+    if (!this.cart || this.displayedCartItems.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Thông báo',
+        detail: 'Giỏ hàng trống. Vui lòng thêm sản phẩm vào giỏ hàng.',
+      });
+      return;
+    }
+
+    // Navigate to pickup-info page
+    this.router.navigate(['/pickup-info']);
   }
 }

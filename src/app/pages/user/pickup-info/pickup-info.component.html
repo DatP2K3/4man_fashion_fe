@@ -126,11 +126,11 @@
           <!-- Order Summary -->
           <div class="col-lg-4 col-md-12">
             <div class="order-summary">
-              <h3>Tổng ({{ cartItems?.length || 3 }} sản phẩm)</h3>
+              <h3>Tổng ({{ cartItems.length || 0 }} sản phẩm)</h3>
 
               <div class="summary-item">
                 <span>Tổng giá sản phẩm</span>
-                <span>{{ formatCurrency(subtotal || 600000) }}</span>
+                <span>{{ formatCurrency(subtotal || 0) }}</span>
               </div>
 
               <div class="summary-item">
@@ -143,7 +143,7 @@
               <div class="summary-total">
                 <span>Total</span>
                 <span>{{
-                  formatCurrency((subtotal || 600000) + (shippingFee || 30000))
+                  formatCurrency((subtotal || 0) + (shippingFee || 30000))
                 }}</span>
               </div>
             </div>
