@@ -14,6 +14,7 @@ import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageService } from 'primeng/api';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { PickupInfoComponent } from './pickup-info.component';
 import { OrderService } from '@app/core/services/Order.service';
 
@@ -33,6 +34,7 @@ import { OrderService } from '@app/core/services/Order.service';
     ProgressBarModule,
     AvatarModule,
     DropdownModule,
+    RadioButtonModule,
     RouterModule.forChild([{ path: '', component: PickupInfoComponent }]),
   ],
   providers: [MessageService, OrderService],

@@ -6,6 +6,7 @@ import { ManageProductComponent } from './components/manage-product/manage-produ
 import { EditProductComponent } from './components/edit-product/edit-product.component';
 import { ManageBannerComponent } from './components/manage-banner/manage-banner.component';
 import { ManagePromotionComponent } from './components/manage-promotion/manage-promotion.component';
+import { ManageOrderComponent } from './components/manage-order/manage-order.component'; // Import ManageOrderComponent
 import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ManageShopAddressComponent } from './components/manage-shop-address/manage-shop-address.component';
@@ -34,7 +35,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { PaginatorModule } from 'primeng/paginator';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
-import { IftaLabelModule } from 'primeng/iftalabel'; // Add IftaLabelModule import
+import { IftaLabelModule } from 'primeng/iftalabel';
+import { TabMenuModule } from 'primeng/tabmenu'; // Add TabMenuModule for p-tabMenu
 
 const routes: Routes = [
   {
@@ -56,6 +58,7 @@ const routes: Routes = [
       },
       { path: 'manage-promotions/edit/:id', component: EditPromotionComponent },
       { path: 'manage-shop-address', component: ManageShopAddressComponent },
+      { path: 'manage-orders', component: ManageOrderComponent }, // Add route for ManageOrderComponent
     ],
   },
 ];
@@ -68,7 +71,8 @@ const routes: Routes = [
     ManageBannerComponent,
     ManagePromotionComponent,
     EditPromotionComponent,
-    ManageShopAddressComponent, // Add the component to declarations
+    ManageShopAddressComponent,
+    ManageOrderComponent, // Add ManageOrderComponent here
   ],
   imports: [
     CommonModule,
@@ -77,7 +81,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    // Make sure all these PrimeNG modules are imported
+    // PrimeNG modules
     TableModule,
     ButtonModule,
     InputTextModule,
@@ -99,7 +103,8 @@ const routes: Routes = [
     RadioButtonModule,
     PaginatorModule,
     AccordionModule,
-    IftaLabelModule, // Add IftaLabelModule for p-iftalabel component
+    IftaLabelModule,
+    TabMenuModule, // Add TabMenuModule for p-tabMenu component
   ],
   providers: [MessageService],
 })

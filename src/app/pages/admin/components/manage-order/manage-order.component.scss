@@ -1,0 +1,485 @@
+/* Main container */
+.order-management-container {
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+}
+
+/* Tab filter styling */
+.order-tabs {
+  margin-bottom: 1.5rem;
+
+  ::ng-deep .p-tabmenu {
+    .p-tabmenu-nav {
+      border-bottom: 1px solid #e0e0e0;
+
+      .p-tabmenuitem {
+        &.p-highlight .p-menuitem-link {
+          color: var(--primary-color);
+          border-color: var(--primary-color);
+        }
+
+        &:not(.p-highlight):not(.p-disabled):hover .p-menuitem-link {
+          color: var(--primary-color);
+          border-color: #e0e0e0;
+        }
+
+        .p-menuitem-link {
+          transition: all 0.2s;
+        }
+      }
+    }
+  }
+}
+
+/* Filter section */
+.filter-section {
+  margin-bottom: 1.5rem;
+  background-color: #f9fafc;
+  padding: 1.25rem;
+  border-radius: 6px;
+  border: 1px solid #eef2f7;
+
+  .date-filters {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+
+    .date-range {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #495057;
+        font-size: 1.4rem; // Increased font size for labels
+      }
+
+      ::ng-deep .p-calendar {
+        .p-inputtext {
+          width: 180px; // Increased from 160px
+          height: 40px; // Added height for larger input
+          font-size: 1.4rem; // Increased from 1rem to 1.4rem
+        }
+
+        .p-button {
+          color: var(--primary-color);
+        }
+
+        .p-datepicker-trigger {
+          height: 40px; // Added for consistent button height
+          width: 40px; // Added for larger clickable area
+
+          &:enabled:hover {
+            background: var(--primary-color);
+            color: #ffffff;
+          }
+        }
+      }
+    }
+
+    .filter-button {
+      align-self: flex-end;
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      height: 40px;
+      min-width: 100px;
+      font-size: 1.4rem; // Increased font size for filter button
+
+      &:enabled:hover {
+        background-color: var(--primary-color);
+        opacity: 0.9;
+        border-color: var(--primary-color);
+      }
+    }
+  }
+}
+
+.action-header-center {
+  text-align: center;
+}
+
+/* Order table styling */
+.order-table {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  ::ng-deep {
+    .p-datatable-header {
+      background-color: #ffffff;
+      padding: 1rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .p-datatable-thead > tr > th {
+      background-color: #f9fafc;
+      color: #495057;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border-color: #eef2f7;
+
+      &:last-child {
+        text-align: center; /* Center align the "Hành động" column header */
+      }
+    }
+
+    .p-datatable-tbody > tr {
+      &:hover {
+        background-color: #f5f8ff;
+      }
+
+      > td {
+        padding: 1rem 1rem; // Increased padding (was 0.75rem)
+        border-color: #eef2f7;
+        height: 60px; // Added explicit height for larger rows
+        vertical-align: middle; // Ensure content is vertically centered
+      }
+    }
+
+    .p-paginator {
+      padding: 0.75rem;
+      background-color: #ffffff;
+      border-top: 1px solid #eef2f7;
+
+      .p-paginator-current {
+        color: #6c757d;
+      }
+
+      .p-paginator-page.p-highlight {
+        background: var(--primary-color);
+        color: #ffffff;
+      }
+    }
+  }
+
+  .cancelled-order {
+    background-color: #fafafa;
+    color: #6c757d;
+  }
+
+  .order-status {
+    display: inline-block;
+    padding: 0.35rem 0.7rem;
+    border-radius: 20px;
+    font-size: 1rem; // Increased from 0.875rem for consistency
+    font-weight: 500;
+    text-align: center;
+    min-width: 110px;
+  }
+
+  .status-confirmed {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+  }
+
+  .status-waiting {
+    background-color: #fff8e1;
+    color: #ff8f00;
+  }
+
+  .status-transit {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .status-delivered {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .status-cancelled {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+
+  .status-failed {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+
+  .status-unpaid {
+    background-color: #fff8e1;
+    color: #ff8f00;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem; // Increased from 0.5rem for more spacing between buttons
+    flex-wrap: wrap;
+    justify-content: center; /* Center the action buttons */
+    align-items: center;
+
+    ::ng-deep {
+      .view-action {
+        background-color: #0288d1 !important; // Vibrant blue color
+        color: #ffffff !important;
+        border: 1px solid #0277bd !important;
+        font-size: 1.4rem;
+
+        &:hover {
+          background-color: #01579b !important;
+          box-shadow: 0 3px 8px rgba(2, 136, 209, 0.3);
+          transform: translateY(-2px);
+        }
+      }
+
+      .print-action {
+        background-color: #00897b !important; // Teal/green color
+        color: #ffffff !important;
+        border: 1px solid #00796b !important;
+        font-size: 1.4rem;
+
+        &:hover {
+          background-color: #00695c !important;
+          box-shadow: 0 3px 8px rgba(0, 137, 123, 0.3);
+          transform: translateY(-2px);
+        }
+      }
+
+      .cancel-action {
+        background-color: #e53935 !important; // Brighter red color
+        color: #ffffff !important;
+        border: 1px solid #d32f2f !important;
+
+        &:hover {
+          background-color: #c62828 !important;
+          box-shadow: 0 3px 8px rgba(229, 57, 53, 0.3);
+          transform: translateY(-2px);
+        }
+      }
+
+      .shipping-action {
+        background-color: #8e24aa !important; // Rich purple color
+        color: #ffffff !important;
+        border: 1px solid #7b1fa2 !important;
+        font-size: 1.4rem;
+
+        &:hover {
+          background-color: #6a1b9a !important;
+          box-shadow: 0 3px 8px rgba(142, 36, 170, 0.3);
+          transform: translateY(-2px);
+        }
+      }
+
+      // More specific selectors to ensure override
+      .p-button.p-button-sm.view-action {
+        background-color: #0288d1 !important;
+        color: #ffffff !important;
+        border-color: #0277bd !important;
+        font-size: 1.4rem;
+
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: #01579b !important;
+          box-shadow: 0 3px 8px rgba(2, 136, 209, 0.3) !important;
+        }
+      }
+
+      .p-button.p-button-sm.print-action {
+        background-color: #00897b !important;
+        color: #ffffff !important;
+        border-color: #00796b !important;
+        font-size: 1.4rem;
+
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: #00695c !important;
+          box-shadow: 0 3px 8px rgba(0, 137, 123, 0.3) !important;
+        }
+      }
+
+      .p-button.p-button-sm.cancel-action {
+        background-color: #e53935 !important;
+        color: #ffffff !important;
+        border-color: #d32f2f !important;
+        font-size: 1.4rem;
+
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: #c62828 !important;
+          box-shadow: 0 3px 8px rgba(229, 57, 53, 0.3) !important;
+        }
+      }
+
+      .p-button.p-button-sm.shipping-action {
+        background-color: #8e24aa !important;
+        color: #ffffff !important;
+        border-color: #7b1fa2 !important;
+        font-size: 1.4rem !important;
+
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: #6a1b9a !important;
+          box-shadow: 0 3px 8px rgba(142, 36, 170, 0.3) !important;
+        }
+      }
+
+      // Apply transitions to all button types
+      .p-button {
+        transition: all 0.2s ease;
+        margin: 0.5rem !important; // Increased from 0.3rem
+        min-width: 100px !important; // Increased from 80px to accommodate larger text
+        font-weight: 600;
+        font-size: 1.4rem !important; // Increased from current size to 1.4rem
+        text-align: center;
+        padding: 0.7rem 1rem !important; // Increased padding for larger buttons
+        border-radius: 6px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
+/* Order detail dialog */
+.order-details {
+  h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 0.75rem;
+  }
+
+  .info-row {
+    display: flex;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+
+    .label {
+      font-weight: 500;
+      width: 180px;
+      flex-shrink: 0;
+      color: #495057;
+    }
+
+    .value {
+      flex-grow: 1;
+
+      &.status {
+        padding: 0.25rem 0.5rem;
+        border-radius: 20px;
+        display: inline-block;
+      }
+    }
+  }
+
+  .order-info-section,
+  .customer-info-section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f9fafc;
+    border-radius: 6px;
+  }
+
+  .order-items-section {
+    .order-items-table {
+      margin-bottom: 1rem;
+
+      ::ng-deep {
+        th {
+          background-color: #f9fafc;
+          font-weight: 600;
+        }
+      }
+
+      .text-right {
+        text-align: right;
+      }
+
+      .total-row {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+/* Override PrimeNG primary color */
+:host ::ng-deep {
+  .p-button.p-button-primary,
+  .p-buttonset.p-button-primary > .p-button,
+  .p-splitbutton.p-button-primary > .p-button {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+
+    &:enabled:hover {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      opacity: 0.9;
+    }
+  }
+
+  .p-button.p-button-outlined {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+
+  .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    background: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .p-dialog {
+    .p-dialog-header {
+      background-color: #f9fafc;
+      color: var(--primary-color);
+      font-weight: 600;
+      padding: 1.25rem;
+    }
+  }
+
+  .p-toast .p-toast-message {
+    &.p-toast-message-success {
+      border-left-color: var(--primary-color);
+      .p-toast-message-icon {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  // Specifically target our custom action buttons
+  .action-buttons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    .p-button.view-action {
+      background-color: #0288d1 !important;
+      border-color: #0277bd !important;
+    }
+
+    .p-button.print-action {
+      background-color: #00897b !important;
+      border-color: #00796b !important;
+    }
+
+    .p-button.cancel-action {
+      background-color: #e53935 !important;
+      border-color: #d32f2f !important;
+    }
+
+    .p-button.shipping-action {
+      background-color: #8e24aa !important;
+      border-color: #7b1fa2 !important;
+    }
+  }
+}

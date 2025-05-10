@@ -8,7 +8,12 @@ import { Router } from '@angular/router';
 import { Cart, CartItem } from '@app/core/models/Cart.model';
 import { CartService } from '@app/core/services/Cart.service';
 import { OrderService } from '@app/core/services/Order.service';
-import { OrderFeeDTO } from '@app/core/models/Order.model';
+import {
+  OrderFeeDTO,
+  CreateOrderRequest,
+  OrderDTO,
+  PaymentMethod,
+} from '@app/core/models/Order.model';
 
 interface AddressOption {
   label: string;
@@ -25,6 +30,7 @@ export class PickupInfoComponent implements OnInit {
   profile: Profile | null = null;
   selectedAddress: ShippingAddress | null = null;
   selectedAddressId: string | null = null;
+  selectedPaymentMethod: PaymentMethod = PaymentMethod.COD; // Default payment method
   loading: boolean = true;
   shippingForm: FormGroup;
   addressOptions: AddressOption[] = [];
@@ -55,6 +61,7 @@ export class PickupInfoComponent implements OnInit {
       ward: ['', Validators.required],
       district: ['', Validators.required],
       city: ['', Validators.required],
+      note: [''], // Add note field
     });
   }
 
@@ -259,13 +266,16 @@ export class PickupInfoComponent implements OnInit {
         })
         .subscribe({
           next: (response) => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Address Saved',
-              detail: 'New shipping address saved successfully',
-            });
-            // Navigate to payment or confirmation page
-            // this.router.navigate(['/checkout/payment']);
+            if (response && response.data) {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Address Saved',
+                detail: 'New shipping address saved successfully',
+              });
+
+              // Create order with the newly created address
+              this.createOrder(response.data.id || '');
+            }
           },
           error: (error) => {
             console.error('Error saving address:', error);
@@ -278,12 +288,55 @@ export class PickupInfoComponent implements OnInit {
         });
     } else {
       // Proceed with existing address
-      // this.router.navigate(['/checkout/payment']);
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Address Selected',
-        detail: 'Proceeding to payment',
-      });
+      this.createOrder(this.selectedAddressId || '');
     }
+  }
+
+  private createOrder(addressId: string): void {
+    // Prepare the order request
+    const orderRequest: CreateOrderRequest = {
+      toAddressId: addressId,
+      paymentMethod: this.selectedPaymentMethod,
+      note: this.shippingForm.get('note')?.value || '',
+    };
+
+    this.orderService.createOrder(orderRequest).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Đặt hàng thành công',
+            detail: 'Đơn hàng của bạn đã được tạo thành công',
+          });
+
+          // Different handling based on payment method
+          if (response.data.paymentMethod === PaymentMethod.COD) {
+            // For COD, go directly to success page with order data
+            this.router.navigate(['/order-successed'], {
+              state: { order: response.data },
+            });
+          } else if (
+            response.data.paymentMethod === PaymentMethod.ONLINE &&
+            response.data.paymentUrl
+          ) {
+            // For online payment, redirect to VNPay
+            window.location.href = response.data.paymentUrl;
+          } else {
+            // Fallback in case no payment URL is provided
+            this.router.navigate(['/order-successed'], {
+              queryParams: { orderCode: response.data.orderCode },
+            });
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error creating order:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Lỗi',
+          detail: 'Không thể tạo đơn hàng. Vui lòng thử lại.',
+        });
+      },
+    });
   }
 }

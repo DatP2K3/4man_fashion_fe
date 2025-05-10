@@ -24,4 +24,6 @@ export class CartService {
   updateCart(cart: Cart): Observable<any> {
     return this.http.put<Cart>(`${this.apiUrl}/carts`, cart);
   }
+
+  // Removed searchOrders method as it belongs in OrderService
 }

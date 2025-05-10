@@ -40,6 +40,13 @@ const routes: Routes = [
         (m) => m.PickupInfoModule
       ),
   },
+  {
+    path: 'order-successed',
+    loadChildren: () =>
+      import('./pages/user/order-successed/order-successed.module').then(
+        (m) => m.OrderSuccessedModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -1,0 +1,267 @@
+<div class="order-management-container">
+  <h2>Quản lý đơn hàng</h2>
+
+  <!-- Tab filter -->
+  <div class="order-tabs">
+    <p-tabMenu [model]="orderStatusTabs" [activeItem]="activeTab"></p-tabMenu>
+  </div>
+
+  <!-- Filter controls -->
+  <div class="filter-section">
+    <div class="date-filters">
+      <div class="date-range">
+        <label>Từ ngày</label>
+        <p-calendar
+          [(ngModel)]="fromDate"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          inputId="fromDate"
+          [monthNavigator]="true"
+          [yearNavigator]="true"
+        >
+        </p-calendar>
+      </div>
+
+      <div class="date-range">
+        <label>Đến ngày</label>
+        <p-calendar
+          [(ngModel)]="toDate"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          inputId="toDate"
+          [monthNavigator]="true"
+          [yearNavigator]="true"
+        >
+        </p-calendar>
+      </div>
+
+      <button
+        pButton
+        type="button"
+        label="Lọc"
+        (click)="filterOrders()"
+        class="filter-button"
+      ></button>
+    </div>
+  </div>
+
+  <!-- Orders table -->
+  <p-table
+    [value]="orders"
+    [paginator]="true"
+    [rows]="rowsPerPage"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    [rowHover]="true"
+    styleClass="order-table"
+    (onPage)="onPageChange($event)"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Mã đơn hàng</th>
+        <th>Khách hàng</th>
+        <th>Trạng thái đơn hàng</th>
+        <th>Trạng thái in</th>
+        <th class="action-header-center">Tổng</th>
+        <th class="action-header-center">Hành động</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-order>
+      <tr [ngClass]="{ 'cancelled-order': order.orderStatus === 'CANCELLED' }">
+        <td>{{ order.orderCode }}</td>
+        <td>{{ order.toName }}</td>
+        <td>
+          <span
+            class="order-status"
+            [ngClass]="getOrderStatusClass(order.orderStatus)"
+          >
+            {{ translateOrderStatus(order.orderStatus) }}
+          </span>
+        </td>
+        <td>
+          <span>{{ getPrintStatus(order) }}</span>
+        </td>
+        <td>{{ formatCurrency(order.totalPrice + order.shipmentFee) }}</td>
+        <td>
+          <div class="action-buttons">
+            <button
+              *ngIf="canArrangeShipping(order)"
+              pButton
+              type="button"
+              class="shipping-action"
+              style="font-size: 1.4rem; padding: 0.7rem 1rem"
+              (click)="arrangeShipping(order)"
+              label="Sắp xếp vận chuyển"
+            ></button>
+
+            <button
+              pButton
+              type="button"
+              class="view-action"
+              style="font-size: 1.4rem; padding: 0.7rem 1rem"
+              (click)="viewOrder(order)"
+              label="Xem"
+            ></button>
+
+            <button
+              *ngIf="canPrint(order)"
+              pButton
+              type="button"
+              class="print-action"
+              style="font-size: 1.4rem; padding: 0.7rem 1rem"
+              (click)="printOrder(order)"
+              label="In"
+            ></button>
+
+            <button
+              *ngIf="canCancel(order)"
+              pButton
+              type="button"
+              class="cancel-action"
+              style="font-size: 1.4rem; padding: 0.7rem 1rem"
+              (click)="confirmCancelOrder(order)"
+              label="Xoá"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center">Không tìm thấy đơn hàng nào</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="paginatorleft">
+      <p>Tổng số: {{ totalRecords }} đơn hàng</p>
+    </ng-template>
+
+    <!-- Removed the paginatorright template with the dropdown -->
+  </p-table>
+</div>
+
+<!-- Order detail dialog -->
+<p-dialog
+  [(visible)]="displayOrderDetail"
+  [style]="{ width: '90%', maxWidth: '800px' }"
+  [header]="'Chi tiết đơn hàng ' + (selectedOrder?.orderCode || '')"
+  [modal]="true"
+>
+  <div *ngIf="selectedOrder" class="order-details">
+    <div class="order-info-section">
+      <h3>Thông tin đơn hàng</h3>
+      <div class="info-row">
+        <span class="label">Mã đơn hàng:</span>
+        <span class="value">{{ selectedOrder.orderCode }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Trạng thái:</span>
+        <span
+          class="value status"
+          [ngClass]="getOrderStatusClass(selectedOrder.orderStatus)"
+        >
+          {{ translateOrderStatus(selectedOrder.orderStatus) }}
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="label">Phương thức thanh toán:</span>
+        <span class="value">{{
+          translatePaymentMethod(selectedOrder.paymentMethod)
+        }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Trạng thái thanh toán:</span>
+        <span class="value">{{
+          translatePaymentStatus(selectedOrder.paymentStatus)
+        }}</span>
+      </div>
+      <div class="info-row" *ngIf="selectedOrder.note">
+        <span class="label">Ghi chú:</span>
+        <span class="value">{{ selectedOrder.note }}</span>
+      </div>
+    </div>
+
+    <div class="customer-info-section">
+      <h3>Thông tin khách hàng</h3>
+      <div class="info-row">
+        <span class="label">Tên:</span>
+        <span class="value">{{ selectedOrder.toName }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Số điện thoại:</span>
+        <span class="value">{{ selectedOrder.toPhoneNumber }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Địa chỉ:</span>
+        <span class="value">
+          {{ selectedOrder.toAddressLine1 }}
+          {{
+            selectedOrder.toAddressLine2
+              ? ", " + selectedOrder.toAddressLine2
+              : ""
+          }}, {{ selectedOrder.toWard }}, {{ selectedOrder.toDistrict }},
+          {{ selectedOrder.toCity }}
+        </span>
+      </div>
+    </div>
+
+    <div class="order-items-section">
+      <h3>Sản phẩm</h3>
+      <p-table
+        [value]="selectedOrder.orderItems"
+        styleClass="order-items-table"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td>{{ getProductName(item.productId, item.productVariantId) }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ formatCurrency(item.price) }}</td>
+            <td>{{ formatCurrency(item.price * item.quantity) }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="3" class="text-right">Tổng tiền hàng:</td>
+            <td>{{ formatCurrency(selectedOrder.totalPrice) }}</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-right">Phí vận chuyển:</td>
+            <td>{{ formatCurrency(selectedOrder.shipmentFee) }}</td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="3" class="text-right">Tổng thanh toán:</td>
+            <td>
+              {{
+                formatCurrency(
+                  selectedOrder.totalPrice + selectedOrder.shipmentFee
+                )
+              }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Confirmation dialog -->
+<p-confirmDialog
+  [style]="{ width: '450px' }"
+  acceptLabel="Có"
+  rejectLabel="Không"
+  acceptButtonStyleClass="p-button-primary"
+  rejectButtonStyleClass="p-button-text"
+></p-confirmDialog>
+
+<p-toast></p-toast>

@@ -116,6 +116,54 @@
                   </div>
                 </div>
 
+                <div class="form-group">
+                  <label for="note">Ghi chú</label>
+                  <input
+                    type="text"
+                    id="note"
+                    formControlName="note"
+                    class="form-control"
+                    placeholder="Ghi chú cho đơn hàng (tùy chọn)"
+                  />
+                </div>
+
+                <!-- Payment Method Selection -->
+                <div class="form-group payment-method">
+                  <label>Phương thức thanh toán</label>
+                  <div class="payment-options">
+                    <div class="payment-option">
+                      <p-radioButton
+                        name="paymentMethod"
+                        value="COD"
+                        [(ngModel)]="selectedPaymentMethod"
+                        [ngModelOptions]="{ standalone: true }"
+                        inputId="cod"
+                      >
+                      </p-radioButton>
+                      <label for="cod" class="payment-label">
+                        <span class="payment-name"
+                          >Thanh toán khi nhận hàng (COD)</span
+                        >
+                      </label>
+                    </div>
+                    <div class="payment-option">
+                      <p-radioButton
+                        name="paymentMethod"
+                        value="ONLINE"
+                        [(ngModel)]="selectedPaymentMethod"
+                        [ngModelOptions]="{ standalone: true }"
+                        inputId="online"
+                      >
+                      </p-radioButton>
+                      <label for="online" class="payment-label">
+                        <span class="payment-name"
+                          >Thanh toán trực tuyến (ONLINE)</span
+                        >
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="form-actions">
                   <button type="submit" class="continue-btn">Tiếp tục</button>
                 </div>

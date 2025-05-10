@@ -187,6 +187,40 @@
         }
       }
     }
+
+    .payment-method {
+      .payment-options {
+        margin-top: 10px;
+      }
+
+      .payment-option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: all 0.2s;
+
+        &:hover {
+          background-color: rgba(var(--primary-color-rgb), 0.05);
+        }
+      }
+
+      .payment-label {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+        margin-bottom: 0;
+        cursor: pointer;
+      }
+
+      .payment-name {
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: var(--primary-text-color);
+      }
+    }
   }
 
   .order-summary {
@@ -260,6 +294,61 @@
 
     .p-dropdown-trigger {
       padding: 0 15px;
+    }
+  }
+
+  .payment-option {
+    .p-radiobutton {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .p-radiobutton {
+    transition: none !important;
+    transform: none !important;
+
+    .p-radiobutton-box {
+      transition: none !important;
+      transform: none !important;
+
+      &:focus,
+      &:active,
+      &:hover {
+        box-shadow: none !important;
+        outline: none !important;
+        transform: none !important;
+        animation: none !important;
+      }
+
+      .p-radiobutton-icon {
+        transition: none !important;
+        transform: none !important;
+        animation: none !important;
+      }
+    }
+
+    &:focus {
+      outline: none !important;
+    }
+  }
+
+  .p-radiobutton-box {
+    &:active,
+    &:focus {
+      box-shadow: none !important;
+      outline: none !important;
+    }
+  }
+
+  .p-radiobutton-checked {
+    .p-radiobutton-box {
+      border-color: var(--primary-color) !important;
+      background: var(--primary-color) !important;
+
+      .p-radiobutton-icon {
+        background-color: #fff !important;
+      }
     }
   }
 }

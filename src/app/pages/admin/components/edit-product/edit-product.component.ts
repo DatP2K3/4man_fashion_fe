@@ -260,7 +260,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    const maxSize = 6 * 1024 * 1024; // 5MB in bytes
     if (file.size > maxSize) {
       this.formErrors.images = 'Kích thước tệp không được vượt quá 5MB';
       return false;
