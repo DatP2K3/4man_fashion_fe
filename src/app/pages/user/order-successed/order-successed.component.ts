@@ -38,9 +38,7 @@ export class OrderSuccessedComponent implements OnInit {
   ngOnInit(): void {
     // Xử lý các tham số URL trước
     const urlParams = new URLSearchParams(window.location.search);
-    const txnRef = urlParams.get('vnp_TxnRef');
-    console.log('Mã đơn hàng từ VNPay:', txnRef);
-    this.orderCode = txnRef || '';
+    this.orderCode = urlParams.get('orderCode') || '';
 
     if (this.orderCode) {
       // Nếu có mã từ VNPay hoặc query param

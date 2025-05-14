@@ -1,0 +1,214 @@
+<div class="container-fluid">
+  <!-- Header - Fixed -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+
+  <!-- Main Content -->
+  <main class="row">
+    <div class="col-12">
+      <!-- Hero Banner -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <h1 class="hero-title">Câu Chuyện Về 4ManFashion</h1>
+          <p class="hero-subtitle">
+            Hành trình kiến tạo phong cách thời trang nam Việt
+          </p>
+        </div>
+      </section>
+
+      <!-- Brand Story Section -->
+      <section class="story-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <h2 class="section-title">Khởi Nguồn Câu Chuyện</h2>
+              <p class="section-text">
+                4ManFashion được thành lập vào năm 2019, bởi một nhóm những
+                người trẻ đam mê thời trang và khát khao mang đến cho nam giới
+                Việt Nam những sản phẩm chất lượng cao với giá cả hợp lý.
+              </p>
+              <p class="section-text">
+                Chúng tôi tin rằng mỗi người đàn ông đều xứng đáng có được những
+                sản phẩm thời trang tốt nhất, được thiết kế phù hợp với vóc dáng
+                người Việt, làm từ những chất liệu cao cấp và bền bỉ theo thời
+                gian.
+              </p>
+              <p class="section-text">
+                Với slogan "Tự tin - Phong cách - Đẳng cấp", chúng tôi không chỉ
+                cung cấp quần áo mà còn mang đến một lối sống, một thái độ sống
+                tích cực cho những người đàn ông hiện đại.
+              </p>
+            </div>
+            <div class="col-md-6">
+              <div class="story-image">
+                <img src="assets/images/about-us.jpg" alt="4ManFashion Story" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Our Values Section -->
+      <section class="values-section">
+        <div class="container">
+          <h2 class="section-title text-center">Giá Trị Cốt Lõi</h2>
+          <div class="row">
+            <div *ngFor="let value of values" class="col-md-3 col-sm-6">
+              <div class="value-card">
+                <div class="value-icon">
+                  <i [class]="value.icon"></i>
+                </div>
+                <h3 class="value-title">{{ value.title }}</h3>
+                <p class="value-description">{{ value.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Milestone Section -->
+      <section class="milestone-section">
+        <div class="container">
+          <h2 class="section-title text-center">Hành Trình Phát Triển</h2>
+          <div class="timeline">
+            <div
+              *ngFor="let milestone of milestones; let i = index"
+              class="timeline-item"
+              [ngClass]="{ right: i % 2 !== 0 }"
+            >
+              <div class="timeline-badge">{{ milestone.year }}</div>
+              <div class="timeline-panel">
+                <div class="timeline-content">
+                  <h3 class="timeline-title">{{ milestone.title }}</h3>
+                  <p class="timeline-text">{{ milestone.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manufacturing Process -->
+      <section class="process-section">
+        <div class="container">
+          <h2 class="section-title text-center">Quy Trình Sản Xuất</h2>
+          <div class="process-steps">
+            <div class="step">
+              <div class="step-number">01</div>
+              <h3 class="step-title">Thiết Kế</h3>
+              <p class="step-description">
+                Đội ngũ thiết kế chuyên nghiệp của chúng tôi nghiên cứu xu hướng
+                và tạo ra những mẫu phù hợp với người Việt
+              </p>
+            </div>
+            <div class="step">
+              <div class="step-number">02</div>
+              <h3 class="step-title">Chọn Nguyên Liệu</h3>
+              <p class="step-description">
+                Lựa chọn kỹ lưỡng những chất liệu cao cấp, bền đẹp và thân thiện
+                với môi trường
+              </p>
+            </div>
+            <div class="step">
+              <div class="step-number">03</div>
+              <h3 class="step-title">Sản Xuất</h3>
+              <p class="step-description">
+                Sản xuất với quy trình nghiêm ngặt, đảm bảo chất lượng của từng
+                đường kim mũi chỉ
+              </p>
+            </div>
+            <div class="step">
+              <div class="step-number">04</div>
+              <h3 class="step-title">Kiểm Tra Chất Lượng</h3>
+              <p class="step-description">
+                Mỗi sản phẩm đều trải qua nhiều bước kiểm tra trước khi đến tay
+                khách hàng
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Team Section -->
+      <section class="team-section">
+        <div class="container">
+          <h2 class="section-title text-center">Đội Ngũ Sáng Lập</h2>
+          <div class="row">
+            <div *ngFor="let member of team" class="col-md-4">
+              <div class="team-card">
+                <div class="team-image">
+                  <img [src]="member.image" [alt]="member.name" />
+                </div>
+                <h3 class="team-name">{{ member.name }}</h3>
+                <p class="team-position">{{ member.position }}</p>
+                <p class="team-bio">{{ member.bio }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Social Responsibility -->
+      <section class="social-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <h2 class="section-title">Trách Nhiệm Xã Hội</h2>
+              <p class="section-text">
+                Tại 4ManFashion, chúng tôi tin rằng thành công trong kinh doanh
+                phải đi đôi với trách nhiệm đối với cộng đồng và môi trường.
+              </p>
+              <p class="section-text">
+                Chúng tôi cam kết sử dụng các vật liệu bền vững, giảm thiểu chất
+                thải trong quá trình sản xuất và đóng góp vào các hoạt động xã
+                hội thông qua nhiều dự án khác nhau.
+              </p>
+              <div class="initiatives">
+                <div class="initiative">
+                  <h4>Dự án "Áo Ấm Cho Em"</h4>
+                  <p>Mang áo ấm đến với trẻ em vùng cao mỗi mùa đông về</p>
+                </div>
+                <div class="initiative">
+                  <h4>Chương Trình "Một Cây Xanh"</h4>
+                  <p>Trồng một cây xanh cho mỗi 100 sản phẩm được bán ra</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="social-image">
+                <img
+                  src="assets/images/brand-story/social-responsibility.jpg"
+                  alt="Trách nhiệm xã hội"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Call to Action -->
+      <section class="cta-section">
+        <div class="container">
+          <h2 class="cta-title">Trở Thành Một Phần Của Câu Chuyện</h2>
+          <p class="cta-text">
+            Cùng 4ManFashion kiến tạo phong cách thời trang nam chất lượng cao,
+            bền vững và đậm chất Việt
+          </p>
+          <button
+            pButton
+            type="button"
+            label="Khám Phá Bộ Sưu Tập"
+            class="p-button-lg"
+            routerLink="/products"
+          ></button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="row">
+    <app-footer></app-footer>
+  </footer>
+</div>

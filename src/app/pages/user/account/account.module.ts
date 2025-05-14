@@ -15,6 +15,13 @@ import { AddressComponent } from './components/address/address.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { ManageOrderOfMeComponent } from './components/manage-order-of-me/manage-order-of-me.component';
+// Import additional PrimeNG modules
+import { TableModule } from 'primeng/table';
+import { CalendarModule } from 'primeng/calendar';
+import { PaginatorModule } from 'primeng/paginator';
+import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip'; // Import TooltipModule
 
 const routes: Routes = [
   {
@@ -27,12 +34,18 @@ const routes: Routes = [
       { path: 'orders', component: InfoComponent },
       { path: '4mancash-point', component: InfoComponent },
       { path: 'faq', component: InfoComponent },
+      { path: 'manage-order-of-me', component: ManageOrderOfMeComponent },
     ],
   },
 ];
 
 @NgModule({
-  declarations: [AccountComponent, InfoComponent, AddressComponent],
+  declarations: [
+    AccountComponent,
+    InfoComponent,
+    AddressComponent,
+    ManageOrderOfMeComponent,
+  ],
   imports: [
     RouterModule,
     RouterModule.forChild(routes),
@@ -45,12 +58,16 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     ToastModule,
-    IftaLabelModule, // Add this for p-iftalabel component
-    DatePickerModule, // Add this for p-datepicker component
-    DropdownModule, // Add this if using dropdowns in address component
+    IftaLabelModule,
+    DatePickerModule,
+    DropdownModule,
+    // Add PrimeNG modules
+    TableModule,
+    CalendarModule,
+    PaginatorModule,
+    InputTextModule,
+    TooltipModule, // Add TooltipModule
   ],
-  providers: [
-    MessageService, // Add this for toast messages
-  ],
+  providers: [MessageService],
 })
 export class AccountModule {}

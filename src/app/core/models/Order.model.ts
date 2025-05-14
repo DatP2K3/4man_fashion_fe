@@ -91,6 +91,9 @@ export interface OrderDTO {
   paymentUrl: string;
   ghnorderCode: string;
   orderItems: OrderItemDTO[];
+  createdAt: Date;
+  updatedAt: Date;
+  updateBy: string;
 }
 
 export interface CreateOrderRequest {
@@ -114,4 +117,8 @@ export interface SearchOrderRequest {
   orderStatus?: OrderStatus | null; // Changed from status to orderStatus
   pageIndex: number;
   pageSize: number;
+}
+
+export interface CancelOrderRequest {
+  orderIds: string[]; // UUID là string
 }

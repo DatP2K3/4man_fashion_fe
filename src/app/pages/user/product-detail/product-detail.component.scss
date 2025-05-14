@@ -214,7 +214,7 @@ footer {
 .product-detail-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 15rem;
   padding: 2rem 0;
   margin: 0 20px;
 }
@@ -222,9 +222,13 @@ footer {
 .product-images-section {
   flex: 1;
   min-width: 300px;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 
   .product-main-image {
-    width: 100%;
+    flex: 1;
+    // flex: 1 đã tự động tính toán không gian còn lại
     margin-bottom: 1rem;
 
     img {
@@ -237,11 +241,14 @@ footer {
 
   .product-thumbnails {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
+    width: 90px; // Tăng từ 80px lên 90px
+    flex-shrink: 0;
 
     .thumbnail {
-      width: 80px;
-      height: 80px;
+      width: 90px; // Tăng từ 80px lên 90px
+      height: 90px; // Tăng từ 80px lên 90px
       border: 1px solid #ddd;
       cursor: pointer;
       overflow: hidden;
@@ -366,7 +373,7 @@ footer {
         border: 1px solid #ddd;
         border-left: none;
         border-right: none;
-        font-size: 1rem;
+        font-size: 1.4rem;
 
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
@@ -433,7 +440,7 @@ footer {
 
       tr {
         td {
-          padding: 0.5rem;
+          padding: 1rem;
 
           &:first-child {
             font-weight: 500;
@@ -451,7 +458,7 @@ footer {
 
 .product-description {
   margin: 2rem 20px;
-  padding: 1.5rem;
+  padding: 30px 60px;
   background-color: #f9f9f9;
 
   h2 {

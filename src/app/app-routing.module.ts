@@ -47,6 +47,13 @@ const routes: Routes = [
         (m) => m.OrderSuccessedModule
       ),
   },
+  {
+    path: 'brand-story',
+    loadChildren: () =>
+      import('./pages/user/brand-story/brand-story.module').then(
+        (m) => m.BrandStoryModule
+      ),
+  },
 ];
 
 @NgModule({

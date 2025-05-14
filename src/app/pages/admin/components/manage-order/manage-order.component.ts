@@ -9,6 +9,7 @@ import {
   PrintOrCancelGHNOrderRequest,
   CreateShippingOrderRequest,
   SearchOrderRequest,
+  CancelOrderRequest,
 } from 'src/app/core/models/Order.model';
 import { MenuItem } from 'primeng/api';
 import { ProductService } from 'src/app/core/services/Product.service';
@@ -328,14 +329,38 @@ export class ManageOrderComponent implements OnInit {
   }
 
   cancelOrder(order: OrderDTO) {
-    // Implement cancel order logic here
-    order.orderStatus = OrderStatus.CANCELLED;
+    // Create cancel order request
+    const request: CancelOrderRequest = {
+      orderIds: [order.id],
+    };
 
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Thành công',
-      detail: 'Đã hủy đơn hàng ' + order.orderCode,
-    });
+    this.loading = true;
+    this.orderService
+      .deleteOrder(request)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (response) => {
+          // Update local state
+          order.orderStatus = OrderStatus.CANCELLED;
+
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Thành công',
+            detail: 'Đã hủy đơn hàng ' + order.orderCode,
+          });
+
+          // Reload orders to get updated data
+          this.loadOrders();
+        },
+        error: (error) => {
+          console.error('Error cancelling order:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Lỗi',
+            detail: 'Không thể hủy đơn hàng ' + order.orderCode,
+          });
+        },
+      });
   }
 
   arrangeShipping(order: OrderDTO) {

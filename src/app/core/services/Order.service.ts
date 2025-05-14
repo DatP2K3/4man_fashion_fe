@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiResponse } from '../models/ApiResponse.model';
 import {
+  CancelOrderRequest,
   CreateOrderRequest,
   CreateShippingOrderRequest,
   OrderDTO,
@@ -63,5 +64,16 @@ export class OrderService {
       `${this.apiUrl}/orders/search`,
       { params }
     );
+  }
+
+  deleteOrder(request: CancelOrderRequest): Observable<ApiResponse<void>> {
+    const url = `${this.apiUrl}/orders`;
+    return this.http.request<ApiResponse<void>>('delete', url, {
+      body: request,
+    });
+  }
+
+  getOrders(): Observable<ApiResponse<OrderDTO[]>> {
+    return this.http.get<ApiResponse<OrderDTO[]>>(`${this.apiUrl}/orders`);
   }
 }

@@ -16,11 +16,7 @@
         *ngIf="!loading && product; else loadingTemplate"
       >
         <div class="product-images-section">
-          <!-- Main product image -->
-          <div class="product-main-image">
-            <img [src]="selectedImage" alt="{{ product.name }}" />
-          </div>
-          <!-- Thumbnail gallery -->
+          <!-- Thumbnail gallery (moved before main image) -->
           <div class="product-thumbnails">
             <div
               class="thumbnail"
@@ -30,6 +26,10 @@
             >
               <img [src]="img" alt="Product thumbnail" />
             </div>
+          </div>
+          <!-- Main product image -->
+          <div class="product-main-image">
+            <img [src]="selectedImage" alt="{{ product.name }}" />
           </div>
         </div>
 
@@ -127,7 +127,10 @@
           <div class="product-details">
             <h3 class="details-title">Chi tiết sản phẩm</h3>
             <table class="details-table">
-              <tr *ngFor="let key of product.description | keyvalue">
+              <tr
+                *ngFor="let key of product.description | keyvalue"
+                class="details-row"
+              >
                 <td>{{ key.key }}:</td>
                 <td>{{ key.value }}</td>
               </tr>

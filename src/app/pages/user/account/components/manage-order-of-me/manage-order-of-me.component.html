@@ -1,0 +1,117 @@
+<div class="order-management-container">
+  <div class="card">
+    <form
+      [formGroup]="dateRangeForm"
+      (ngSubmit)="filterOrders()"
+      class="date-filter"
+    >
+      <div class="date-range">
+        <div class="date-input">
+          <label for="fromDate">Từ ngày</label>
+          <p-calendar
+            formControlName="fromDate"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            inputId="fromDate"
+          ></p-calendar>
+        </div>
+
+        <div class="date-input">
+          <label for="toDate">Đến ngày</label>
+          <p-calendar
+            formControlName="toDate"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            inputId="toDate"
+          ></p-calendar>
+        </div>
+
+        <div class="filter-btn-container">
+          <button
+            pButton
+            type="submit"
+            label="Lọc"
+            class="p-button-outlined filter-btn"
+          ></button>
+        </div>
+      </div>
+    </form>
+
+    <div class="order-table">
+      <p-table
+        [value]="filteredOrders"
+        [loading]="loading"
+        [paginator]="false"
+        [rowHover]="true"
+        styleClass="p-datatable-sm"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Mã đơn hàng</th>
+            <th>Trạng thái đơn hàng</th>
+            <th>Tổng</th>
+            <th>Hành động</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+          <tr>
+            <td>{{ order.orderCode }}</td>
+            <td>
+              <span [class]="'order-status ' + order.orderStatus.toLowerCase()">
+                {{ getStatusTranslation(order.orderStatus) }}
+              </span>
+            </td>
+            <td>{{ order.totalPrice | number }} đ</td>
+            <td>
+              <div class="action-buttons">
+                <button
+                  pButton
+                  type="button"
+                  label="Xem"
+                  class="p-button-info view-btn"
+                  (click)="viewOrder(order.orderCode)"
+                ></button>
+                <button
+                  pButton
+                  type="button"
+                  label="Huỷ"
+                  class="p-button-danger cancel-btn"
+                  *ngIf="
+                    order.orderStatus === 'PENDING_SHIPMENT' ||
+                    order.orderStatus === 'WAITING_FOR_PICKUP'
+                  "
+                  (click)="cancelOrder(order.orderCode)"
+                ></button>
+                <button
+                  pButton
+                  type="button"
+                  label="Thanh toán"
+                  class="p-button-success payment-btn"
+                  *ngIf="order.orderStatus === 'UNPAID'"
+                  (click)="payOrder(order.orderCode)"
+                ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4" class="text-center">
+              <div *ngIf="loading">Đang tải...</div>
+              <div *ngIf="!loading">Không có đơn hàng nào</div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="pagination-container">
+      <p-paginator
+        [rows]="pageSize"
+        [totalRecords]="totalItems"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        (onPageChange)="paginate($event)"
+      ></p-paginator>
+    </div>
+  </div>
+</div>
