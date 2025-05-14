@@ -1,0 +1,22 @@
+<div class="unauthorized-container">
+  <div class="unauthorized-content">
+    <i
+      class="pi pi-lock"
+      style="font-size: 4rem; color: var(--primary-color)"
+    ></i>
+    <h1>Truy cập bị từ chối</h1>
+    <p>Bạn không có quyền truy cập trang này.</p>
+    <p>
+      Vui lòng liên hệ quản trị viên để được cấp quyền hoặc quay về trang chủ.
+    </p>
+    <div class="actions">
+      <button
+        pButton
+        type="button"
+        label="Quay về trang chủ"
+        (click)="goHome()"
+        class="p-button-primary"
+      ></button>
+    </div>
+  </div>
+</div>

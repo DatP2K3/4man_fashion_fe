@@ -11,8 +11,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
+import { UnauthorizedModule } from './shared/components/unauthorized/unauthorized.module';
 
-// Keycloak initialization function
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
@@ -40,9 +40,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
     SharedModule,
     KeycloakAngularModule,
     AppRoutingModule,
+    UnauthorizedModule,
   ],
   providers: [
-    // Keycloak initialization
     {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
@@ -50,13 +50,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
       deps: [KeycloakService],
     },
     KeycloakService,
-    // Auth interceptor
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
     },
-    // PrimeNG configuration using providePrimeNG
     providePrimeNG({
       ripple: true,
       zIndex: {
@@ -71,7 +69,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
     }),
     MessageService,
     ConfirmationService,
-    // Zone.js configuration for event coalescing
     {
       provide: 'ZoneConfig',
       useValue: { eventCoalescing: true },

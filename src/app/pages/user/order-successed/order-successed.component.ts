@@ -97,6 +97,6 @@ export class OrderSuccessedComponent implements OnInit {
   }
 
   navigateToOrderManagement(): void {
-    this.router.navigate(['/account/orders']);
+    this.router.navigate(['/account/manage-order-of-me']);
   }
 }

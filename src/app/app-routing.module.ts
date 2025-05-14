@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized.component';
 
 // Main application routes
 const routes: Routes = [
@@ -53,6 +54,10 @@ const routes: Routes = [
       import('./pages/user/brand-story/brand-story.module').then(
         (m) => m.BrandStoryModule
       ),
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent,
   },
 ];
 

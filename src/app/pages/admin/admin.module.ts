@@ -10,6 +10,7 @@ import { ManageOrderComponent } from './components/manage-order/manage-order.com
 import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ManageShopAddressComponent } from './components/manage-shop-address/manage-shop-address.component';
+import { RoleGuard } from '../../core/guards/role.guard';
 
 // PrimeNG modules
 import { TableModule } from 'primeng/table';
@@ -42,6 +43,11 @@ const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
+    canActivate: [RoleGuard],
+    canActivateChild: [RoleGuard],
+    data: {
+      role: 'ADMIN',
+    },
     children: [
       { path: 'manage-products', component: ManageProductComponent },
       { path: 'manage-products/edit', component: EditProductComponent },
