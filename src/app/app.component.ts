@@ -3,6 +3,7 @@ import { FcmService } from './core/services/fcm.service';
 import { KeycloakService } from 'keycloak-angular';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private fcmService: FcmService,
     private keycloakService: KeycloakService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -25,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.initializeApp();
     this.setupDirectKeycloakEventListeners();
     this.monitorRouteChanges();
+    this.saveCurrentUrl(); // Thêm dòng này
     this.checkInitialLoginState();
   }
 
@@ -123,6 +126,9 @@ export class AppComponent implements OnInit, OnDestroy {
               userId
             );
           }
+
+          // Handle role-based navigation
+          await this.authService.handleSuccessfulLogin();
         }
       } catch (error) {
         console.error('✘ LỖI KHI ĐĂNG KÝ THIẾT BỊ SAU ĐĂNG NHẬP:', error);
@@ -218,6 +224,20 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Lưu lại URL hiện tại để có thể quay lại sau khi làm mới trang
+   */
+  private saveCurrentUrl() {
+    const currentUrl = window.location.pathname;
+    const excludedUrls = ['/', '/login', '/unauthorized', '/auth'];
+
+    // Chỉ lưu URL khi không phải là các trang loại trừ
+    if (!excludedUrls.includes(currentUrl) && !currentUrl.startsWith('/auth')) {
+      localStorage.setItem('lastVisitedUrl', currentUrl);
+      console.log('Đã lưu URL hiện tại:', currentUrl);
+    }
+  }
+
+  /**
    * Kiểm tra trạng thái đăng nhập khi khởi động ứng dụng
    */
   private async checkInitialLoginState() {
@@ -239,6 +259,28 @@ export class AppComponent implements OnInit, OnDestroy {
         if (userId) {
           await this.fcmService.registerDevice(userId);
           console.log('✓ ĐĂNG KÝ THIẾT BỊ FCM THÀNH CÔNG KHI KHỞI ĐỘNG APP');
+        }
+
+        // Kiểm tra xem có đang ở trang cần điều hướng không
+        const currentUrl = this.router.url;
+        const publicPaths = ['/', '/login', '/unauthorized', '/auth'];
+        const shouldRedirect = publicPaths.some((path) =>
+          currentUrl.startsWith(path)
+        );
+
+        // Chỉ điều hướng nếu đang ở trang công khai
+        if (shouldRedirect) {
+          // Kiểm tra URL đã lưu và điều hướng về đó nếu có
+          const lastVisitedUrl = localStorage.getItem('lastVisitedUrl');
+          if (lastVisitedUrl && lastVisitedUrl !== '/') {
+            console.log('Điều hướng về trang đã lưu:', lastVisitedUrl);
+            this.router.navigateByUrl(lastVisitedUrl);
+          } else {
+            // Nếu không có URL đã lưu, thực hiện điều hướng mặc định
+            await this.authService.handleSuccessfulLogin();
+          }
+        } else {
+          console.log('Giữ nguyên tại trang hiện tại:', currentUrl);
         }
       } else {
         localStorage.setItem('isLoggedIn', 'false');

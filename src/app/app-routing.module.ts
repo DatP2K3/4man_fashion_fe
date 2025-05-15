@@ -59,6 +59,7 @@ const routes: Routes = [
     path: 'unauthorized',
     component: UnauthorizedComponent,
   },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
