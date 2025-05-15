@@ -21,7 +21,9 @@
               "base64-js",
               "js-sha256",
               "firebase/app",
-              "firebase/messaging"
+              "firebase/messaging",
+              "chart.js",
+              "chart.js/auto"
             ],
             "outputPath": "dist/frontend",
             "index": "src/index.html",

@@ -1,1 +1,141 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <!-- Header with time range selection -->
+  <div class="dashboard-header">
+    <h1>Bảng điều khiển</h1>
+    <div class="time-filter">
+      <p-dropdown
+        [options]="timeRangeOptions"
+        [(ngModel)]="selectedTimeRange"
+        placeholder="Chọn khoảng thời gian"
+        optionLabel="label"
+        optionValue="value"
+        (onChange)="onTimeRangeChange()"
+        [style]="{ width: '200px' }"
+      ></p-dropdown>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="loading" class="loading-container">
+    <p-progressSpinner
+      strokeWidth="4"
+      [style]="{ width: '50px', height: '50px' }"
+      animationDuration=".5s"
+    ></p-progressSpinner>
+    <span class="loading-text">Đang tải dữ liệu...</span>
+  </div>
+
+  <div *ngIf="!loading && dashboardData" class="dashboard-content">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <p-card styleClass="summary-card revenue-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <i class="pi pi-money-bill"></i>
+            <span>Doanh thu hôm nay</span>
+          </div>
+        </ng-template>
+        <div class="card-content">
+          <h3>{{ formatCurrency(dashboardData.todaySummary.totalRevenue) }}</h3>
+        </div>
+      </p-card>
+
+      <p-card styleClass="summary-card orders-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <i class="pi pi-shopping-cart"></i>
+            <span>Đơn hàng hôm nay</span>
+          </div>
+        </ng-template>
+        <div class="card-content">
+          <h3>{{ dashboardData.todaySummary.totalOrders }}</h3>
+        </div>
+      </p-card>
+
+      <p-card styleClass="summary-card users-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <i class="pi pi-users"></i>
+            <span>Người dùng mới</span>
+          </div>
+        </ng-template>
+        <div class="card-content">
+          <h3>{{ dashboardData.todaySummary.totalNewUsers }}</h3>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+      <!-- Revenue Chart -->
+      <p-card header="Doanh thu theo thời gian" styleClass="chart-card">
+        <div class="chart-container">
+          <p-chart
+            type="line"
+            [data]="revenueChartData"
+            [options]="revenueChartOptions"
+          ></p-chart>
+        </div>
+      </p-card>
+
+      <!-- Orders Chart -->
+      <p-card header="Số lượng đơn hàng theo thời gian" styleClass="chart-card">
+        <div class="chart-container">
+          <p-chart
+            type="bar"
+            [data]="ordersChartData"
+            [options]="ordersChartOptions"
+          ></p-chart>
+        </div>
+      </p-card>
+    </div>
+
+    <div class="charts-row">
+      <!-- City Distribution Chart -->
+      <p-card header="Phân bố đơn hàng theo thành phố" styleClass="chart-card">
+        <div class="chart-container pie-chart">
+          <p-chart
+            type="pie"
+            [data]="cityChartData"
+            [options]="cityChartOptions"
+          ></p-chart>
+        </div>
+      </p-card>
+
+      <!-- Recent Orders Summary -->
+      <p-card header="Thống kê đơn hàng theo thành phố" styleClass="chart-card">
+        <p-table
+          [value]="dashboardData.orderByCity"
+          [tableStyle]="{ 'min-width': '50%' }"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Thành phố</th>
+              <th>Số đơn hàng</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-city>
+            <tr>
+              <td>{{ city.city }}</td>
+              <td>{{ city.totalOrders }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="2" class="text-center">Không có dữ liệu</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- No data message -->
+  <div *ngIf="!loading && !dashboardData" class="no-data">
+    <i class="pi pi-info-circle"></i>
+    <p>Không có dữ liệu hiển thị</p>
+  </div>
+
+  <!-- Toast notifications -->
+  <p-toast></p-toast>
+</div>

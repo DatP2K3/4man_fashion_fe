@@ -6,7 +6,8 @@ import { ManageProductComponent } from './components/manage-product/manage-produ
 import { EditProductComponent } from './components/edit-product/edit-product.component';
 import { ManageBannerComponent } from './components/manage-banner/manage-banner.component';
 import { ManagePromotionComponent } from './components/manage-promotion/manage-promotion.component';
-import { ManageOrderComponent } from './components/manage-order/manage-order.component'; // Import ManageOrderComponent
+import { ManageOrderComponent } from './components/manage-order/manage-order.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ManageShopAddressComponent } from './components/manage-shop-address/manage-shop-address.component';
@@ -37,7 +38,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { IftaLabelModule } from 'primeng/iftalabel';
-import { TabMenuModule } from 'primeng/tabmenu'; // Add TabMenuModule for p-tabMenu
+import { TabMenuModule } from 'primeng/tabmenu';
+import { ChartModule } from 'primeng/chart';
 
 const routes: Routes = [
   {
@@ -49,6 +51,8 @@ const routes: Routes = [
       role: 'ADMIN',
     },
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'manage-products', component: ManageProductComponent },
       { path: 'manage-products/edit', component: EditProductComponent },
       { path: 'manage-products/edit/:id', component: EditProductComponent },
@@ -64,7 +68,7 @@ const routes: Routes = [
       },
       { path: 'manage-promotions/edit/:id', component: EditPromotionComponent },
       { path: 'manage-shop-address', component: ManageShopAddressComponent },
-      { path: 'manage-orders', component: ManageOrderComponent }, // Add route for ManageOrderComponent
+      { path: 'manage-orders', component: ManageOrderComponent },
     ],
   },
 ];
@@ -78,7 +82,8 @@ const routes: Routes = [
     ManagePromotionComponent,
     EditPromotionComponent,
     ManageShopAddressComponent,
-    ManageOrderComponent, // Add ManageOrderComponent here
+    ManageOrderComponent,
+    DashboardComponent,
   ],
   imports: [
     CommonModule,
@@ -110,7 +115,8 @@ const routes: Routes = [
     PaginatorModule,
     AccordionModule,
     IftaLabelModule,
-    TabMenuModule, // Add TabMenuModule for p-tabMenu component
+    TabMenuModule,
+    ChartModule,
   ],
   providers: [MessageService],
 })
