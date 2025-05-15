@@ -1,0 +1,59 @@
+<form [formGroup]="infoForm" (ngSubmit)="onSubmit()" class="info-form">
+  <p-iftalabel class="form-group">
+    <input
+      id="email"
+      type="text"
+      pInputText
+      formControlName="email"
+      autocomplete="off"
+    />
+    <label for="email">Email</label>
+  </p-iftalabel>
+
+  <p-iftalabel class="form-group">
+    <input
+      id="first_name"
+      type="text"
+      pInputText
+      formControlName="firstName"
+      autocomplete="off"
+    />
+    <label for="first_name">First Name</label>
+  </p-iftalabel>
+
+  <p-iftalabel class="form-group">
+    <input
+      id="last_name"
+      type="text"
+      pInputText
+      formControlName="lastName"
+      autocomplete="off"
+    />
+    <label for="last_name">Last Name</label>
+  </p-iftalabel>
+
+  <p-iftalabel class="form-group">
+    <input
+      id="phone_number"
+      type="text"
+      pInputText
+      formControlName="phoneNumber"
+      autocomplete="off"
+    />
+    <label for="phone_number">Phone Number</label>
+  </p-iftalabel>
+
+  <p-iftalabel class="form-group">
+    <p-datepicker
+      class="datepicker"
+      formControlName="dob"
+      inputId="dob"
+      showIcon
+      iconDisplay="input"
+    />
+    <label for="dob">Date of Birth</label>
+  </p-iftalabel>
+  <div class="btn">
+    <button type="submit">Cập nhật</button>
+  </div>
+</form>

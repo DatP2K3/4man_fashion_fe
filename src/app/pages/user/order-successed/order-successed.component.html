@@ -1,0 +1,101 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+
+  <!-- Main Content -->
+  <main class="row">
+    <div class="col-12">
+      <div class="order-success-container">
+        <!-- Loading state -->
+        <div *ngIf="loading" class="loading-container">
+          <p-progressBar
+            mode="indeterminate"
+            [style]="{ height: '6px' }"
+          ></p-progressBar>
+        </div>
+
+        <!-- Success state -->
+        <div *ngIf="!loading && order" class="success-content">
+          <!-- Success icon -->
+          <div class="success-icon">
+            <i class="pi pi-check-circle"></i>
+          </div>
+
+          <!-- Order details -->
+          <div class="order-info">
+            <h1 class="order-title">Order {{ order.orderCode }}</h1>
+            <h2 class="thank-you-text">Cảm ơn bạn, {{ customerName }}!</h2>
+            <p class="confirmation-text">
+              Đơn hàng của bạn đã được xác nhận.
+              <span *ngIf="order.paymentMethod === 'COD'"
+                >Chúng tôi đã tiếp nhận đơn hàng của bạn và đang chuẩn bị để gửi
+                hàng cho bạn sớm nhất có thể.</span
+              >
+            </p>
+          </div>
+
+          <!-- Order summary -->
+          <div class="order-summary">
+            <div class="summary-header">
+              <h3>Chi tiết đơn hàng</h3>
+            </div>
+
+            <div class="summary-item">
+              <span>Tổng giá sản phẩm</span>
+              <span>{{ formatCurrency(order.totalPrice || 0) }}</span>
+            </div>
+
+            <div class="summary-item">
+              <span>Phí vận chuyển</span>
+              <span>{{ formatCurrency(order.shipmentFee || 0) }}</span>
+            </div>
+
+            <hr />
+
+            <div class="summary-total">
+              <span>Total</span>
+              <span>{{
+                formatCurrency(order.totalPrice + order.shipmentFee)
+              }}</span>
+            </div>
+
+            <div class="actions-container">
+              <button
+                pButton
+                type="button"
+                class="p-button-primary manage-order-btn"
+                label="Quản lý đơn hàng"
+                (click)="navigateToOrderManagement()"
+              ></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error state -->
+        <div *ngIf="!loading && !order" class="error-content">
+          <div class="error-icon">
+            <i class="pi pi-exclamation-circle"></i>
+          </div>
+          <h2>Không tìm thấy thông tin đơn hàng</h2>
+          <p>Có thể đơn hàng không tồn tại hoặc đã bị hủy.</p>
+          <button
+            pButton
+            type="button"
+            label="Trở về trang chủ"
+            (click)="router.navigate(['/'])"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast messages -->
+  <p-toast></p-toast>
+
+  <!-- Footer -->
+  <footer class="row">
+    <app-footer></app-footer>
+  </footer>
+</div>

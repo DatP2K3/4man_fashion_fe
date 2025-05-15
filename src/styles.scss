@@ -5,8 +5,10 @@
 :root {
   --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif !important;
-  --primary-color: #0c6ed6;
-  --secondary-color: black;
+  --primary-color: #1976d2; /* Màu chính của ứng dụng */
+  --primary-color-rgb: 25, 118, 210; /* RGB của màu chính */
+  --primary-color-dark: #1565c0; /* Phiên bản tối hơn của màu chính */
+  --secondary-color: #64748b;
   --success-color: #0c6ed6;
   --danger-color: #ee4f22;
   --warning-color: #eaf608;
@@ -15,6 +17,36 @@
   --background-color: #fff;
   --secondary-background-color: #ececec;
   --third-background-color: #000000;
+  --surface-card: #ffffff;
+  --text-color: #1e293b;
+}
+
+// Ghi đè các class của PrimeNG button
+.p-button.p-button-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--secondary-text-color) !important;
+}
+
+.p-button.p-button-primary:hover {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  filter: brightness(1.1) !important;
+}
+
+.p-button.p-button-primary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25) !important;
+}
+
+.p-button.p-button-text {
+  color: var(--primary-color) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.p-button.p-button-text:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.04) !important;
+  color: var(--primary-color) !important;
 }
 
 html {
@@ -23,6 +55,18 @@ html {
   padding: 0;
   box-sizing: border-box;
   font-size: 62.5%;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 56.25%; /* ~9px base for medium screens */
+  }
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 50%; /* 8px base for small screens */
+  }
 }
 
 body {
@@ -45,6 +89,31 @@ div {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  // Firefox scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--primary-color-rgb), 0.5) #f1f1f1;
+}
+
+// Chrome, Edge, and Safari scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--primary-color-rgb), 0.5);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--primary-color-rgb), 0.8);
 }
 
 .row * {

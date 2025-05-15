@@ -9,10 +9,10 @@
         <a routerLink="/home">TRANG CHỦ</a>
       </li>
       <li>
-        <a routerLink="/home">QUẦN</a>
+        <a routerLink="/ao">ÁO</a>
       </li>
       <li>
-        <a routerLink="/phukien">PHỤ KIỆN</a>
+        <a routerLink="/quan">QUẦN</a>
       </li>
       <li>
         <a routerLink="/about">GIỚI THIỆU</a>
@@ -27,18 +27,25 @@
 
   <nav class="auth-nav">
     <ul class="auth-nav-list">
-      <li *ngIf="user.authStatus != 'AUTH'" class="login-btn">
+      <li *ngIf="!isLoggedIn" class="login-btn">
         <a (click)="login()">ĐĂNG NHẬP</a>
       </li>
-      <li *ngIf="user.authStatus != 'AUTH'" class="register-btn">
+      <li *ngIf="!isLoggedIn" class="register-btn">
         <a>ĐĂNG KÝ</a>
       </li>
     </ul>
   </nav>
 
-  <div class="menu" *ngIf="user.authStatus == 'AUTH'">
-    <i class="pi pi-user" (click)="visible = true"></i>
-    <i class="pi pi-shopping-cart"></i>
+  <div class="menu" *ngIf="isLoggedIn">
+    <i class="pi pi-user" (click)="openProfileDrawer()"></i>
+    <i
+      class="pi pi-shopping-cart"
+      (click)="openCartPopup()"
+      pBadge
+      [value]="getCartItemCount()"
+    ></i>
+
+    <!-- Profile drawer -->
     <p-drawer
       [(visible)]="visible"
       position="right"
@@ -46,15 +53,20 @@
       [style]="{ width: '350px' }"
     >
       <div class="profile-drawer">
-        <h2 class="title-drawer">Hi, Phan Đạt</h2>
+        <h2 class="title-drawer">
+          Hi, {{ profile?.firstName }} {{ profile?.lastName }}
+        </h2>
         <p-divider></p-divider>
         <div class="spending-info">
           <p>
-            Chi tiêu thêm <strong class="target-cash">500.000đ</strong> để lên
-            hạng
+            Tích luỹ thêm
+            <strong class="target-cash">{{
+              profile?.pointsToNextLevel
+            }}</strong>
+            điểm để lên hạng
             <strong>BẠC</strong>
           </p>
-          <p-progressbar [value]="percent" />
+          <p-progressbar [value]="profile?.percent" />
         </div>
 
         <div class="man-club">
@@ -62,7 +74,8 @@
             Hiện tại bạn có: <br />
             <span class="wallet"
               ><i class="pi pi-money-bill"></i>
-              <strong class="coin">0</strong> 4Mancash</span
+              <strong class="coin">{{ profile?.totalCoins }}</strong>
+              4Mancash</span
             >
           </p>
           <button>Về 4Man</button>
@@ -81,29 +94,146 @@
         </div>
 
         <div class="nav-manage">
-          <div class="nav-manage-item">
+          <a routerLink="/my-order" class="nav-manage-item">
             <i class="pi pi-history"></i>
-            <a routerLink="/my-order">Lịch sử đơn hàng</a>
-          </div>
+            <p>Lịch sử đơn hàng</p>
+          </a>
 
-          <div class="nav-manage-item">
+          <a routerLink="/my-order" class="nav-manage-item">
             <i class="pi pi-address-book"></i>
-            <a routerLink="/my-order">Sổ địa chỉ</a>
-          </div>
+            <p>Sổ địa chỉ</p></a
+          >
 
-          <div class="nav-manage-item">
+          <button (click)="accountManagement()" class="nav-manage-item">
             <i class="pi pi-cog"></i>
-            <a routerLink="/my-setting">Cài đặt tài khoản</a>
-          </div>
+            <p>Cài đặt bảo mật</p>
+          </button>
 
-          <div class="nav-manage-item">
+          <a routerLink="/address" class="nav-manage-item">
             <i class="pi pi-question-circle"></i>
-            <a routerLink="/address">FAQ & Chính sách</a>
-          </div>
+            <p>FAQ & Chính sách</p></a
+          >
         </div>
 
         <div class="footer">
           <button><a routerLink="/account">Đi đến tài khoản</a></button>
+        </div>
+      </div>
+    </p-drawer>
+
+    <!-- Cart popup -->
+    <p-drawer
+      [(visible)]="cartVisible"
+      position="right"
+      [baseZIndex]="10000"
+      [style]="{ width: '350px' }"
+    >
+      <div class="cart-popup">
+        <h2 class="cart-popup-title">Giỏ hàng của bạn</h2>
+        <p-divider></p-divider>
+
+        <!-- Empty or loading cart - show the same empty cart UI -->
+        <div *ngIf="!cart || !hasVisibleCartItems()" class="cart-empty">
+          <i class="pi pi-shopping-cart empty-cart-icon"></i>
+          <p>
+            {{ !cart ? "Đang tải giỏ hàng..." : "Giỏ hàng của bạn đang trống" }}
+          </p>
+          <p-button
+            *ngIf="cart"
+            label="Mua sắm ngay"
+            routerLink="/home"
+            (click)="cartVisible = false"
+            styleClass="p-button-primary"
+          >
+          </p-button>
+        </div>
+
+        <!-- Cart items (only shown when cart has items) -->
+        <div *ngIf="cart && hasVisibleCartItems()">
+          <div class="cart-items-summary">
+            <p class="total-price">
+              <span>{{ getVisibleCartItemCount() }} sản phẩm</span>
+              <span
+                >{{ calculateTotal() | currency : "VND" : "" : "1.0-0" }}đ</span
+              >
+            </p>
+          </div>
+
+          <div class="cart-items">
+            <!-- This *ngFor uses the filtered list of non-deleted items -->
+            <div class="cart-item" *ngFor="let item of getVisibleCartItems()">
+              <div class="cart-item-image">
+                <img
+                  *ngIf="item.imageUrl"
+                  [src]="item.imageUrl"
+                  [alt]="item.name"
+                  class="cart-item-img"
+                />
+                <p-avatar
+                  *ngIf="!item.imageUrl"
+                  icon="pi pi-image"
+                  styleClass="p-mr-2"
+                  size="large"
+                  shape="square"
+                ></p-avatar>
+              </div>
+              <div class="cart-item-details">
+                <h3>{{ item.name || "Sản phẩm" }}</h3>
+                <div class="item-attributes">
+                  <span *ngIf="item.size">Size: {{ item.size }}</span>
+                  <span *ngIf="item.color">Màu: {{ item.color }}</span>
+                </div>
+                <div class="item-price-qty">
+                  <div class="price-container">
+                    <!-- Show original price with different styling based on discount -->
+                    <span
+                      [ngClass]="{
+                        'original-price': item.discountPrice,
+                        'item-price': !item.discountPrice
+                      }"
+                    >
+                      {{
+                        item.originPrice | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+
+                    <!-- Only show discount price when it exists -->
+                    <span class="item-price" *ngIf="item.discountPrice">
+                      {{
+                        item.discountPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                  </div>
+                  <span class="item-qty">x{{ item.quantity }}</span>
+                </div>
+              </div>
+              <button
+                class="remove-item-btn"
+                (click)="removeCartItem(item.id || '')"
+              >
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Updated buttons with better positioning -->
+          <div class="cart-popup-actions">
+            <p-button
+              label="Xem giỏ hàng"
+              routerLink="/cart"
+              (click)="goToCart()"
+              styleClass="p-button-outlined p-button-primary view-cart-btn"
+            >
+            </p-button>
+            <p-button
+              label="Đặt hàng"
+              routerLink="/cart"
+              (click)="goToCart()"
+              styleClass="p-button-primary checkout-btn"
+            >
+            </p-button>
+          </div>
         </div>
       </div>
     </p-drawer>

@@ -141,6 +141,10 @@
     border-radius: 8px;
     margin: 10px 0;
 
+    p {
+      margin-bottom: 10px;
+    }
+
     .target-cash {
       color: var(--primary-color);
       font-weight: bold;
@@ -247,21 +251,25 @@
       display: flex;
       background-color: var(--secondary-background-color);
       border-radius: 20px;
+      border: none;
+
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
       padding: 20px 0;
+      text-decoration: none;
+      color: var(--primary-text-color);
       width: 156px;
       cursor: pointer;
 
       i {
+        margin-bottom: 10px;
         font-size: 2.5rem;
       }
 
-      a {
-        margin-top: 10px;
-        text-decoration: none;
-        color: var(--primary-text-color);
+      &:hover {
+        background-color: var(--primary-color);
+        color: var(--secondary-text-color);
       }
     }
   }
@@ -270,7 +278,7 @@
     button {
       margin-top: 20px;
       font-size: 1.6rem;
-      padding: 8px 8px;
+      padding: 15px 8px;
       border-radius: 20px;
       border: none;
       width: 100%;
@@ -290,4 +298,188 @@
 // PrimeNG overrides
 ::ng-deep .p-progressbar-value {
   background: var(--primary-color) !important;
+}
+
+/* Cart popup styles */
+.cart-popup {
+  padding: 1.5rem;
+
+  .cart-popup-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .cart-loading {
+    padding: 2rem 0;
+  }
+
+  .cart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1rem;
+
+    .empty-cart-icon {
+      font-size: 4rem;
+      color: #ccc;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      font-size: 1.6rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .cart-items-summary {
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+
+    .total-price {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 0;
+
+      span:last-child {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .cart-items {
+    .cart-item {
+      display: flex;
+      padding: 1rem 0;
+      border-bottom: 1px solid #eee;
+      position: relative;
+
+      .cart-item-image {
+        width: 70px;
+        height: 70px;
+        border: 1px solid #eee;
+        margin-right: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f8f8;
+        overflow: hidden;
+
+        .cart-item-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .cart-item-details {
+        flex: 1;
+
+        h3 {
+          font-size: 1.4rem;
+          margin: 0 0 0.5rem 0;
+          color: #333;
+        }
+
+        .item-attributes {
+          display: flex;
+          gap: 1rem;
+          font-size: 1.2rem;
+          color: #666;
+          margin-bottom: 0.5rem;
+        }
+
+        .price-container {
+          display: flex;
+          flex-direction: column;
+
+          .item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+          }
+
+          .item-original-price {
+            font-size: 0.9rem;
+            color: #999;
+          }
+        }
+
+        .item-price-qty {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          font-size: 1.3rem;
+        }
+      }
+
+      .remove-item-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0;
+        background: none;
+        border: none;
+        color: #999;
+        font-size: 1.2rem;
+        cursor: pointer;
+
+        &:hover {
+          color: #f44336;
+        }
+      }
+    }
+  }
+
+  .cart-popup-actions {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 0 1.5rem;
+    width: 100%;
+
+    ::ng-deep .view-cart-btn,
+    ::ng-deep .checkout-btn {
+      flex: 1;
+      width: 150px !important;
+      height: 50px; // Make buttons taller
+
+      .p-button-label {
+        font-size: 1.4rem; // Increase font size
+      }
+
+      // Make buttons more visually appealing
+      &.p-button {
+        justify-content: center;
+        border-radius: 5px;
+      }
+    }
+
+    // Ensure the buttons are truly equal size
+    ::ng-deep .p-button {
+      min-width: 0;
+      width: calc(50% - 10px); // Equal width with gap taken into account
+      padding: 0.75rem 1rem;
+    }
+  }
+}
+
+// Ensure the drawer has enough space for the fixed button row
+::ng-deep .p-drawer-content {
+  padding-bottom: 120px !important; // Add space at the bottom for the buttons
+}
+
+// Badge styling
+::ng-deep {
+  .p-badge {
+    background-color: var(--primary-color) !important;
+  }
 }

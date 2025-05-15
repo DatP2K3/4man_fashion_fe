@@ -1,0 +1,239 @@
+<p-toast></p-toast>
+
+<div class="shop-address-container">
+  <div class="card">
+    <h2 class="page-title">Quản lý địa chỉ cửa hàng</h2>
+
+    <p-accordion [multiple]="true" [activeIndex]="accordionIndex">
+      <!-- Pickup Warehouse Section -->
+      <p-accordionTab header="Kho lấy hàng">
+        <form [formGroup]="pickupForm">
+          <div class="form-row">
+            <p-iftalabel class="form-group">
+              <input
+                id="pickupName"
+                type="text"
+                pInputText
+                formControlName="shopName"
+                autocomplete="off"
+              />
+              <label for="pickupName">Tên người nhận</label>
+            </p-iftalabel>
+
+            <p-iftalabel class="form-group">
+              <input
+                id="pickupPhone"
+                type="text"
+                pInputText
+                formControlName="phoneNumber"
+                autocomplete="off"
+              />
+              <label for="pickupPhone">Số điện thoại</label>
+            </p-iftalabel>
+          </div>
+
+          <p-iftalabel class="form-group">
+            <input
+              id="pickupAddressLine1"
+              type="text"
+              pInputText
+              formControlName="addressLine1"
+              autocomplete="off"
+            />
+            <label for="pickupAddressLine1">Số nhà, tên đường</label>
+          </p-iftalabel>
+
+          <p-iftalabel class="form-group">
+            <input
+              id="pickupAddressLine2"
+              type="text"
+              pInputText
+              formControlName="addressLine2"
+              autocomplete="off"
+            />
+            <label for="pickupAddressLine2">Toà nhà/ căn hộ</label>
+          </p-iftalabel>
+
+          <div class="address-grid">
+            <p-iftalabel class="form-group">
+              <p-dropdown
+                #pickupProvinceDropdown
+                formControlName="cityId"
+                [options]="provinces"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Chọn tỉnh/thành phố"
+                (onChange)="onPickupProvinceChange($event)"
+                [style]="{ width: '100%' }"
+              ></p-dropdown>
+              <label for="pickupCity">Tỉnh/ thành phố</label>
+            </p-iftalabel>
+
+            <p-iftalabel class="form-group">
+              <p-dropdown
+                #pickupDistrictDropdown
+                formControlName="districtId"
+                [options]="pickupFilteredDistricts"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Chọn quận/huyện"
+                (onChange)="onPickupDistrictChange($event)"
+                [style]="{ width: '100%' }"
+                [disabled]="
+                  !pickupForm.get('cityId')?.value || isLoadingPickupDistricts
+                "
+                [loading]="isLoadingPickupDistricts"
+              ></p-dropdown>
+              <label for="pickupDistrict">Quận/ huyện</label>
+            </p-iftalabel>
+
+            <p-iftalabel class="form-group">
+              <p-dropdown
+                #pickupWardDropdown
+                formControlName="wardCode"
+                [options]="pickupFilteredWards"
+                optionLabel="wardName"
+                optionValue="wardCode"
+                placeholder="Chọn phường/xã"
+                (onChange)="onPickupWardChange($event)"
+                [style]="{ width: '100%' }"
+                [disabled]="
+                  !pickupForm.get('districtId')?.value || isLoadingPickupWards
+                "
+                [loading]="isLoadingPickupWards"
+              ></p-dropdown>
+              <label for="pickupWard">Phường/ xã</label>
+            </p-iftalabel>
+          </div>
+
+          <div class="form-actions">
+            <button
+              pButton
+              type="submit"
+              label="Lưu địa chỉ"
+              icon="pi pi-save"
+              class="p-button-primary"
+              (click)="savePickupAddress()"
+              [disabled]="loading"
+            ></button>
+          </div>
+        </form>
+      </p-accordionTab>
+
+      <!-- Return Warehouse Section -->
+      <p-accordionTab header="Kho trả hàng">
+        <form [formGroup]="returnForm">
+          <div class="form-row">
+            <p-iftalabel class="form-group">
+              <input
+                id="returnName"
+                type="text"
+                pInputText
+                formControlName="shopName"
+                autocomplete="off"
+              />
+              <label for="returnName">Tên người nhận</label>
+            </p-iftalabel>
+
+            <p-iftalabel class="form-group">
+              <input
+                id="returnPhone"
+                type="text"
+                pInputText
+                formControlName="phoneNumber"
+                autocomplete="off"
+              />
+              <label for="returnPhone">Số điện thoại</label>
+            </p-iftalabel>
+          </div>
+
+          <p-iftalabel class="form-group">
+            <input
+              id="returnAddressLine1"
+              type="text"
+              pInputText
+              formControlName="addressLine1"
+              autocomplete="off"
+            />
+            <label for="returnAddressLine1">Số nhà, tên đường</label>
+          </p-iftalabel>
+
+          <p-iftalabel class="form-group">
+            <input
+              id="returnAddressLine2"
+              type="text"
+              pInputText
+              formControlName="addressLine2"
+              autocomplete="off"
+            />
+            <label for="returnAddressLine2">Toà nhà/ căn hộ</label>
+          </p-iftalabel>
+
+          <div class="address-grid">
+            <p-iftalabel class="form-group">
+              <p-dropdown
+                #returnProvinceDropdown
+                formControlName="cityId"
+                [options]="provinces"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Chọn tỉnh/thành phố"
+                (onChange)="onReturnProvinceChange($event)"
+                [style]="{ width: '100%' }"
+              ></p-dropdown>
+              <label for="returnCity">Tỉnh/ thành phố</label>
+            </p-iftalabel>
+
+            <p-iftalabel class="form-group">
+              <p-dropdown
+                #returnDistrictDropdown
+                formControlName="districtId"
+                [options]="returnFilteredDistricts"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Chọn quận/huyện"
+                (onChange)="onReturnDistrictChange($event)"
+                [style]="{ width: '100%' }"
+                [disabled]="
+                  !returnForm.get('cityId')?.value || isLoadingReturnDistricts
+                "
+                [loading]="isLoadingReturnDistricts"
+              ></p-dropdown>
+              <label for="returnDistrict">Quận/ huyện</label>
+            </p-iftalabel>
+
+            <p-iftalabel class="form-group">
+              <p-dropdown
+                #returnWardDropdown
+                formControlName="wardCode"
+                [options]="returnFilteredWards"
+                optionLabel="wardName"
+                optionValue="wardCode"
+                placeholder="Chọn phường/xã"
+                (onChange)="onReturnWardChange($event)"
+                [style]="{ width: '100%' }"
+                [disabled]="
+                  !returnForm.get('districtId')?.value || isLoadingReturnWards
+                "
+                [loading]="isLoadingReturnWards"
+              ></p-dropdown>
+              <label for="returnWard">Phường/ xã</label>
+            </p-iftalabel>
+          </div>
+
+          <div class="form-actions">
+            <button
+              pButton
+              type="submit"
+              label="Lưu địa chỉ"
+              icon="pi pi-save"
+              class="p-button-primary"
+              (click)="saveReturnAddress()"
+              [disabled]="loading"
+            ></button>
+          </div>
+        </form>
+      </p-accordionTab>
+    </p-accordion>
+  </div>
+</div>

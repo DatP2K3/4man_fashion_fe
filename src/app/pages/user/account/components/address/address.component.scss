@@ -1,0 +1,277 @@
+.address-manager {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  // Styling cho dropdown select
+  .address-select {
+    margin-bottom: 20px;
+    width: 90%;
+
+    h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+  }
+
+  // Styling cho form
+  .info-form {
+    margin: 10px 0 0 0;
+    padding: 20px;
+    width: 90%;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      align-self: flex-start;
+      margin-left: 5%;
+    }
+
+    .form-group {
+      width: 90% !important;
+
+      input {
+        border: 1px solid var(--third-background-color) !important;
+        color: var(--secondary-text-color) !important;
+        width: 100% !important;
+        margin: 10px 0 !important;
+        padding: 20px 10px 15px 10px !important;
+        border-radius: 8px;
+        font-size: 1.4rem;
+        color: var(--primary-text-color) !important;
+      }
+
+      label {
+        margin-top: 8px;
+        font-size: 1.4rem;
+        color: var(--primary-text-color) !important;
+      }
+    }
+
+    .location-fields {
+      display: flex;
+      width: 90%;
+      gap: 20px;
+      justify-content: space-between;
+    }
+
+    .default-address {
+      width: 90%;
+      margin: 15px 0;
+      font-size: 1.4rem;
+      color: var(--primary-color);
+
+      input[type="checkbox"] {
+        margin-right: 8px;
+      }
+    }
+
+    .btn {
+      display: flex;
+      width: 90%;
+      flex-direction: row;
+      justify-content: flex-end;
+      gap: 15px;
+
+      button {
+        margin-top: 15px;
+        font-size: 1.6rem;
+        padding: 10px 20px;
+        border-radius: 20px;
+        border: none;
+        min-width: 150px;
+        text-align: center;
+        background-color: var(--primary-color);
+        color: var(--secondary-text-color);
+        cursor: pointer;
+
+        &.cancel-btn {
+          background-color: transparent;
+          border: 1px solid var(--third-background-color);
+          color: var(--primary-text-color);
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  // Style cho dropdown
+
+  .p-dropdown.p-focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(12, 110, 214, 0.3) !important; /* Tùy chỉnh shadow nếu cần */
+  }
+
+  .p-dropdown {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--third-background-color) !important; // Match input border
+    height: 56px !important; // Match input height
+    margin: 10px 0 !important; // Match input margins
+    display: flex;
+    align-items: center; // Add this for overall vertical centering
+
+    .p-select-open {
+      border: var(--primary-color) !important;
+    }
+
+    .p-dropdown-label {
+      font-size: 1.4rem;
+      padding: 0 10px !important; // Equal padding left/right with no top/bottom padding
+      color: var(--primary-text-color);
+      display: flex;
+      align-items: center; // Center text vertically
+      justify-content: flex-start; // Left align text horizontally
+      height: 100%;
+      line-height: normal; // Normalize line height
+    }
+
+    .p-dropdown-trigger {
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    // Items in the dropdown panel also get centered
+    .p-dropdown-item {
+      display: flex;
+      align-items: center;
+      min-height: 2.5rem; // Set a minimum height for dropdown items
+    }
+
+    .p-dropdown-panel {
+      border-radius: 8px;
+      margin-top: 5px;
+      border: 1px solid var(--primary-color);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+
+      .p-dropdown-items {
+        padding: 0;
+      }
+    }
+
+    .p-select-option {
+      &:hover {
+        background-color: rgba(12, 110, 214, 0.3) !important;
+        color: var(--primary-text-color) !important;
+      }
+    }
+    .p-select-option-selected {
+      background-color: rgba(12, 110, 214, 0.3) !important;
+      color: var(--primary-text-color) !important;
+    }
+
+    &:hover {
+      border-color: var(--primary-color) !important;
+    }
+  }
+
+  // Style for dropdown placeholder - ensure it's centered too
+  .p-dropdown .p-dropdown-label.p-placeholder {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    color: #6c757d; // Placeholder color
+  }
+
+  // Style cho datepicker
+  .p-datepicker-input {
+    border: 1px solid var(--third-background-color) !important;
+    font-size: 1.4rem !important;
+    color: var(--secondary-text-color) !important;
+    margin: 10px 0 !important;
+    padding: 15px 10px !important;
+    width: 800px !important;
+    border-radius: 8px;
+    color: var(--primary-text-color) !important;
+  }
+
+  .p-datepicker-panel {
+    width: 50% !important;
+  }
+
+  .p-datepicker-input-icon-container {
+    margin-top: -10px !important;
+  }
+
+  .p-datepicker-input-icon .p-icon {
+    color: var(--primary-color) !important;
+    width: 20px;
+    height: 20px;
+  }
+
+  // Style cho input
+  .p-inputtext:enabled:focus {
+    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  // Style cho float label
+  .p-float-label input:focus ~ label,
+  .p-float-label input.p-filled ~ label {
+    top: -0.75rem !important;
+    font-size: 0.85em !important;
+    background-color: white;
+    padding: 0 4px;
+  }
+
+  // Style cho checkbox
+  .p-checkbox {
+    .p-checkbox-box {
+      border: 1px solid var(--third-background-color);
+
+      &.p-highlight {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+    }
+
+    .p-checkbox-icon {
+      color: var(--secondary-text-color);
+    }
+  }
+
+  // Style for dropdown label - make it match input labels
+  .p-float-label {
+    margin-top: 8px;
+
+    label {
+      font-size: 1.4rem !important;
+      color: var(--primary-text-color) !important;
+    }
+
+    // Ensure dropdown labels behave like text input labels
+    .p-dropdown + label {
+      top: 0.7rem !important;
+      left: 0.75rem !important;
+      background-color: transparent;
+    }
+
+    .p-dropdown.p-focus + label,
+    .p-dropdown-filled + label {
+      top: -0.75rem !important;
+      font-size: 0.85em !important;
+      background-color: white;
+      padding: 0 4px;
+    }
+  }
+
+  // Style for selected values (below dropdowns)
+  .selected-value {
+    display: block;
+    margin-top: 4px;
+    color: #007bff;
+    font-size: 1.2rem;
+    font-style: italic;
+  }
+}

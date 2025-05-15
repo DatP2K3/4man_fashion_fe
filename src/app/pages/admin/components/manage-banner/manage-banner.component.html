@@ -1,0 +1,278 @@
+<div class="banner-management-container">
+  <p-toast
+    position="top-right"
+    [baseZIndex]="9999"
+    [style]="{ marginTop: '60px' }"
+  ></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <p-card>
+    <div class="banner-layout-container" *ngIf="!loading">
+      <!-- Main Slides Carousel -->
+      <div class="slides-section">
+        <!-- Slides Carousel -->
+        <div class="slides-carousel" *ngIf="slideBanners.length > 0">
+          <div
+            class="carousel-inner"
+            [style.transform]="'translateX(' + -activeSlideIndex * 100 + '%)'"
+          >
+            <div class="carousel-item" *ngFor="let banner of slideBanners">
+              <div class="carousel-item-content">
+                <img
+                  [src]="
+                    banner.imageUrl ||
+                    'assets/images/placeholders/slide-placeholder.jpg'
+                  "
+                  [alt]="banner.title"
+                  class="banner-image"
+                  [class.placeholder-image]="
+                    banner.id.startsWith('placeholder-')
+                  "
+                />
+                <div class="banner-info">
+                  <h3>{{ banner.title }}</h3>
+                </div>
+                <div class="banner-actions">
+                  <button
+                    pButton
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-mr-2"
+                    (click)="openEditDialog(banner)"
+                    pTooltip="Chỉnh sửa"
+                  ></button>
+                  <button
+                    pButton
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger"
+                    (click)="confirmDeleteBanner(banner.id)"
+                    pTooltip="Xóa"
+                    *ngIf="!banner.id.startsWith('placeholder-')"
+                  ></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation arrows -->
+          <button
+            class="carousel-control prev"
+            (click)="previousSlide()"
+            *ngIf="slideBanners.length > 1"
+          >
+            <i class="pi pi-chevron-left"></i>
+          </button>
+          <button
+            class="carousel-control next"
+            (click)="nextSlide()"
+            *ngIf="slideBanners.length > 1"
+          >
+            <i class="pi pi-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- Slide indicators -->
+        <div class="carousel-indicators" *ngIf="slideBanners.length > 1">
+          <button
+            *ngFor="let banner of slideBanners; let i = index"
+            class="indicator-dot"
+            [class.active]="i === activeSlideIndex"
+            (click)="goToSlide(i)"
+          ></button>
+        </div>
+
+        <!-- Empty state for slides -->
+        <div class="empty-banner-container" *ngIf="slideBanners.length === 0">
+          <div class="empty-banner slide-placeholder">
+            <i class="pi pi-image"></i>
+            <p>Không có banner slide nào</p>
+            <button
+              pButton
+              label="Thêm banner slide"
+              icon="pi pi-plus"
+              (click)="createNewBanner(BannerType.SLIDE)"
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side Banners Row -->
+      <div class="side-banners-row">
+        <!-- Left Banner -->
+        <div class="side-banner-container">
+          <h3 class="section-title">Banner Trái</h3>
+          <div class="side-banner" *ngIf="leftBanner">
+            <img
+              [src]="
+                leftBanner
+                  ? getBannerImageUrl(leftBanner)
+                  : 'assets/images/placeholders/left-placeholder.jpg'
+              "
+              [alt]="leftBanner.title"
+            />
+            <div class="banner-info">
+              <span class="banner-title">{{ leftBanner.title }}</span>
+            </div>
+            <div class="banner-actions">
+              <button
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-success p-mr-2"
+                (click)="openEditDialog(leftBanner)"
+                pTooltip="Chỉnh sửa"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-danger"
+                (click)="confirmDeleteBanner(leftBanner.id)"
+                pTooltip="Xóa"
+                *ngIf="!leftBanner.id.startsWith('placeholder-')"
+              ></button>
+            </div>
+          </div>
+          <div
+            class="empty-banner"
+            *ngIf="!leftBanner"
+            (click)="createNewBanner(BannerType.LEFT_BANNER)"
+          >
+            <i class="pi pi-image"></i>
+            <p>Thêm banner trái</p>
+          </div>
+        </div>
+
+        <!-- Right Banner -->
+        <div class="side-banner-container">
+          <h3 class="section-title">Banner Phải</h3>
+          <div class="side-banner" *ngIf="rightBanner">
+            <img
+              [src]="
+                rightBanner
+                  ? getBannerImageUrl(rightBanner)
+                  : 'assets/images/placeholders/right-placeholder.jpg'
+              "
+              [alt]="rightBanner.title"
+            />
+            <div class="banner-info">
+              <span class="banner-title">{{ rightBanner.title }}</span>
+            </div>
+            <div class="banner-actions">
+              <button
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-success p-mr-2"
+                (click)="openEditDialog(rightBanner)"
+                pTooltip="Chỉnh sửa"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-danger"
+                (click)="confirmDeleteBanner(rightBanner.id)"
+                pTooltip="Xóa"
+                *ngIf="!rightBanner.id.startsWith('placeholder-')"
+              ></button>
+            </div>
+          </div>
+          <div
+            class="empty-banner"
+            *ngIf="!rightBanner"
+            (click)="createNewBanner(BannerType.RIGHT_BANNER)"
+          >
+            <i class="pi pi-image"></i>
+            <p>Thêm banner phải</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="banner-loading" *ngIf="loading">
+      <p-progressSpinner></p-progressSpinner>
+      <p>Đang tải dữ liệu banner...</p>
+    </div>
+  </p-card>
+
+  <p-dialog
+    [(visible)]="displayDialog"
+    [header]="dialogHeader"
+    [modal]="true"
+    [style]="{ width: '450px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <form [formGroup]="bannerForm" class="p-fluid">
+      <div class="p-field">
+        <label for="title">Tiêu đề</label>
+        <input id="title" type="text" pInputText formControlName="title" />
+        <small
+          *ngIf="
+            bannerForm.get('title')?.invalid && bannerForm.get('title')?.touched
+          "
+          class="p-error"
+          >Tiêu đề là bắt buộc</small
+        >
+      </div>
+
+      <div class="p-field">
+        <label for="type">Loại Banner</label>
+        <p-dropdown
+          id="type"
+          [options]="bannerTypes"
+          formControlName="type"
+          optionLabel="label"
+          optionValue="value"
+        ></p-dropdown>
+      </div>
+
+      <div class="p-field" *ngIf="bannerForm.get('type')?.value === 'MAIN'">
+        <label for="position">Vị trí</label>
+        <p-inputNumber
+          id="position"
+          formControlName="position"
+          [showButtons]="true"
+          buttonLayout="horizontal"
+          [min]="0"
+          decrementButtonClass="p-button-danger"
+          incrementButtonClass="p-button-success"
+          incrementButtonIcon="pi pi-plus"
+          decrementButtonIcon="pi pi-minus"
+        ></p-inputNumber>
+      </div>
+
+      <div class="p-field">
+        <label>Ảnh Banner</label>
+        <p-fileUpload
+          mode="basic"
+          chooseLabel="Chọn ảnh"
+          [auto]="true"
+          [customUpload]="true"
+          accept="image/*"
+          [maxFileSize]="10000000"
+          (uploadHandler)="onFileSelected($event)"
+        ></p-fileUpload>
+      </div>
+
+      <div *ngIf="previewUrl" class="p-field">
+        <label>Xem trước</label>
+        <div class="preview-container">
+          <img [src]="previewUrl" alt="Preview" class="preview-image" />
+        </div>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        icon="pi pi-times"
+        label="Hủy"
+        (onClick)="displayDialog = false"
+        styleClass="p-button-text"
+      ></p-button>
+      <p-button
+        icon="pi pi-check"
+        label="Lưu"
+        (onClick)="saveBanner()"
+        [disabled]="bannerForm.invalid"
+      ></p-button>
+    </ng-template>
+  </p-dialog>
+</div>

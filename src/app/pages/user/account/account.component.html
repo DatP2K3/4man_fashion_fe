@@ -1,0 +1,110 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+
+  <!-- Main Content -->
+  <main class="row">
+    <div class="main-content row">
+      <div class="basic-info">
+        <div class="avatar">
+          <p-avatar
+            class="avatar-img"
+            [image]="avatarUrl"
+            [icon]="!avatarUrl ? 'pi pi-user' : undefined"
+            shape="circle"
+          ></p-avatar>
+          <button class="change-avatar-btn" (click)="triggerFileInput()">
+            Đổi ảnh đại diện
+          </button>
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/*"
+            style="display: none"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+
+        <div class="mancash">
+          <div class="man-club">
+            <h2 class="title-drawer">
+              Hi, {{ profile?.firstName }} {{ profile?.lastName }}
+            </h2>
+            <p>
+              Hiện tại bạn có: <br />
+              <span class="wallet"
+                ><i class="pi pi-money-bill"></i>
+                <strong class="coin">{{ profile?.totalCoins }}</strong>
+                4Mancash</span
+              >
+            </p>
+          </div>
+
+          <div class="cash-info">
+            <div class="spending-info">
+              <p>
+                Tích luỹ thêm
+                <strong class="target-cash">{{
+                  profile?.pointsToNextLevel
+                }}</strong>
+                điểm để lên hạng
+                <strong>BẠC</strong>
+              </p>
+              <p-progressbar [value]="profile?.percent" />
+            </div>
+            <button class="section-invite">
+              Giới thiệu bạn bè <i class="pi pi-user-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <ul class="navbar">
+            <li [routerLink]="['/account/info']" routerLinkActive="active-nav">
+              <span>Thông tin tài khoản</span>
+              <i class="pi pi-arrow-right"></i>
+            </li>
+            <li [routerLink]="['/account/refer-friend']">
+              <span>Giới thiệu bạn bè</span>
+              <i class="pi pi-arrow-right"></i>
+            </li>
+            <li [routerLink]="['/account/manage-order-of-me']">
+              <span>Lịch sử đơn hàng</span>
+              <i class="pi pi-arrow-right"></i>
+            </li>
+            <li [routerLink]="['/account/4mancash-point']">
+              <span>Lịch sử 4ManCash</span>
+              <i class="pi pi-arrow-right"></i>
+            </li>
+            <li
+              [routerLink]="['/account/address']"
+              routerLinkActive="active-nav"
+            >
+              <span>Sổ địa chỉ</span>
+              <i class="pi pi-arrow-right"></i>
+            </li>
+            <li [routerLink]="['/account/faq']">
+              <span>Chính sách & câu hỏi thường gặp</span>
+              <i class="pi pi-arrow-right"></i>
+            </li>
+            <li (click)="logout()">
+              <span>Đăng xuất</span>
+              <i class="pi pi-arrow-right"></i>
+            </li>
+          </ul>
+        </div>
+        <div class="col-8">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="address-manager">
+    <app-footer></app-footer>
+  </footer>
+</div>

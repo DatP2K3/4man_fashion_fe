@@ -1,0 +1,1299 @@
+.add-product-container {
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  font-size: 14px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .product-form {
+    display: flex;
+    gap: 24px;
+    position: relative;
+
+    .sidebar {
+      flex: 0 0 250px;
+      position: fixed;
+      width: 250px;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+
+      .nav-section {
+        padding: 12px 16px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #f0f0f0;
+        }
+
+        &.active {
+          background-color: #e6f7ff;
+          color: #1890ff;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: 270px; /* Add margin to prevent content overlap with fixed sidebar */
+
+      .section {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 24px;
+
+        .section-header {
+          font-size: 18px;
+          font-weight: 600;
+          padding-bottom: 16px;
+          margin-bottom: 20px;
+          border-bottom: 1px solid #eee;
+        }
+      }
+    }
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+
+    &.required label::after {
+      content: " *";
+      color: #ff4d4f;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .error-message {
+      color: #ff4d4f;
+      font-size: 1.2rem;
+      margin-top: 4px;
+    }
+  }
+
+  // Image upload section
+  .image-upload-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .main-image-upload {
+      width: 300px;
+      height: 300px;
+      border: 1px dashed #ccc;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+
+      &:hover {
+        border-color: #1890ff;
+      }
+
+      .upload-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 10px;
+
+        i {
+          font-size: 24px;
+          color: #999;
+          margin-bottom: 8px;
+        }
+
+        span {
+          font-size: 1.2rem;
+          margin-bottom: 8px;
+        }
+
+        p {
+          font-size: 1rem;
+          color: #999;
+          margin: 2px 0;
+        }
+      }
+
+      .image-preview-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .preview-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+
+    // Add styling for the image remove button
+    .image-preview-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .image-remove-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        z-index: 10;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        i {
+          font-size: 14px;
+        }
+      }
+
+      &:hover .image-remove-button {
+        opacity: 1;
+      }
+    }
+
+    .thumbnails-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .image-options,
+    .additional-image-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+
+      .image-option {
+        width: 100%;
+        aspect-ratio: 1/1;
+        border: 1px dashed #ccc;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        text-align: center;
+        position: relative;
+
+        &:hover {
+          border-color: #1890ff;
+        }
+
+        .option-icon {
+          width: 40px;
+          height: 40px;
+          background-color: #f5f5f5;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 8px;
+
+          i {
+            color: #999;
+          }
+        }
+
+        .image-preview-container {
+          height: 80%;
+          width: 80%;
+          margin-bottom: 8px;
+          position: relative;
+
+          .option-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+          }
+        }
+
+        span {
+          font-size: 1.2rem;
+          color: #555;
+          padding: 0 5px;
+          margin-top: 5px;
+          display: block;
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  // Product name input
+  .name-input-container {
+    position: relative;
+
+    input {
+      width: 100%;
+      padding-right: 60px;
+      font-size: 14px;
+    }
+
+    .char-count {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: #999;
+    }
+  }
+
+  // Category selection
+  .category-selection {
+    p-dropdown {
+      width: 100%;
+      font-size: 14px;
+    }
+  }
+
+  // Description section
+  .description-container {
+    .description-note {
+      display: flex;
+      background-color: #f9f9f9;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+
+      i {
+        color: #1890ff;
+        margin-right: 10px;
+        margin-top: 3px;
+      }
+
+      p {
+        font-size: 0.85rem;
+        color: #555;
+        margin: 0;
+        flex: 1;
+        line-height: 1.5;
+
+        a {
+          color: #1890ff;
+          text-decoration: none;
+        }
+      }
+    }
+
+    .description-ai-container {
+      .description-input {
+        margin-bottom: 10px;
+
+        span {
+          display: block;
+          font-size: 0.85rem;
+          margin-bottom: 5px;
+        }
+
+        .ai-input-container {
+          display: flex;
+          gap: 10px;
+
+          input {
+            flex: 1;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  .description-fields {
+    margin-bottom: 24px;
+
+    .p-card {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+
+      .bg-primary {
+        background-color: var(--primary-color) !important;
+      }
+
+      .text-white {
+        color: white !important;
+      }
+    }
+
+    .p-field {
+      margin-bottom: 16px;
+      padding: 0 8px;
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+        text-transform: capitalize;
+        font-size: 14px;
+      }
+
+      input {
+        width: 100%;
+        margin-bottom: 8px;
+        font-size: 14px !important;
+        padding: 10px;
+      }
+    }
+  }
+
+  // Variants section
+  .toggle-variants {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .hint-text {
+      font-size: 0.85rem;
+      color: #999;
+    }
+  }
+
+  .variants-section {
+    margin-top: 20px;
+
+    .variant-input {
+      margin-bottom: 16px;
+      background-color: #f9f9f9;
+      padding: 16px;
+      border-radius: 4px;
+
+      .variant-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+
+        label {
+          margin-bottom: 0;
+          font-size: 14px;
+        }
+      }
+
+      .variant-options {
+        .variant-option-input {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 10px;
+          position: relative;
+
+          input {
+            flex: 1;
+            padding-right: 60px;
+            font-size: 14px;
+          }
+
+          .char-count {
+            position: absolute;
+            right: 100px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            color: #999;
+          }
+        }
+
+        .selected-options {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+      }
+    }
+
+    .add-variant {
+      margin-bottom: 16px;
+    }
+
+    .variant-combinations {
+      margin-top: 20px;
+
+      .p-inputtext {
+        font-size: 14px !important;
+      }
+    }
+  }
+
+  // Price and stock section
+  .price-stock-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+
+    input {
+      font-size: 14px;
+    }
+  }
+
+  // Weight and dimensions
+  .weight-input {
+    display: flex;
+    gap: 10px;
+
+    p-dropdown {
+      width: 150px;
+      font-size: 14px;
+    }
+
+    input {
+      flex: 1;
+      font-size: 14px;
+    }
+  }
+
+  .dimensions-note {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  .dimensions-input {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+
+    .dimension {
+      position: relative;
+
+      input {
+        width: 100%;
+        padding-right: 30px;
+        font-size: 14px;
+      }
+
+      span {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.85rem;
+        color: #999;
+      }
+    }
+  }
+
+  // Form actions
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 0;
+  }
+}
+
+// Dialog styling
+.variant-dialog-content {
+  padding: 20px 0;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+// New styles for the visual product preview layout
+.product-preview-layout {
+  margin-bottom: 30px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+
+  .layout-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+  }
+
+  .layout-container {
+    display: flex;
+    gap: 20px;
+
+    .layout-main {
+      flex: 0 0 60%;
+
+      .main-image-preview {
+        width: 100%;
+        aspect-ratio: 1/1;
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        cursor: pointer;
+        overflow: hidden;
+        background-color: #fff;
+        transition: border-color 0.2s;
+        position: relative;
+
+        &:hover {
+          border-color: #1890ff;
+        }
+      }
+    }
+
+    .layout-thumbnails {
+      flex: 0 0 40%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .layout-thumbnail-row {
+        display: flex;
+        gap: 10px;
+        height: 50%;
+
+        .thumbnail-preview {
+          flex: 1;
+          border: 2px dashed #ccc;
+          border-radius: 8px;
+          cursor: pointer;
+          overflow: hidden;
+          background-color: #fff;
+          transition: border-color 0.2s;
+          position: relative;
+
+          &:hover {
+            border-color: #1890ff;
+          }
+        }
+      }
+    }
+  }
+}
+
+.additional-images-section {
+  margin-bottom: 30px;
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .additional-images-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+
+    .additional-image-item {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      overflow: hidden;
+      background-color: #fff;
+      transition: border-color 0.2s;
+      position: relative;
+      aspect-ratio: 4/3;
+
+      &:hover {
+        border-color: #1890ff;
+      }
+    }
+  }
+}
+
+// Shared image placeholder styles
+.image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+
+  i {
+    font-size: 24px; /* Standardized icon size for all placeholders */
+    color: #999;
+    margin-bottom: 8px;
+  }
+
+  span {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  p {
+    font-size: 12px;
+    color: #888;
+    margin: 2px 0;
+  }
+
+  /* Apply consistent styling for small placeholders */
+  &.small {
+    i {
+      font-size: 24px; /* Same size for consistency */
+      margin-bottom: 5px;
+    }
+
+    span {
+      font-size: 14px;
+    }
+
+    p {
+      font-size: 10px;
+    }
+  }
+
+  /* Style for main image placeholder only */
+  &.large {
+    i {
+      font-size: 32px; /* Larger only for main image */
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.position-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-bottom-right-radius: 8px;
+  z-index: 2;
+}
+
+.image-preview-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  .preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-remove-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 3;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  &:hover .image-remove-button {
+    opacity: 1;
+  }
+}
+
+// Unified image upload layout
+.unified-image-upload-layout {
+  margin-bottom: 30px;
+
+  .image-layout-container {
+    display: flex;
+    gap: 20px;
+    align-items: stretch; // Ensure both columns stretch to equal height
+
+    .layout-left-column {
+      flex: 0 0 50%;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      flex-direction: column;
+      aspect-ratio: 1/1; // Force square aspect ratio
+
+      .main-image-upload {
+        flex: 2; // Take 2/3 of the available height
+        width: 100%;
+        aspect-ratio: 1/1; // Force square aspect ratio
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        background-color: #f8f8f8;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        align-self: center; // Center the container if it doesn't take full width
+
+        &:hover {
+          border-color: #1890ff;
+        }
+      }
+
+      .secondary-images-row {
+        flex: 1; // Take 1/3 of the available height
+        display: flex;
+        gap: 15px;
+
+        .detail-image-upload,
+        .size-image-upload {
+          flex: 1;
+          aspect-ratio: 1/1; // Ensure square aspect ratio
+          border: 2px dashed #ddd;
+          border-radius: 8px;
+          background-color: #f8f8f8;
+          position: relative;
+          overflow: hidden;
+          cursor: pointer;
+          transition: border-color 0.2s;
+
+          &:hover {
+            border-color: #1890ff;
+          }
+        }
+      }
+    }
+
+    .layout-right-column {
+      flex: 0 0 50%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      .image-group {
+        display: flex;
+        gap: 15px;
+        flex: 1; // Each group takes equal vertical space
+
+        .view-image-item,
+        .model-image-upload,
+        .variant-image-upload {
+          flex: 1;
+          aspect-ratio: 1/1; // Force square aspect ratio
+          border: 2px dashed #ddd;
+          border-radius: 8px;
+          background-color: #f8f8f8;
+          position: relative;
+          overflow: hidden;
+          cursor: pointer;
+          transition: border-color 0.2s;
+
+          &:hover {
+            border-color: #1890ff;
+          }
+        }
+      }
+    }
+  }
+
+  // Image placeholders
+  .image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    text-align: center;
+
+    i {
+      font-size: 24px; /* Standardized size to match other placeholders */
+      color: #999;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin: 5px 0;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .drag-hint {
+      margin-top: 5px;
+      font-style: italic;
+      color: #999;
+    }
+
+    &.small {
+      i {
+        font-size: 24px; /* Same size for consistency */
+        margin-bottom: 5px;
+      }
+    }
+
+    &.large {
+      i {
+        font-size: 32px; /* Larger size only for main image */
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  // Position indicators
+  .position-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-bottom-right-radius: 8px;
+    z-index: 2;
+  }
+
+  // Image preview container
+  .image-preview-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    .preview-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-actions {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      display: flex;
+      gap: 5px;
+      opacity: 0;
+      transition: opacity 0.2s;
+
+      button {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &.replace-button {
+          background-color: rgba(24, 144, 255, 0.8);
+          color: white;
+
+          &:hover {
+            background-color: rgba(24, 144, 255, 1);
+          }
+        }
+
+        &.remove-button {
+          background-color: rgba(255, 77, 79, 0.8);
+          color: white;
+
+          &:hover {
+            background-color: rgba(255, 77, 79, 1);
+          }
+        }
+
+        i {
+          font-size: 14px;
+        }
+      }
+    }
+
+    &:hover .image-actions {
+      opacity: 1;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item,
+  .p-editor-container .ql-editor,
+  .p-button .p-button-label {
+    font-size: 14px;
+  }
+
+  .p-dialog .p-dialog-content {
+    padding: 2rem;
+    min-height: 180px;
+    overflow: visible; // Đảm bảo dropdown menu hiển thị đúng
+  }
+
+  .p-dialog-footer {
+    padding: 1.5rem;
+  }
+
+  .p-dropdown {
+    width: 100%;
+    z-index: 1002; // Đảm bảo dropdown hiển thị đè lên dialog
+  }
+
+  .p-dropdown-panel {
+    z-index: 1003 !important; // Đảm bảo panel hiển thị phía trên cùng
+    min-width: 250px !important; // Tăng chiều rộng tối thiểu
+    width: auto !important; // Cho phép mở rộng theo nội dung
+  }
+
+  .p-dropdown-items {
+    padding: 8px 0;
+  }
+
+  .p-select-overlay {
+    width: 100% !important; // Đảm bảo chiều rộng của overlay
+  }
+
+  .p-dropdown-item {
+    padding: 10px 16px !important; // Tăng padding cho các item
+    white-space: nowrap; // Không xuống dòng text
+    font-size: 14px !important;
+    min-width: 300px; // Đảm bảo chiều rộng tối thiểu của mỗi item
+  }
+
+  // Tăng chiều rộng cho dropdown trong dialog variant
+  .variant-dialog-content .p-dropdown,
+  .variant-dialog-content .p-dropdown-panel {
+    min-width: 400px !important;
+  }
+
+  // Tăng chiều rộng cho chip hiển thị các option đã chọn
+  .p-chip {
+    min-width: 80px;
+    text-align: center;
+    padding: 8px 12px;
+    margin: 4px;
+  }
+
+  // Điều chỉnh cho vùng hiển thị biến thể
+  .variant-options {
+    width: 100%;
+
+    .selected-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+  }
+
+  // Thay đổi màu xanh cho các thành phần UI
+  .p-button-success {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  // Màu cho dropdown và các thành phần tương tác
+  .p-dropdown:focus,
+  .p-inputtext:focus,
+  .p-dropdown-item.p-highlight {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25) !important;
+  }
+
+  .p-dropdown-item.p-highlight,
+  .p-dropdown-item:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.1) !important;
+    color: var(--primary-color) !important;
+  }
+
+  // Thay đổi màu cho chips và badges
+  .p-chip.p-component .p-chip-remove-icon:hover {
+    color: var(--primary-color) !important;
+  }
+
+  // Màu cho các buttons và highlights
+  .p-button.p-button-primary {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  .p-button.p-button-text.p-button-primary {
+    color: var(--primary-color) !important;
+    background: transparent !important;
+  }
+
+  .p-button.p-button-text.p-button-primary:hover {
+    background: rgba(var(--primary-color-rgb), 0.1) !important;
+  }
+
+  // Cập nhật toàn diện màu sắc cho tất cả component PrimeNG
+
+  // Buttons
+  .p-button.p-button-primary,
+  .p-button.p-button-success,
+  .p-button.p-button-info {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  // InputSwitch
+  .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+    background-color: var(--primary-color) !important;
+  }
+
+  // Checkbox
+  .p-checkbox .p-checkbox-box.p-highlight {
+    border-color: var(--primary-color) !important;
+    background: var(--primary-color) !important;
+  }
+
+  // RadioButton
+  .p-radiobutton .p-radiobutton-box.p-highlight {
+    border-color: var(--primary-color) !important;
+    background: var(--primary-color) !important;
+  }
+
+  // Editor
+  .p-editor-container .ql-snow.ql-toolbar button:hover,
+  .p-editor-container .ql-snow.ql-toolbar button.ql-active,
+  .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active,
+  .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected {
+    color: var(--primary-color) !important;
+  }
+
+  .p-editor-container .ql-snow.ql-toolbar button:hover .ql-stroke,
+  .p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+  .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+  .p-editor-container
+    .ql-snow.ql-toolbar
+    .ql-picker-item.ql-selected
+    .ql-stroke {
+    stroke: var(--primary-color) !important;
+  }
+
+  .p-editor-container .ql-snow.ql-toolbar button:hover .ql-fill,
+  .p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-fill,
+  .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
+  .p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill {
+    fill: var(--primary-color) !important;
+  }
+
+  // FileUpload
+  .p-fileupload .p-fileupload-buttonbar {
+    background: transparent;
+
+    .p-button {
+      background: var(--primary-color) !important;
+      border-color: var(--primary-color) !important;
+    }
+  }
+
+  // Table
+  .p-datatable .p-datatable-tbody > tr.p-highlight {
+    background: rgba(var(--primary-color-rgb), 0.1) !important;
+    color: var(--primary-color) !important;
+  }
+
+  .p-datatable .p-datatable-thead > tr > th.p-highlight {
+    background: rgba(var(--primary-color-rgb), 0.1) !important;
+    color: var(--primary-color) !important;
+  }
+
+  .p-datatable .p-sortable-column.p-highlight,
+  .p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+    color: var(--primary-color) !important;
+  }
+
+  .p-datatable .p-sortable-column:focus {
+    box-shadow: inset 0 0 0 0.15rem rgba(var(--primary-color-rgb), 0.25) !important;
+  }
+
+  // Dialog
+  .p-dialog .p-dialog-header,
+  .p-dialog .p-dialog-footer {
+    button:hover {
+      color: var(--primary-color) !important;
+    }
+  }
+
+  // Paginator
+  .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background: rgba(var(--primary-color-rgb), 0.1) !important;
+    color: var(--primary-color) !important;
+    border-color: rgba(var(--primary-color-rgb), 0.5) !important;
+  }
+
+  // TabView
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+  }
+
+  // MultiSelect
+  .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+    background: rgba(var(--primary-color-rgb), 0.1) !important;
+    color: var(--primary-color) !important;
+  }
+
+  // Calendar
+  .p-calendar .p-datepicker-header,
+  .p-calendar .p-datepicker-calendar td.p-datepicker-today > span {
+    color: var(--primary-color) !important;
+  }
+
+  .p-calendar .p-datepicker-calendar td.p-datepicker-today > span:hover {
+    background: rgba(var(--primary-color-rgb), 0.1) !important;
+  }
+
+  .p-calendar .p-datepicker-calendar td > span.p-highlight {
+    background: var(--primary-color) !important;
+    color: var(--surface-0, #ffffff) !important;
+  }
+
+  // Toast
+  .p-toast {
+    z-index: 9999 !important; // Ensure toasts appear above everything
+    position: fixed !important;
+    top: 75px !important; // Position from top instead of bottom
+    right: 20px !important;
+  }
+
+  .p-toast-message {
+    margin-bottom: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23) !important;
+  }
+
+  // Chip
+  .p-chip {
+    background-color: rgba(var(--primary-color-rgb), 0.1) !important;
+
+    &.p-chip-primary {
+      background-color: var(--primary-color) !important;
+      color: var(--surface-0, #ffffff) !important;
+    }
+  }
+
+  // Sidebar/drawer
+  .p-sidebar-header,
+  .p-drawer-header {
+    .p-sidebar-close:hover,
+    .p-drawer-close:hover {
+      color: var(--primary-color) !important;
+    }
+  }
+
+  // Accordion
+  .p-accordion
+    .p-accordion-header:not(.p-disabled).p-highlight
+    .p-accordion-header-link {
+    background: rgba(var(--primary-color-rgb), 0.1) !important;
+    border-color: rgba(var(--primary-color-rgb), 0.5) !important;
+    color: var(--primary-color) !important;
+  }
+
+  // Focus states for all inputs
+  .p-inputtext:enabled:focus,
+  .p-dropdown:not(.p-disabled).p-focus,
+  .p-multiselect:not(.p-disabled).p-focus,
+  .p-listbox:not(.p-disabled).p-focus,
+  .p-checkbox:not(.p-disabled) .p-checkbox-box.p-focus,
+  .p-radiobutton:not(.p-disabled) .p-radiobutton-box.p-focus,
+  .p-inputswitch:not(.p-disabled).p-focus .p-inputswitch-slider {
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  .p-toggleswitch-checked .p-toggleswitch-slider {
+    background-color: var(--primary-color) !important;
+  }
+
+  // Dialog button styles
+  .p-dialog .p-dialog-footer {
+    .p-button {
+      &.p-button-text {
+        color: var(--primary-color) !important;
+
+        &:hover {
+          background: rgba(var(--primary-color-rgb), 0.04) !important;
+        }
+      }
+
+      &.p-button-primary {
+        background: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+
+        &:hover {
+          background: var(--primary-color) !important;
+          border-color: var(--primary-color) !important;
+          filter: brightness(1.1);
+        }
+      }
+    }
+  }
+
+  // Tăng font-size cho tất cả các ô input
+  input.p-inputtext,
+  .p-dropdown-label,
+  .p-dropdown-items,
+  .p-dropdown-item,
+  textarea,
+  .p-editor-container .ql-editor {
+    font-size: 14px !important;
+  }
+
+  // Đảm bảo font-size nhất quán trong các trường thông số kỹ thuật
+  .description-fields {
+    .p-field {
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      input {
+        font-size: 14px !important;
+        padding: 10px;
+      }
+    }
+  }
+
+  // Đảm bảo font-size cho dropdown trong bảng biến thể
+  .variant-combinations .p-inputtext {
+    font-size: 14px !important;
+  }
+
+  // Tăng font-size cho các placeholder
+  ::placeholder {
+    font-size: 14px !important;
+  }
+}

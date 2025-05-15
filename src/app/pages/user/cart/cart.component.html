@@ -1,0 +1,183 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+
+  <!-- Main Content -->
+  <main class="row">
+    <div class="col-12 cart-container">
+      <h2 class="cart-title">Giỏ hàng của bạn</h2>
+      <p-toast></p-toast>
+
+      <div *ngIf="isLoading" class="loading">
+        <p-progressBar
+          mode="indeterminate"
+          [style]="{ height: '6px' }"
+        ></p-progressBar>
+      </div>
+
+      <div *ngIf="!isLoading">
+        <!-- Empty cart message -->
+        <div
+          *ngIf="!displayedCartItems || displayedCartItems.length === 0"
+          class="empty-cart"
+        >
+          <div class="empty-cart-content">
+            <i class="pi pi-shopping-cart empty-cart-icon"></i>
+            <h3>Bạn vẫn chưa thêm gì vào giỏ hàng</h3>
+            <p>
+              Hãy khám phá các sản phẩm của chúng tôi và chọn cho mình những món
+              đồ yêu thích
+            </p>
+            <p-button
+              label="Mua sắm ngay"
+              icon="pi pi-shopping-bag"
+              routerLink="/home"
+              styleClass="p-button-primary"
+            >
+            </p-button>
+          </div>
+        </div>
+
+        <!-- Cart with items using PrimeNG Table -->
+        <div *ngIf="displayedCartItems && displayedCartItems.length > 0">
+          <p-table
+            [value]="displayedCartItems"
+            styleClass="cart-table"
+            [tableStyle]="{ 'min-width': '50rem' }"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 40%">Sản phẩm</th>
+                <th style="width: 20%">Giá</th>
+                <th style="width: 20%">Số lượng</th>
+                <th style="width: 20%">Hành động</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+              <tr>
+                <td>
+                  <div class="product-cell">
+                    <!-- Add data-variant-id attribute to help with image preservation -->
+                    <div
+                      class="product-image"
+                      [attr.data-variant-id]="item.productVariantId"
+                    >
+                      <img
+                        *ngIf="item.imageUrl"
+                        [src]="item.imageUrl"
+                        [alt]="item.name"
+                        class="product-img"
+                      />
+                      <p-avatar
+                        *ngIf="!item.imageUrl"
+                        icon="pi pi-image"
+                        styleClass="product-avatar"
+                        size="large"
+                        shape="square"
+                      ></p-avatar>
+                    </div>
+                    <div class="product-info">
+                      <!-- Show actual product name -->
+                      <h3>{{ item.name || "Sản phẩm" }}</h3>
+                      <!-- Show actual size and color if available -->
+                      <p *ngIf="item.size">Size: {{ item.size }}</p>
+                      <p *ngIf="item.color">Màu: {{ item.color }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="price-cell">
+                  <div class="price-container">
+                    <!-- Exact match with home component price display -->
+                    <span
+                      [ngClass]="{
+                        'original-price': item.discountPrice,
+                        'normal-price': !item.discountPrice
+                      }"
+                      >{{
+                        item.originPrice | currency : "VND" : "symbol" : "1.0-0"
+                      }}</span
+                    >
+
+                    <!-- Only show discount price when it exists -->
+                    <span class="sale-price" *ngIf="item.discountPrice">{{
+                      item.discountPrice | currency : "VND" : "symbol" : "1.0-0"
+                    }}</span>
+                  </div>
+
+                  <!-- Keep discount percentage -->
+                  <span
+                    *ngIf="item.discountPercent > 0"
+                    class="discount-percent"
+                  >
+                    -{{ item.discountPercent }}%
+                  </span>
+                </td>
+                <td class="quantity-cell">
+                  <p-inputNumber
+                    [(ngModel)]="item.quantity"
+                    [showButtons]="true"
+                    buttonLayout="horizontal"
+                    spinnerMode="horizontal"
+                    [min]="1"
+                    [max]="10"
+                    decrementButtonClass="p-button-secondary"
+                    incrementButtonClass="p-button-secondary"
+                    incrementButtonIcon="pi pi-plus"
+                    decrementButtonIcon="pi pi-minus"
+                    (onInput)="updateCartItem(item)"
+                  >
+                  </p-inputNumber>
+                </td>
+                <td>
+                  <p-button
+                    icon="pi pi-trash"
+                    (click)="removeItem(item.id || '')"
+                    styleClass="p-button-text p-button-danger p-button-sm delete-product-btn"
+                    label="Xóa sản phẩm"
+                  >
+                  </p-button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <div class="cart-summary">
+            <div class="summary-content">
+              <div class="summary-row total-row">
+                <span>Tạm tính:</span>
+                <span class="total-amount"
+                  >{{
+                    calculateTotal() | currency : "VND" : "" : "1.0-0"
+                  }}đ</span
+                >
+              </div>
+
+              <p-button
+                label="Tiến hành đặt hàng"
+                icon="pi pi-check"
+                styleClass="p-button-primary checkout-button"
+                (onClick)="checkout()"
+              >
+              </p-button>
+
+              <p-button
+                label="Tiếp tục mua sắm"
+                icon="pi pi-arrow-left"
+                styleClass="p-button-outlined p-button-secondary continue-button"
+                routerLink="/home"
+              >
+              </p-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="row">
+    <app-footer></app-footer>
+  </footer>
+</div>

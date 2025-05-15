@@ -1,0 +1,293 @@
+.order-management-container {
+  padding: 1rem;
+  margin-left: 100px;
+  font-size: 1.4rem; // Set base font size for the entire component
+
+  * {
+    font-size: 1.4rem; // Apply to all elements unless overridden
+  }
+
+  .card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .date-filter {
+    margin-bottom: 1.5rem;
+
+    .date-range {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 50px; // Changed from 1rem to exactly 20px
+      margin-bottom: 1rem; // Center the container
+      align-items: center;
+      justify-content: flex-start;
+
+      .date-input {
+        display: flex;
+        align-items: center;
+        min-width: 200px;
+        gap: 10px;
+
+        .p-float-label {
+          display: block;
+          margin-bottom: 0; // Remove bottom margin
+
+          // Fix label positioning
+          label {
+            font-size: 1.4rem !important;
+            margin-bottom: 4px;
+            font-weight: 500;
+            background-color: white;
+            padding: 0 4px;
+          }
+
+          input {
+            font-size: 1.4rem;
+          }
+
+          p-calendar {
+            width: 100%;
+          }
+        }
+      }
+
+      .filter-btn-container {
+        flex: 0 1 calc(20% - 20px); // Calculate width accounting for gap
+        min-width: 120px;
+        display: flex;
+        align-items: flex-end;
+
+        p-button {
+          width: 100%;
+
+          ::ng-deep .p-button {
+            height: 40px; // Match height with calendar input
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+
+            &:hover {
+              background-color: var(--primary-color-lightest) !important;
+            }
+
+            .p-button-icon {
+              font-size: 1.4rem;
+              margin-right: 8px;
+            }
+          }
+        }
+
+        .filter-btn {
+          height: 40px;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.4rem;
+          color: var(--primary-color) !important;
+          border-color: var(--primary-color) !important;
+          background-color: transparent !important;
+          width: 100px;
+
+          &:hover {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+          }
+        }
+      }
+    }
+  }
+
+  .order-table {
+    margin-bottom: 1.5rem;
+
+    th,
+    td {
+      font-size: 1.4rem;
+      padding: 1rem; // Increase padding to accommodate larger text
+      vertical-align: middle;
+    }
+
+    .order-status {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 1.4rem; // Increased from 0.85rem
+
+      &.pending_shipment,
+      &.waiting_for_pickup {
+        background-color: #feedaf;
+        color: #8a5340;
+      }
+
+      &.in_transit {
+        background-color: #b3e5fc;
+        color: #23547b;
+      }
+
+      &.delivered {
+        background-color: #c8e6c9;
+        color: #256029;
+      }
+
+      &.delivery_fail {
+        background-color: #ffcdd2;
+        color: #c63737;
+      }
+
+      &.unpaid {
+        background-color: #e1bee7;
+        color: #651fff;
+      }
+
+      &.cancelled {
+        background-color: #cfd8dc;
+        color: #455a64;
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+
+      .view-btn,
+      .cancel-btn,
+      .payment-btn {
+        min-width: 70px;
+        padding: 0.5rem 1rem;
+      }
+
+      .view-btn {
+        background-color: #2196f3;
+        border-color: #2196f3;
+
+        &:hover {
+          background-color: darken(#2196f3, 10%);
+          border-color: darken(#2196f3, 10%);
+        }
+      }
+
+      .cancel-btn {
+        background-color: #f44336;
+        border-color: #f44336;
+
+        &:hover {
+          background-color: darken(#f44336, 10%);
+          border-color: darken(#f44336, 10%);
+        }
+      }
+
+      .payment-btn {
+        background-color: #4caf50;
+        border-color: #4caf50;
+
+        &:hover {
+          background-color: darken(#4caf50, 10%);
+          border-color: darken(#4caf50, 10%);
+        }
+      }
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .text-center {
+    text-align: center;
+    padding: 1rem;
+    font-style: italic;
+    color: #666;
+  }
+}
+
+// Add global style overrides to ensure tooltips display properly
+:host ::ng-deep {
+  .p-tooltip {
+    max-width: 250px;
+    opacity: 1 !important;
+
+    .p-tooltip-text {
+      font-size: 1.4rem;
+    }
+  }
+
+  // Increase font size for PrimeNG components
+  .p-component {
+    font-size: 1.4rem;
+  }
+
+  .p-button {
+    font-size: 1.4rem;
+  }
+
+  .p-calendar {
+    width: 100%;
+
+    .p-inputtext {
+      height: 40px;
+      font-size: 1.4rem;
+      padding-left: 10px;
+    }
+
+    .p-datepicker-trigger {
+      height: 40px;
+      padding: 0 10px;
+
+      .p-button-icon {
+        font-size: 1.4rem;
+      }
+    }
+  }
+
+  .p-paginator {
+    font-size: 1.4rem;
+
+    .p-paginator-page {
+      font-size: 1.4rem;
+    }
+  }
+
+  .p-datatable {
+    font-size: 1.4rem;
+
+    .p-datatable-header,
+    .p-datatable-thead > tr > th,
+    .p-datatable-tbody > tr > td {
+      font-size: 1.4rem;
+    }
+  }
+
+  .p-button.filter-btn {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    background-color: transparent !important;
+
+    &:hover,
+    &:focus {
+      background-color: var(--primary-color) !important;
+      color: white !important;
+    }
+
+    .p-button-label {
+      font-weight: 500;
+    }
+  }
+}
+
+label {
+  font-size: 1.4rem !important; // Set label font size
+}
+
+.cancelBtn {
+  color: #f44336 !important; // Stronger red color
+  &hover {
+    background-color: #f44336 !important; // Stronger red color
+    color: #fff !important; // White text on hover
+  }
+}

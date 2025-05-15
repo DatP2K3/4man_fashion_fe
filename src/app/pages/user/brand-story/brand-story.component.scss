@@ -1,0 +1,599 @@
+// Global styles for brand story page
+:host {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 3rem;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 230px;
+    height: 3px;
+    background-color: var(--primary-color);
+  }
+
+  &.text-center {
+    text-align: center;
+
+    &::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.section-text {
+  font-size: 1.4rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+// Hero Banner Section
+.hero-section {
+  position: relative;
+  height: 500px;
+  background: url("/assets/images/hero-banner.jpg") center/cover no-repeat;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 0 20px;
+  }
+
+  .hero-title {
+    font-size: 6rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+  }
+
+  .hero-subtitle {
+    font-size: 2rem;
+    font-weight: 300;
+  }
+}
+
+// Global section container styling
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+// Brand Story Section
+.story-section {
+  padding: 80px 0;
+  background-color: #fff;
+  text-align: center;
+
+  .row {
+    margin: 0 -25px; // Negative margin để bù lại padding
+    text-align: left;
+
+    [class*="col-"] {
+      padding: 0 25px; // 25px padding ở mỗi bên = 50px khoảng cách giữa các cột
+    }
+  }
+
+  .story-image {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      gap: 200px;
+    }
+  }
+}
+
+// Values Section
+.values-section {
+  padding: 80px 0;
+  background-color: #f9f9f9;
+  text-align: center;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .row {
+    margin: 0 -15px; // Đảm bảo margin âm cho row
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; // Căn giữa các cột
+  }
+
+  [class*="col-"] {
+    padding: 15px; // Padding đồng đều cho tất cả các cột
+  }
+
+  .value-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%; // Đảm bảo tất cả các card có cùng chiều cao
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .value-icon {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+
+      i {
+        font-size: 2.5rem;
+      }
+    }
+
+    .value-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .value-description {
+      color: #777;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+  }
+}
+
+// Timeline Section
+.milestone-section {
+  padding: 80px 0;
+  background-color: #fff;
+  text-align: center;
+
+  .timeline {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 6px;
+      background-color: #e0e0e0;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -3px;
+    }
+  }
+
+  .timeline-item {
+    padding: 10px 40px;
+    position: relative;
+    background-color: inherit;
+    width: 50%;
+    margin-bottom: 50px;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      right: -13px;
+      background-color: white;
+      border: 4px solid var(--primary-color);
+      top: 15px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .timeline-badge {
+      position: absolute;
+      top: 0;
+      right: -90px; // Tăng từ -70px lên -90px để đẩy badge ra xa hơn
+      width: 50px;
+      height: 50px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      z-index: 2;
+      font-size: 1.2rem; // Thêm kích thước font chữ rõ ràng hơn
+    }
+
+    .timeline-panel {
+      padding: 20px;
+      background-color: white;
+      position: relative;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+
+      .timeline-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .timeline-text {
+        line-height: 1.6;
+        color: #666;
+      }
+    }
+
+    &.right {
+      left: 50%;
+
+      &::after {
+        left: -12px;
+      }
+
+      .timeline-badge {
+        left: -80px; // Tăng từ -60px lên -80px để đẩy badge ra xa hơn
+      }
+    }
+  }
+}
+
+// Process Section
+.process-section {
+  padding: 80px 0;
+  background-color: #f9f9f9;
+  text-align: center;
+
+  .process-steps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 50px;
+    position: relative;
+    max-width: 1200px; // Tăng chiều rộng tối đa cho container
+    margin-left: auto;
+    margin-right: auto;
+    gap: 30px; // Thêm gap giữa các bước
+
+    .step {
+      flex: 0 0 calc(25% - 50px); // Giảm kích thước mỗi bước để tạo khoảng cách lớn hơn
+      margin-bottom: 30px;
+      text-align: center;
+      padding: 25px; // Tăng padding bên trong mỗi bước
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 2; // Đặt z-index để step hiển thị trên đường nối
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: -80px; // Tăng từ -40px lên -80px
+        width: 80px; // Tăng từ 40px lên 80px
+        height: 3px; // Tăng độ dày từ 2px lên 3px
+        background-color: #666;
+        transform: translateY(-50%);
+        z-index: 1;
+      }
+
+      &:last-child::after {
+        display: none;
+      }
+
+      .step-number {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 50px;
+        margin-bottom: 20px;
+      }
+
+      .step-title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .step-description {
+        font-size: 1.4rem;
+        color: #777;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+// Team Section
+.team-section {
+  padding: 80px 0;
+  background-color: #fff;
+  text-align: center;
+
+  .team-card {
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    .team-image {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .team-name {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .team-position {
+      font-size: 1rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+
+    .team-bio {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #666;
+    }
+  }
+}
+
+// Social Responsibility Section
+.social-section {
+  padding: 80px 0;
+  background-color: #f9f9f9;
+
+  .container {
+    .row {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .col-md-6:first-child {
+    text-align: left;
+  }
+
+  .social-image {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .initiatives {
+    margin-top: 30px;
+
+    .initiative {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: white;
+      border-radius: 6px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+
+      h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--primary-color);
+      }
+
+      p {
+        margin: 0;
+        color: #666;
+      }
+    }
+  }
+}
+
+// Call to Action Section
+.cta-section {
+  padding: 80px 0;
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+
+  .cta-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-text {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+  }
+
+  .p-button-lg {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background-color: white;
+    color: var(--primary-color);
+    border: none;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+}
+
+// Responsive Styles
+@media (max-width: 992px) {
+  .process-section .process-steps .step {
+    flex: 0 0 calc(50% - 30px); // Điều chỉnh kích thước cho responsive
+    margin-bottom: 40px; // Thêm margin-bottom để tạo khoảng cách giữa các hàng
+
+    &::after {
+      display: none; // Ẩn đường nối ở chế độ responsive
+    }
+
+    // Thêm đường nối theo chiều dọc cho chế độ responsive
+    &:nth-child(odd)::before {
+      content: "";
+      position: absolute;
+      bottom: -40px; // Tăng từ -30px lên -40px
+      left: 50%;
+      width: 3px; // Tăng độ dày từ 2px lên 3px
+      height: 40px; // Tăng từ 30px lên 40px
+      background-color: #666;
+      z-index: 1;
+    }
+
+    // Ẩn đường nối dọc cho 2 step cuối cùng
+    &:nth-last-child(1)::before,
+    &:nth-last-child(2):nth-child(odd)::before {
+      display: none;
+    }
+  }
+
+  .milestone-section .timeline {
+    &::after {
+      left: 40px;
+    }
+
+    .timeline-item {
+      width: 100%;
+      padding-left: 70px;
+      padding-right: 25px;
+
+      &::after {
+        left: 28px;
+      }
+
+      .timeline-badge {
+        left: -20px; // Điều chỉnh vị trí badge trong chế độ responsive
+        right: auto;
+      }
+
+      &.right {
+        left: 0%;
+
+        .timeline-badge {
+          left: -20px; // Đảm bảo cả hai loại badge có cùng vị trí trong chế độ responsive
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 400px;
+
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+    }
+  }
+
+  .story-section,
+  .values-section,
+  .milestone-section,
+  .process-section,
+  .team-section,
+  .social-section,
+  .cta-section {
+    padding: 50px 0;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .cta-section {
+    .cta-title {
+      font-size: 2rem;
+    }
+
+    .cta-text {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Fixed header styles
+:host ::ng-deep {
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  main {
+    padding-top: 80px; // Thêm padding-top cho main để không bị header che khuất
+  }
+}

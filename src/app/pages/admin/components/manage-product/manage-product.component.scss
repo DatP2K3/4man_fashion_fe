@@ -1,0 +1,165 @@
+.manage-product-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 55px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.manage-product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 1.8rem;
+  }
+}
+
+.manage-product-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+
+  .search-box {
+    width: 300px;
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid var(--primary-color);
+      font-size: 14px;
+      color: var(--primary-text-color);
+    }
+  }
+}
+
+.product-image {
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  aspect-ratio: 1/1; /* Force square aspect ratio */
+  width: 80px; /* Take full width of container */
+  height: auto; /* Height will be calculated based on aspect ratio */
+}
+
+// Container for the image to ensure consistent dimensions
+.product-image-container {
+  width: 30px; /* Set fixed width */
+  height: 30px; /* Same as width to make it square */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-badge {
+  border-radius: 5px;
+  padding: 5px 0;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  display: inline-block;
+  width: 120px; /* Độ rộng cố định */
+  text-align: center; /* Căn giữa nội dung */
+
+  &.status-instock {
+    color: var(--secondary-text-color);
+    background-color: var(--primary-color);
+  }
+
+  &.status-outofstock {
+    background-color: #ffcdd2;
+    color: #c63737;
+  }
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+:host ::ng-deep {
+  .p-datatable .p-datatable-thead > tr > th {
+    background-color: var(--background-color);
+    color: var(--primary-text-color);
+    font-weight: 600;
+  }
+
+  .p-button {
+    font-size: 14px;
+  }
+
+  .p-paginator {
+    justify-content: flex-end;
+    padding: 1rem 0;
+    display: flex !important;
+    visibility: visible !important;
+
+    .p-paginator-element {
+      min-width: 2.5rem;
+      height: 2.5rem;
+
+      &.p-highlight {
+        background-color: var(--primary-color);
+        color: #ffffff;
+      }
+    }
+
+    .p-paginator-pages {
+      display: flex !important;
+    }
+  }
+
+  .p-inputtext:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 1px var(--primary-color) !important;
+  }
+
+  .custom-add-button {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  .p-datatable-loading-overlay {
+    display: none !important;
+  }
+
+  .p-datatable .p-datatable-tbody > tr {
+    background-color: #ffffff;
+    min-height: 3rem;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  // Make sure all image cells in the table have consistent sizing
+  .p-datatable .p-datatable-tbody > tr > td.image-cell {
+    width: 90px; /* Set fixed width for image cell */
+    padding: 5px; /* Reduce padding to fit image better */
+  }
+
+  // Ensure the rows per page dropdown has the highest z-index
+  .p-paginator-rpp-options {
+    z-index: 1000 !important;
+  }
+
+  // Target the dropdown overlay to ensure it appears on top
+  .p-dropdown-panel {
+    z-index: 9999 !important;
+  }
+
+  // Target the dropdown items inside the paginator
+  .p-paginator .p-dropdown {
+    position: relative;
+    z-index: 1000;
+
+    .p-dropdown-items-wrapper {
+      z-index: 9999 !important;
+    }
+  }
+}

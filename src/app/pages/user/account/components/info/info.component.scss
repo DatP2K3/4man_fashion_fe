@@ -1,0 +1,81 @@
+.info-form {
+  margin: 10px 0 0 100px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .form-group {
+    width: 90% !important;
+
+    input {
+      border: 1px solid var(--third-background-color) !important;
+      color: var(--secondary-text-color) !important;
+      width: 100% !important;
+      margin: 10px 0 !important;
+      padding: 20px 10px 15px 10px !important;
+      border-radius: 8px;
+      font-size: 1.4rem;
+      color: var(--primary-text-color) !important;
+    }
+
+    label {
+      margin-top: 8px;
+      font-size: 1.4rem;
+      color: var(--primary-text-color) !important;
+    }
+  }
+
+  .btn {
+    display: flex;
+    width: 80%;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    button {
+      margin-top: 15px;
+      font-size: 1.6rem;
+      padding: 10px 5px;
+      border-radius: 20px;
+      border: none;
+      width: 150px;
+      text-align: center;
+      background-color: var(--primary-color);
+      color: var(--secondary-text-color);
+      cursor: pointer;
+    }
+  }
+}
+
+::ng-deep {
+  .p-datepicker {
+    width: 100% !important;
+  }
+
+  .p-datepicker-input {
+    border: 1px solid var(--third-background-color) !important;
+    font-size: 1.4rem !important;
+
+    color: var(--secondary-text-color) !important;
+    margin: 10px 0 !important;
+    padding: 20px 10px 15px 10px !important;
+    border-radius: 8px;
+    color: var(--primary-text-color) !important;
+  }
+
+  .p-datepicker-panel {
+    width: 50% !important;
+  }
+
+  .p-datepicker-input-icon-container {
+    margin-top: -10px !important;
+  }
+
+  .p-datepicker-input-icon .p-icon {
+    color: var(--primary-color) !important;
+    width: 20px;
+    height: 20px;
+  }
+}
