@@ -12,6 +12,14 @@ import { providePrimeNG } from 'primeng/config';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { UnauthorizedModule } from './shared/components/unauthorized/unauthorized.module';
+import { RouterModule } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
+// Thay thế import cũ
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
+import { environment } from '../environments/environment';
+import { DeviceIdService } from './core/services/device-id.service';
+import { DeviceRegistrationService } from './core/services/device-registration.service';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -25,13 +33,21 @@ function initializeKeycloak(keycloak: KeycloakService) {
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri:
           window.location.origin + '/assets/silent-check-sso.html',
+        checkLoginIframe: true,
+        checkLoginIframeInterval: 5,
       },
       enableBearerInterceptor: true,
+      bearerExcludedUrls: ['/assets'],
+      loadUserProfileAtStartUp: true,
+      bearerPrefix: 'Bearer',
     });
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    // Thêm các components khác của bạn ở đây
+  ],
   imports: [
     BrowserModule,
     CommonModule,
@@ -40,7 +56,15 @@ function initializeKeycloak(keycloak: KeycloakService) {
     SharedModule,
     KeycloakAngularModule,
     AppRoutingModule,
+    RouterModule, // Đảm bảo RouterModule được thêm vào đây
     UnauthorizedModule,
+    // Thay thế các provider bằng modules tương ứng
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireMessagingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: true,
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
   providers: [
     {
@@ -73,6 +97,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
       provide: 'ZoneConfig',
       useValue: { eventCoalescing: true },
     },
+    DeviceIdService,
+    DeviceRegistrationService,
+    // Thêm services của bạn ở đây
   ],
   bootstrap: [AppComponent],
 })
