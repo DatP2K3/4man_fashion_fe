@@ -53,11 +53,10 @@ header {
         color: white;
       }
     }
-
-    .active {
-      background-color: var(--primary-color);
-      color: white;
-    }
+  }
+  .active {
+    background-color: var(--primary-color);
+    color: white;
   }
 }
 
