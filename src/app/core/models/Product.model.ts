@@ -1,4 +1,5 @@
 import { UUID } from 'crypto';
+import { DiscountType } from './Discount.model';
 
 export interface ProductImage {
   id?: string;
@@ -30,6 +31,7 @@ export class Product {
   public width?: number;
   public height?: number;
   public hidden?: boolean;
+  public discountType?: DiscountType;
   public totalSold?: number; // Long
   public averageRating?: number; // BigDecimal
   public productVariants?: ProductVariant[];
