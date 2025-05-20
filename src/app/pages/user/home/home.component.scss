@@ -184,6 +184,65 @@
   }
 }
 
+// Flash Sale Section - Make it match products section with just the title being red
+.flash-sale-section {
+  margin: 50px 20px 30px 20px;
+  position: relative;
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  // Add horizontal red lines at start and end of the section
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #e53935;
+  }
+
+  &:before {
+    top: 0;
+  }
+
+  &:after {
+    bottom: 0;
+  }
+
+  // Update section header to have red background with white text
+  .section-header {
+    background-color: #e53935;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0;
+      color: white;
+    }
+  }
+
+  .product-grid {
+    // Same custom row gutter as products-section
+    .row {
+      margin-left: -7.5px;
+      margin-right: -7.5px;
+
+      // Same custom column padding as products-section
+      [class*="col-"] {
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+      }
+    }
+  }
+
+  // Keep all other product card styling from products-section
+  // (all the same as regular products)
+}
+
 // PrimeNG overrides
 :host ::ng-deep {
   .p-carousel {
@@ -290,6 +349,27 @@
 
   .p-button-icon.pi.pi-shopping-cart {
     font-size: 2rem;
+  }
+
+  // Flash Sale carousel specific styles
+  .flash-sale-section {
+    .p-carousel {
+      .p-carousel-content {
+        padding: 0;
+      }
+
+      .p-carousel-container {
+        padding: 0 2rem;
+      }
+
+      .p-carousel-items-content {
+        padding: 0.5rem 0;
+      }
+
+      .p-carousel-indicators {
+        margin-top: 1rem;
+      }
+    }
   }
 }
 

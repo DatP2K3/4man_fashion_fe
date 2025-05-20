@@ -5,52 +5,69 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router,
+  UrlTree,
 } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
-import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RoleGuard implements CanActivate, CanActivateChild {
   constructor(
-    private router: Router,
-    private keycloakService: KeycloakService
+    private keycloakService: KeycloakService,
+    private router: Router
   ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
-    return this.hasRequiredRole(route);
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
+    return this.checkAccess(route);
   }
 
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
-    return this.hasRequiredRole(childRoute);
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
+    return this.checkAccess(childRoute);
   }
 
-  private hasRequiredRole(route: ActivatedRouteSnapshot): boolean {
-    // Get the required role from the route data if it exists
-    const requiredRole = route.data['role'] as string;
+  private async checkAccess(
+    route: ActivatedRouteSnapshot
+  ): Promise<boolean | UrlTree> {
+    // Check if user is authenticated
+    if (!(await this.keycloakService.isLoggedIn())) {
+      // Redirect to login page
+      await this.keycloakService.login({
+        redirectUri: window.location.origin + this.router.url,
+      });
+      return false;
+    }
 
-    // If no role is required, allow access
+    // Get required role from route data
+    const requiredRole = route.data['role'];
+
     if (!requiredRole) {
-      return true;
+      return true; // No specific role required
     }
 
-    // Check if user is authenticated and has the required role
-    if (
-      this.keycloakService.isLoggedIn() &&
-      this.keycloakService.isUserInRole(requiredRole)
-    ) {
-      return true;
+    // Check if user has the required role
+    const hasRole = await this.keycloakService.isUserInRole(requiredRole);
+
+    if (!hasRole) {
+      console.log(`User doesn't have required role: ${requiredRole}`);
+      return this.router.createUrlTree(['/unauthorized']);
     }
 
-    // If user doesn't have the required role, redirect to unauthorized page
-    this.router.navigate(['/unauthorized']);
-    return false;
+    return true;
   }
 }

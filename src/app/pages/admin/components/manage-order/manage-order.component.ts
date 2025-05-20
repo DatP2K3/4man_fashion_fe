@@ -125,6 +125,23 @@ export class ManageOrderComponent implements OnInit {
       searchRequest.orderStatus = this.currentStatus;
     }
 
+    // Add date filters if both dates are selected
+    if (this.fromDate && this.toDate) {
+      // Set time to start of day for fromDate
+      const startDate = new Date(this.fromDate);
+      startDate.setHours(0, 0, 0, 0);
+
+      // Set time to end of day for toDate
+      const endDate = new Date(this.toDate);
+      endDate.setHours(23, 59, 59, 999);
+
+      // Convert to ISO string format for API
+      searchRequest.startDate = startDate.toISOString();
+      searchRequest.endDate = endDate.toISOString();
+
+      console.log('Filtering orders from', startDate, 'to', endDate);
+    }
+
     this.orderService
       .searchOrders(searchRequest)
       .pipe(finalize(() => (this.loading = false)))
@@ -190,9 +207,11 @@ export class ManageOrderComponent implements OnInit {
         });
         return;
       }
+
       // Reset to first page
-      this.currentPage = 1; // Changed from 0 to 1
-      // Apply filters
+      this.currentPage = 1;
+
+      // Apply filters and reload orders
       this.loadOrders();
     } else {
       this.messageService.add({

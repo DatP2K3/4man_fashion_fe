@@ -50,6 +50,328 @@
         </div>
       </section>
 
+      <!-- Flash Sale Section - Use products-section class -->
+      <section
+        class="products-section flash-sale-section"
+        *ngIf="!flashSaleLoading && flashSaleProducts.length > 0"
+      >
+        <div class="section-header text-center mb-4">
+          <h2 class="section-title">FLASH SALE</h2>
+        </div>
+
+        <div class="product-grid">
+          <div *ngIf="flashSaleLoading" class="text-center p-5">
+            <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            <p>Loading flash sale products...</p>
+          </div>
+
+          <div class="row">
+            <!-- First flash sale product -->
+            <div
+              class="col-12 col-sm-6 col-md-3 mb-4"
+              *ngIf="flashSaleProducts.length > 0"
+            >
+              <div
+                class="product-card h-100"
+                (click)="navigateToProductDetail(flashSaleProducts[0].id)"
+                style="cursor: pointer"
+              >
+                <!-- Sale Badge -->
+                <div
+                  class="sale-badge"
+                  *ngIf="flashSaleProducts[0].discountPercentage"
+                >
+                  {{ flashSaleProducts[0].discountPercentage }}% OFF
+                </div>
+
+                <!-- Product Image -->
+                <div class="product-image-container">
+                  <img
+                    [src]="flashSaleProducts[0].imageUrl"
+                    [alt]="flashSaleProducts[0].name"
+                    class="product-image"
+                  />
+                  <div class="product-overlay">
+                    <button
+                      pButton
+                      icon="pi pi-shopping-cart"
+                      class="p-button-rounded p-button-text"
+                      (click)="$event.stopPropagation()"
+                    ></button>
+                  </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info mt-3">
+                  <h4 class="product-title">{{ flashSaleProducts[0].name }}</h4>
+
+                  <div class="price-container">
+                    <span
+                      [ngClass]="{
+                        'original-price': flashSaleProducts[0].discountPrice,
+                        'normal-price': !flashSaleProducts[0].discountPrice
+                      }"
+                    >
+                      {{
+                        flashSaleProducts[0].originPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                    <span
+                      class="sale-price"
+                      *ngIf="flashSaleProducts[0].discountPrice"
+                    >
+                      {{
+                        flashSaleProducts[0].discountPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                  </div>
+
+                  <p-rating
+                    [ngModel]="flashSaleProducts[0].averageRating || 0"
+                    [readonly]="true"
+                    class="mt-2 d-flex justify-content-center"
+                  ></p-rating>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-12 col-sm-6 col-md-3 mb-4"
+              *ngIf="flashSaleProducts.length === 0"
+            ></div>
+
+            <!-- Second flash sale product -->
+            <div
+              class="col-12 col-sm-6 col-md-3 mb-4"
+              *ngIf="flashSaleProducts.length > 1"
+            >
+              <!-- Same product card structure as first product -->
+              <div
+                class="product-card h-100"
+                (click)="navigateToProductDetail(flashSaleProducts[1].id)"
+                style="cursor: pointer"
+              >
+                <!-- Sale Badge -->
+                <div
+                  class="sale-badge"
+                  *ngIf="flashSaleProducts[1].discountPercentage"
+                >
+                  {{ flashSaleProducts[1].discountPercentage }}% OFF
+                </div>
+
+                <!-- Product Image -->
+                <div class="product-image-container">
+                  <img
+                    [src]="flashSaleProducts[1].imageUrl"
+                    [alt]="flashSaleProducts[1].name"
+                    class="product-image"
+                  />
+                  <div class="product-overlay">
+                    <button
+                      pButton
+                      icon="pi pi-shopping-cart"
+                      class="p-button-rounded p-button-text"
+                      (click)="$event.stopPropagation()"
+                    ></button>
+                  </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info mt-3">
+                  <h4 class="product-title">{{ flashSaleProducts[1].name }}</h4>
+
+                  <div class="price-container">
+                    <span
+                      [ngClass]="{
+                        'original-price': flashSaleProducts[1].discountPrice,
+                        'normal-price': !flashSaleProducts[1].discountPrice
+                      }"
+                    >
+                      {{
+                        flashSaleProducts[1].originPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                    <span
+                      class="sale-price"
+                      *ngIf="flashSaleProducts[1].discountPrice"
+                    >
+                      {{
+                        flashSaleProducts[1].discountPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                  </div>
+
+                  <p-rating
+                    [ngModel]="flashSaleProducts[1].averageRating || 0"
+                    [readonly]="true"
+                    class="mt-2 d-flex justify-content-center"
+                  ></p-rating>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-12 col-sm-6 col-md-3 mb-4"
+              *ngIf="flashSaleProducts.length <= 1"
+            ></div>
+
+            <!-- Third flash sale product -->
+            <div
+              class="col-12 col-sm-6 col-md-3 mb-4"
+              *ngIf="flashSaleProducts.length > 2"
+            >
+              <!-- Same product card structure as first product -->
+              <div
+                class="product-card h-100"
+                (click)="navigateToProductDetail(flashSaleProducts[2].id)"
+                style="cursor: pointer"
+              >
+                <!-- Sale Badge -->
+                <div
+                  class="sale-badge"
+                  *ngIf="flashSaleProducts[2].discountPercentage"
+                >
+                  {{ flashSaleProducts[2].discountPercentage }}% OFF
+                </div>
+
+                <!-- Product Image -->
+                <div class="product-image-container">
+                  <img
+                    [src]="flashSaleProducts[2].imageUrl"
+                    [alt]="flashSaleProducts[2].name"
+                    class="product-image"
+                  />
+                  <div class="product-overlay">
+                    <button
+                      pButton
+                      icon="pi pi-shopping-cart"
+                      class="p-button-rounded p-button-text"
+                      (click)="$event.stopPropagation()"
+                    ></button>
+                  </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info mt-3">
+                  <h4 class="product-title">{{ flashSaleProducts[2].name }}</h4>
+
+                  <div class="price-container">
+                    <span
+                      [ngClass]="{
+                        'original-price': flashSaleProducts[2].discountPrice,
+                        'normal-price': !flashSaleProducts[2].discountPrice
+                      }"
+                    >
+                      {{
+                        flashSaleProducts[2].originPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                    <span
+                      class="sale-price"
+                      *ngIf="flashSaleProducts[2].discountPrice"
+                    >
+                      {{
+                        flashSaleProducts[2].discountPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                  </div>
+
+                  <p-rating
+                    [ngModel]="flashSaleProducts[2].averageRating || 0"
+                    [readonly]="true"
+                    class="mt-2 d-flex justify-content-center"
+                  ></p-rating>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-12 col-sm-6 col-md-3 mb-4"
+              *ngIf="flashSaleProducts.length <= 2"
+            ></div>
+
+            <!-- Fourth flash sale product -->
+            <div
+              class="col-12 col-sm-6 col-md-3 mb-4"
+              *ngIf="flashSaleProducts.length > 3"
+            >
+              <!-- Same product card structure as first product -->
+              <div
+                class="product-card h-100"
+                (click)="navigateToProductDetail(flashSaleProducts[3].id)"
+                style="cursor: pointer"
+              >
+                <!-- Sale Badge -->
+                <div
+                  class="sale-badge"
+                  *ngIf="flashSaleProducts[3].discountPercentage"
+                >
+                  {{ flashSaleProducts[3].discountPercentage }}% OFF
+                </div>
+
+                <!-- Product Image -->
+                <div class="product-image-container">
+                  <img
+                    [src]="flashSaleProducts[3].imageUrl"
+                    [alt]="flashSaleProducts[3].name"
+                    class="product-image"
+                  />
+                  <div class="product-overlay">
+                    <button
+                      pButton
+                      icon="pi pi-shopping-cart"
+                      class="p-button-rounded p-button-text"
+                      (click)="$event.stopPropagation()"
+                    ></button>
+                  </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info mt-3">
+                  <h4 class="product-title">{{ flashSaleProducts[3].name }}</h4>
+
+                  <div class="price-container">
+                    <span
+                      [ngClass]="{
+                        'original-price': flashSaleProducts[3].discountPrice,
+                        'normal-price': !flashSaleProducts[3].discountPrice
+                      }"
+                    >
+                      {{
+                        flashSaleProducts[3].originPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                    <span
+                      class="sale-price"
+                      *ngIf="flashSaleProducts[3].discountPrice"
+                    >
+                      {{
+                        flashSaleProducts[3].discountPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}
+                    </span>
+                  </div>
+
+                  <p-rating
+                    [ngModel]="flashSaleProducts[3].averageRating || 0"
+                    [readonly]="true"
+                    class="mt-2 d-flex justify-content-center"
+                  ></p-rating>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-12 col-sm-6 col-md-3 mb-4"
+              *ngIf="flashSaleProducts.length <= 3"
+            ></div>
+          </div>
+        </div>
+      </section>
+
       <!-- Featured Products Section -->
       <section class="products-section">
         <div class="section-header text-center mb-4">

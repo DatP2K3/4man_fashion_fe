@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { UUID } from 'node:crypto';
 import { Product } from '@app/core/models/Product.model';
+import { DiscountType } from '@app/core/models/Discount.model';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +29,9 @@ export class HomeComponent implements OnInit {
   leftBanners: Banner[] = [];
   rightBanners: Banner[] = [];
   products: Product[] = [];
+  flashSaleProducts: Product[] = [];
   loading: boolean = true;
+  flashSaleLoading: boolean = true;
 
   constructor(
     private bannerService: BannerService,
@@ -43,6 +46,7 @@ export class HomeComponent implements OnInit {
 
     this.loadBanners();
     this.loadProducts();
+    this.loadFlashSaleProducts();
   }
 
   // Helper method to fetch a file URL
@@ -146,6 +150,45 @@ export class HomeComponent implements OnInit {
       error: (error) => {
         console.error('Error fetching products:', error);
         this.loading = false;
+      },
+    });
+  }
+
+  loadFlashSaleProducts(): void {
+    const searchRequest: ProductSearchRequest = {
+      keyword: '',
+      categoryId: '',
+      hidden: false,
+      sortBy: 'discountPercentage',
+      pageIndex: 1,
+      pageSize: 20, // Get more products to ensure we have enough flash sale ones
+      sortDirection: 'desc',
+    };
+
+    this.productService.searchProducts(searchRequest).subscribe({
+      next: (response: ProductSearchResponse) => {
+        // Filter products by discount type FLASH_SALE
+        this.flashSaleProducts = (response.data || [])
+          .filter((product) => product.discountType === DiscountType.FLASH_SALE)
+          .slice(0, 4); // Ensure we only take up to 4 items
+
+        // Process product images
+        this.flashSaleProducts.forEach((product) => {
+          if (product.avatarId) {
+            this.fetchFileUrl(product.avatarId, (url) => {
+              product.imageUrl = url;
+            });
+          } else {
+            product.imageUrl = 'assets/images/placeholder.png';
+          }
+        });
+
+        this.flashSaleLoading = false;
+        console.log('Flash Sale Products loaded:', this.flashSaleProducts);
+      },
+      error: (error) => {
+        console.error('Error fetching flash sale products:', error);
+        this.flashSaleLoading = false;
       },
     });
   }

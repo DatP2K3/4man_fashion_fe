@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import {
-  getMessaging,
-  getToken,
-  onMessage,
-  deleteToken,
-} from 'firebase/messaging';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DeviceRegistrationService } from './device-registration.service';
@@ -57,6 +52,7 @@ export class FcmService {
       const messaging = getMessaging(this.firebaseApp);
       console.log('Đã khởi tạo messaging');
 
+      // Luôn yêu cầu token mới từ Firebase
       const currentToken = await getToken(messaging, {
         vapidKey: environment.firebase.vapidKey,
       });
@@ -64,7 +60,6 @@ export class FcmService {
       if (currentToken) {
         console.log('Token FCM hiện tại: ', currentToken);
         this.currentFcmToken = currentToken;
-        // Gửi token này lên server của bạn
         return currentToken;
       } else {
         console.log('Không thể lấy token. Yêu cầu quyền trước.');
@@ -88,16 +83,15 @@ export class FcmService {
   async registerDevice(userId: string): Promise<boolean> {
     console.log('==== BẮT ĐẦU ĐĂNG KÝ THIẾT BỊ FCM ====');
     try {
-      if (!this.currentFcmToken) {
-        console.log('Chưa có FCM token, đang yêu cầu...');
-        const token = await this.requestPermission();
-        if (!token) {
-          console.error('Không thể lấy FCM token để đăng ký');
-          return false;
-        }
-        console.log('✓ Đã nhận FCM token mới');
-        this.currentFcmToken = token;
+      // Yêu cầu FCM token mới mỗi khi đăng nhập
+      console.log('Đang yêu cầu FCM token mới...');
+      const token = await this.requestPermission();
+      if (!token) {
+        console.error('Không thể lấy FCM token để đăng ký');
+        return false;
       }
+      console.log('✓ Đã nhận FCM token');
+      this.currentFcmToken = token;
 
       // Lấy deviceId hoặc tạo mới nếu chưa có
       const deviceId = this.deviceIdService.getDeviceId();
@@ -126,7 +120,7 @@ export class FcmService {
   }
 
   /**
-   * Hủy đăng ký thiết bị khi đăng xuất
+   * Hủy đăng ký thiết bị khi đăng xuất - Chỉ hủy đăng ký trên server, không xóa token
    * @param userId ID người dùng từ Keycloak
    */
   async unregisterDevice(userId: string): Promise<boolean> {
@@ -151,9 +145,8 @@ export class FcmService {
         this.deviceRegistrationService.unregisterDevice(request)
       );
 
-      // Xóa token FCM
-      const messaging = getMessaging(this.firebaseApp);
-      await deleteToken(messaging);
+      // THAY ĐỔI: Không xóa FCM token nữa
+      // Chỉ giải phóng biến currentFcmToken
       this.currentFcmToken = null;
 
       console.log('==== HỦY ĐĂNG KÝ THIẾT BỊ FCM THÀNH CÔNG ====');

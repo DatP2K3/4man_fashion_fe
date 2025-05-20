@@ -117,6 +117,8 @@ export interface SearchOrderRequest {
   orderStatus?: OrderStatus | null; // Changed from status to orderStatus
   pageIndex: number;
   pageSize: number;
+  startDate?: string; // Date in ISO string format for API
+  endDate?: string; // Date in ISO string format for API
 }
 
 export interface CancelOrderRequest {

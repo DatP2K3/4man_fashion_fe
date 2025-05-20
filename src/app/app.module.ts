@@ -17,9 +17,10 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 // Thay thế import cũ
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
-import { environment } from '../environments/environment';
 import { DeviceIdService } from './core/services/device-id.service';
 import { DeviceRegistrationService } from './core/services/device-registration.service';
+import { environment } from './environments/environment';
+import { AuthService } from './core/services/auth.service';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -41,6 +42,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
       loadUserProfileAtStartUp: true,
       bearerPrefix: 'Bearer',
     });
+}
+
+// Function to initialize AuthService after Keycloak
+export function initializeAuthService(authService: AuthService) {
+  return () => Promise.resolve();
 }
 
 @NgModule({
@@ -73,7 +79,15 @@ function initializeKeycloak(keycloak: KeycloakService) {
       multi: true,
       deps: [KeycloakService],
     },
+    // Initialize AuthService after Keycloak
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAuthService,
+      multi: true,
+      deps: [AuthService],
+    },
     KeycloakService,
+    AuthService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
