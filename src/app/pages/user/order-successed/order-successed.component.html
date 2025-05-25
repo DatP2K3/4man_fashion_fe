@@ -52,12 +52,19 @@
               <span>{{ formatCurrency(order.shipmentFee || 0) }}</span>
             </div>
 
+            <div class="summary-item">
+              <span>4ManCash khả dụng</span>
+              <span>{{ formatCurrency(order.cashbackUsed) }}</span>
+            </div>
+
             <hr />
 
             <div class="summary-total">
               <span>Total</span>
               <span>{{
-                formatCurrency(order.totalPrice + order.shipmentFee)
+                formatCurrency(
+                  order.totalPrice + order.shipmentFee - order.cashbackUsed
+                )
               }}</span>
             </div>
 

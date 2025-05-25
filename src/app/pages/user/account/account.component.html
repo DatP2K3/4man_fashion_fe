@@ -36,7 +36,7 @@
               Hiện tại bạn có: <br />
               <span class="wallet"
                 ><i class="pi pi-money-bill"></i>
-                <strong class="coin">{{ profile?.totalCoins }}</strong>
+                <strong class="coin">{{ profile?.cashbackBalance }}</strong>
                 4Mancash</span
               >
             </p>
@@ -65,10 +65,6 @@
           <ul class="navbar">
             <li [routerLink]="['/account/info']" routerLinkActive="active-nav">
               <span>Thông tin tài khoản</span>
-              <i class="pi pi-arrow-right"></i>
-            </li>
-            <li [routerLink]="['/account/refer-friend']">
-              <span>Giới thiệu bạn bè</span>
               <i class="pi pi-arrow-right"></i>
             </li>
             <li [routerLink]="['/account/manage-order-of-me']">

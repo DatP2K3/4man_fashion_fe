@@ -2,6 +2,7 @@ export interface OrderFeeDTO {
   totalQuantity: number;
   totalPrice: number;
   shippingFee: number;
+  cashbackUsed: number;
   totalWeight: number;
   totalHeight: number;
   totalWidth: number;
@@ -94,6 +95,7 @@ export interface OrderDTO {
   createdAt: Date;
   updatedAt: Date;
   updateBy: string;
+  cashbackUsed: number;
 }
 
 export interface CreateOrderRequest {
