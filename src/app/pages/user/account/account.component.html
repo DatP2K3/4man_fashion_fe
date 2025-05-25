@@ -32,13 +32,13 @@
             <h2 class="title-drawer">
               Hi, {{ profile?.firstName }} {{ profile?.lastName }}
             </h2>
-            <p>
-              Hiện tại bạn có: <br />
-              <span class="wallet"
-                ><i class="pi pi-money-bill"></i>
+            <p class="wallet">
+              Hiện tại bạn có:
+              <span class="wallet-balance">
+                <i class="pi pi-money-bill"></i>
                 <strong class="coin">{{ profile?.cashbackBalance }}</strong>
-                4Mancash</span
-              >
+                4Mancash
+              </span>
             </p>
           </div>
 
@@ -54,9 +54,6 @@
               </p>
               <p-progressbar [value]="profile?.percent" />
             </div>
-            <button class="section-invite">
-              Giới thiệu bạn bè <i class="pi pi-user-plus"></i>
-            </button>
           </div>
         </div>
       </div>
