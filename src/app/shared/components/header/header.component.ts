@@ -1,12 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
 import { Profile } from '../../../core/models/Profile.model';
 import { Cart, CartItem } from '../../../core/models/Cart.model';
+import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../../../core/services/Profile.service';
 import { CartService } from '../../../core/services/Cart.service';
 import { AppStateService } from '../../state/AppState.service';
 import { ImageCacheService } from '@app/core/services/ImageCache.service';
+import { Category } from '@app/core/models/Category.model';
+import { CategoryService } from '@app/core/services/Category.service';
+import { Menu } from 'primeng/menu';
 
 @Component({
   selector: 'app-header',
@@ -23,15 +28,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public isCartLoading: boolean = false;
   public isImagesLoading: boolean = false; // New flag to track image loading separately
 
+  // Add these new properties for the dropdown menu
+  aoCategories: Category[] = [];
+  quanCategories: Category[] = [];
+  activeDropdown: string | null = null;
+  loadingCategories: boolean = false;
+
+  // Menu items for PrimeNG menu
+  aoMenuItems: MenuItem[] = [];
+  quanMenuItems: MenuItem[] = [];
+
   private profileSubscription: Subscription | null = null;
   private cartSubscription: Subscription | null = null;
+
+  // Thêm thuộc tính searchKeyword để lưu từ khóa tìm kiếm
+  searchKeyword: string = '';
 
   constructor(
     private readonly keycloak: KeycloakService,
     private profileService: ProfileService,
     private cartService: CartService,
     private appState: AppStateService,
-    private imageCacheService: ImageCacheService // Replace FileUploadService with ImageCacheService
+    private imageCacheService: ImageCacheService, // Replace FileUploadService with ImageCacheService
+    private categoryService: CategoryService,
+    private router: Router // Thêm router để điều hướng
   ) {}
 
   public async ngOnInit() {
@@ -289,5 +309,126 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public goToCart() {
     this.cartVisible = false;
+  }
+
+  // Modified method to show dropdown
+  loadCategories(type: string): void {
+    this.activeDropdown = type;
+
+    // Cancel any ongoing hide timer
+    this.cancelHideDropdown();
+
+    // Load categories if needed
+    if (type === 'ao' && this.aoCategories.length === 0) {
+      this.loadingCategories = true;
+      console.log('Loading Áo categories...');
+
+      this.categoryService.getCategoriesByProductType('Áo').subscribe({
+        next: (response) => {
+          console.log('Áo categories response:', response);
+          if (response && response.success) {
+            this.aoCategories = response.data || [];
+            console.log('Áo categories loaded:', this.aoCategories);
+          }
+          this.loadingCategories = false;
+        },
+        error: (err) => {
+          console.error('Error fetching Áo categories:', err);
+          this.loadingCategories = false;
+        },
+      });
+    } else if (type === 'quan' && this.quanCategories.length === 0) {
+      this.loadingCategories = true;
+      console.log('Loading Quần categories...');
+
+      this.categoryService.getCategoriesByProductType('Quần').subscribe({
+        next: (response) => {
+          console.log('Quần categories response:', response);
+          if (response && response.success) {
+            this.quanCategories = response.data || [];
+            console.log('Quần categories loaded:', this.quanCategories);
+          }
+          this.loadingCategories = false;
+        },
+        error: (err) => {
+          console.error('Error fetching Quần categories:', err);
+          this.loadingCategories = false;
+        },
+      });
+    }
+
+    // Add event listeners for mouseleave
+    setTimeout(() => {
+      const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+      dropdownMenus.forEach((menu) => {
+        menu.addEventListener('mouseleave', () => {
+          this.activeDropdown = null;
+        });
+      });
+    }, 0);
+  }
+
+  // Improved dropdown handling with mouse events
+  private dropdownTimer: any = null;
+  private isMouseInSubmenu = false;
+
+  // Method to cancel any pending hide dropdowns
+  cancelHideDropdown(): void {
+    if (this.dropdownTimer) {
+      clearTimeout(this.dropdownTimer);
+      this.dropdownTimer = null;
+    }
+  }
+
+  // Handle mouse leave from the entire dropdown container
+  handleMouseLeave(type: string): void {
+    // Start a timer to hide the dropdown
+    this.dropdownTimer = setTimeout(() => {
+      // Only hide if the type matches the active dropdown
+      // This prevents one dropdown from closing another
+      if (this.activeDropdown === type) {
+        this.activeDropdown = null;
+      }
+    }, 100);
+  }
+
+  resetDropdown(): void {
+    // Add a small delay before hiding to give users time to move to submenu
+    this.dropdownTimer = setTimeout(() => {
+      this.activeDropdown = null;
+    }, 100);
+  }
+
+  // When entering the dropdown menu directly, cancel any hide timer
+  enterDropdown(): void {
+    if (this.dropdownTimer) {
+      clearTimeout(this.dropdownTimer);
+      this.dropdownTimer = null;
+    }
+  }
+
+  // Method to navigate to a specific category
+  navigateToCategory(
+    categoryId: string | undefined,
+    productType: string
+  ): void {
+    if (categoryId) {
+      // Will automatically navigate via routerLink in menu items
+      console.log(`Navigate to ${productType} category: ${categoryId}`);
+    }
+  }
+
+  onSearch() {
+    const keyword = this.searchKeyword?.trim();
+    if (keyword) {
+      // Điều hướng đến trang category-products với query param keyword
+      this.router.navigate(['/search'], { queryParams: { keyword } });
+    }
+  }
+
+  onSearchKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onSearch();
+    }
   }
 }

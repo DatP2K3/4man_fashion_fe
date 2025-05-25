@@ -18,6 +18,7 @@ import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
 import { ToastModule } from 'primeng/toast';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { MenuModule } from 'primeng/menu';
 
 @NgModule({
   declarations: [
@@ -41,12 +42,14 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
     AvatarModule,
     ToastModule,
     ScrollPanelModule,
+    MenuModule,
   ],
   exports: [
     HeaderComponent,
     FooterComponent,
     AdminHeaderComponent,
     AdminFooterComponent,
+    MenuModule,
   ],
 })
 export class SharedModule {}

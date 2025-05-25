@@ -8,11 +8,63 @@
       <li>
         <a routerLink="/home">TRANG CHỦ</a>
       </li>
-      <li>
-        <a routerLink="/ao">ÁO</a>
+      <li
+        class="dropdown-container"
+        (mouseenter)="loadCategories('ao')"
+        (mouseleave)="handleMouseLeave('ao')"
+      >
+        <!-- Remove direct navigation from main menu items -->
+        <a style="cursor: pointer">ÁO</a>
+        <div
+          class="dropdown-menu"
+          [ngClass]="{ active: activeDropdown === 'ao' }"
+          (mouseenter)="cancelHideDropdown()"
+        >
+          <div
+            *ngIf="!aoCategories.length && loadingCategories"
+            class="loading-indicator"
+          >
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Đang tải...</span>
+          </div>
+          <ul *ngIf="aoCategories.length">
+            <li *ngFor="let category of aoCategories">
+              <a [routerLink]="['/ao', category.id]">{{ category.name }}</a>
+            </li>
+          </ul>
+          <ul *ngIf="!loadingCategories && !aoCategories.length">
+            <li><span>Không có danh mục nào</span></li>
+          </ul>
+        </div>
       </li>
-      <li>
-        <a routerLink="/quan">QUẦN</a>
+      <li
+        class="dropdown-container"
+        (mouseenter)="loadCategories('quan')"
+        (mouseleave)="handleMouseLeave('quan')"
+      >
+        <!-- Remove direct navigation from main menu items -->
+        <a style="cursor: pointer">QUẦN</a>
+        <div
+          class="dropdown-menu"
+          [ngClass]="{ active: activeDropdown === 'quan' }"
+          (mouseenter)="cancelHideDropdown()"
+        >
+          <div
+            *ngIf="!quanCategories.length && loadingCategories"
+            class="loading-indicator"
+          >
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Đang tải...</span>
+          </div>
+          <ul *ngIf="quanCategories.length">
+            <li *ngFor="let category of quanCategories">
+              <a [routerLink]="['/quan', category.id]">{{ category.name }}</a>
+            </li>
+          </ul>
+          <ul *ngIf="!loadingCategories && !quanCategories.length">
+            <li><span>Không có danh mục nào</span></li>
+          </ul>
+        </div>
       </li>
       <li>
         <a routerLink="/brand-story">GIỚI THIỆU</a>
@@ -21,8 +73,13 @@
   </nav>
 
   <div class="search">
-    <input type="text" placeholder="Tìm kiếm sản phẩm..." />
-    <button><i class="pi pi-search"></i></button>
+    <input
+      type="text"
+      placeholder="Tìm kiếm sản phẩm..."
+      [(ngModel)]="searchKeyword"
+      (keydown)="onSearchKeydown($event)"
+    />
+    <button (click)="onSearch()"><i class="pi pi-search"></i></button>
   </div>
 
   <nav class="auth-nav">

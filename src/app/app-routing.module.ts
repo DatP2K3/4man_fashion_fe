@@ -59,6 +59,44 @@ const routes: Routes = [
     path: 'unauthorized',
     component: UnauthorizedComponent,
   },
+  // Add these routes for category display
+  {
+    path: 'ao',
+    loadChildren: () =>
+      import('./pages/user/category-products/category-products.module').then(
+        (m) => m.CategoryProductsModule
+      ),
+    data: { type: 'ao' },
+  },
+  {
+    path: 'quan',
+    loadChildren: () =>
+      import('./pages/user/category-products/category-products.module').then(
+        (m) => m.CategoryProductsModule
+      ),
+    data: { type: 'quan' },
+  },
+  {
+    path: 'ao/:id',
+    loadChildren: () =>
+      import('./pages/user/category-products/category-products.module').then(
+        (m) => m.CategoryProductsModule
+      ),
+  },
+  {
+    path: 'quan/:id',
+    loadChildren: () =>
+      import('./pages/user/category-products/category-products.module').then(
+        (m) => m.CategoryProductsModule
+      ),
+  },
+  {
+    path: 'search',
+    loadChildren: () =>
+      import('./pages/user/category-products/category-products.module').then(
+        (m) => m.CategoryProductsModule
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];
 
