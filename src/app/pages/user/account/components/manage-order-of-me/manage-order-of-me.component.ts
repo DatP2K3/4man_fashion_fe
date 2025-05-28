@@ -5,6 +5,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { ApiResponse } from '../../../../../core/models/ApiResponse.model';
+import { ProductService } from '../../../../../core/services/Product.service';
+import { FileUploadService } from '../../../../../core/services/FileUpload.service';
 
 @Component({
   selector: 'app-manage-order-of-me',
@@ -20,12 +23,20 @@ export class ManageOrderOfMeComponent implements OnInit {
   currentPage = 0;
   pageSize = 10;
   totalItems = 0;
+  selectedOrder: OrderDTO | null = null;
+  showOrderModal = false;
+  orderItemImages: { [productId: string]: string } = {};
+  orderItemProductInfo: {
+    [productId: string]: { name: string; imageUrl?: string };
+  } = {};
 
   constructor(
     private orderService: OrderService,
     private fb: FormBuilder,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private productService: ProductService,
+    private fileUploadService: FileUploadService // Thêm dòng này
   ) {
     this.dateRangeForm = this.fb.group({
       fromDate: [new Date(new Date().setDate(new Date().getDate() - 30))],
@@ -119,7 +130,82 @@ export class ManageOrderOfMeComponent implements OnInit {
   }
 
   viewOrder(orderCode: string): void {
-    this.router.navigate(['/account/order-detail', orderCode]);
+    this.loading = true;
+    this.orderService
+      .getOrderByOrderCode(orderCode)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (response: ApiResponse<OrderDTO>) => {
+          if (response.success && response.data) {
+            this.selectedOrder = response.data;
+            this.showOrderModal = true;
+            this.loadOrderItemImages();
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Lỗi',
+              detail: 'Không thể lấy thông tin đơn hàng',
+            });
+          }
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Lỗi',
+            detail:
+              'Không thể lấy thông tin đơn hàng: ' +
+              (error.message || 'Unknown error'),
+          });
+        },
+      });
+  }
+
+  loadOrderItemImages(): void {
+    this.orderItemImages = {};
+    this.orderItemProductInfo = {};
+    if (this.selectedOrder && this.selectedOrder.orderItems) {
+      this.selectedOrder.orderItems.forEach((item) => {
+        const productId = item.productId;
+        if (productId) {
+          this.productService.getProductById(productId).subscribe({
+            next: (res) => {
+              const productData = res?.data;
+              const avatarId = productData?.avatarId;
+              const name = productData?.name || '';
+              if (name) {
+                this.orderItemProductInfo[productId] = { name };
+              }
+              if (avatarId) {
+                this.fileUploadService.getFile(avatarId).subscribe({
+                  next: (fileRes) => {
+                    if (fileRes && fileRes.data && fileRes.data.url) {
+                      this.orderItemProductInfo[productId] = {
+                        name,
+                        imageUrl: fileRes.data.url,
+                      };
+                      this.orderItemImages[productId] = fileRes.data.url;
+                    }
+                  },
+                  error: () => {
+                    // Không cần xử lý lỗi ở đây
+                  },
+                });
+              }
+            },
+            error: () => {
+              // Không cần xử lý lỗi ở đây
+            },
+          });
+        }
+      });
+    }
+  }
+
+  closeOrderModal(): void {
+    this.showOrderModal = false;
+    this.selectedOrder = null;
+    this.orderItemImages = {};
+    this.orderItemProductInfo = {};
   }
 
   cancelOrder(orderCode: string): void {

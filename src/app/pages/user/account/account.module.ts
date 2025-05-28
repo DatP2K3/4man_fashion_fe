@@ -22,6 +22,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip'; // Import TooltipModule
+import { DialogModule } from 'primeng/dialog'; // Thêm dòng này
 
 const routes: Routes = [
   {
@@ -67,6 +68,7 @@ const routes: Routes = [
     PaginatorModule,
     InputTextModule,
     TooltipModule, // Add TooltipModule
+    DialogModule, // Thêm dòng này
   ],
   providers: [MessageService],
 })
