@@ -3,7 +3,15 @@
 
   <!-- Tab filter -->
   <div class="order-tabs">
-    <p-tabMenu [model]="orderStatusTabs" [activeItem]="activeTab"></p-tabMenu>
+    <ul class="custom-tab-list">
+      <li
+        *ngFor="let tab of orderStatusTabs"
+        [class.active]="tab === activeTab"
+        (click)="onTabChange(tab)"
+      >
+        {{ tab.label }}
+      </li>
+    </ul>
   </div>
 
   <!-- Filter controls -->

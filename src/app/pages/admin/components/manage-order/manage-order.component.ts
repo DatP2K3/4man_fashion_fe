@@ -464,4 +464,11 @@ export class ManageOrderComponent implements OnInit {
     const variantName = product.variants[variantId]?.name || '';
     return `${product.name} (${variantName})`;
   }
+
+  onTabChange(tab: any) {
+    this.activeTab = tab;
+    if (tab.command) {
+      tab.command();
+    }
+  }
 }

@@ -17,6 +17,59 @@
 .order-tabs {
   margin-bottom: 1.5rem;
 
+  .custom-tab-list {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: 2px solid #e0e0e0;
+
+    li {
+      cursor: pointer;
+      padding: 0.8rem 2.2rem;
+      border-radius: 8px 8px 0 0;
+      background: #f6f8fa;
+      color: #495057;
+      font-weight: 600;
+      font-size: 1.18rem;
+      border: 1.5px solid transparent;
+      margin-bottom: -2px;
+      box-shadow: 0 2px 8px rgba(25, 118, 210, 0.04);
+      transition: background 0.18s, color 0.18s, border 0.18s, box-shadow 0.18s,
+        transform 0.18s;
+
+      &.active {
+        background: var(--primary-color);
+        color: #fff;
+        border: 1.5px solid var(--primary-color);
+        border-bottom: 2.5px solid #fff;
+        z-index: 2;
+        box-shadow: 0 4px 16px rgba(25, 118, 210, 0.13);
+        transform: translateY(2px) scale(1.04);
+      }
+
+      &:hover:not(.active) {
+        background: #e3eafc;
+        color: var(--primary-color, #1976d2);
+        border: 1.5px solid #bbdefb;
+        box-shadow: 0 2px 8px rgba(66, 165, 245, 0.08);
+        transform: translateY(-2px) scale(1.03);
+      }
+    }
+  }
+
+  @media (max-width: 700px) {
+    .custom-tab-list {
+      flex-wrap: wrap;
+      gap: 0.2rem;
+      li {
+        font-size: 1rem;
+        padding: 0.6rem 1.2rem;
+      }
+    }
+  }
+
   ::ng-deep .p-tabmenu {
     .p-tabmenu-nav {
       border-bottom: 1px solid #e0e0e0;

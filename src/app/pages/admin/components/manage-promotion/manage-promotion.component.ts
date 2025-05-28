@@ -208,10 +208,8 @@ export class ManagePromotionComponent implements OnInit, OnDestroy {
     this.applyFilters();
   }
 
-  // Xử lý thay đổi tab trạng thái
-  onTabChange(event: any) {
-    const statusValue = this.statusOptions[event.index].value;
-    this.activeStatusTab = statusValue;
+  onCustomTabChange(tab: any, i: number) {
+    this.activeStatusTab = tab.value;
     this.currentPage = 1;
     this.applyFilters();
   }

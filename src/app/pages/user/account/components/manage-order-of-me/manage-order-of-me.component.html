@@ -130,6 +130,14 @@
         {{ getStatusTranslation(selectedOrder.orderStatus) }}
       </div>
       <div>
+        <strong>Phương thức thanh toán:</strong>
+        {{
+          selectedOrder.paymentMethod === "COD"
+            ? "Thanh toán khi nhận hàng"
+            : "Thanh toán online"
+        }}
+      </div>
+      <div>
         <strong>Tổng tiền:</strong> {{ selectedOrder.totalPrice | number }} đ
       </div>
       <div>
