@@ -21,6 +21,7 @@ import { DeviceIdService } from './core/services/device-id.service';
 import { DeviceRegistrationService } from './core/services/device-registration.service';
 import { environment } from './environments/environment';
 import { AuthService } from './core/services/auth.service';
+import { MembershipComponent } from './pages/user/account/components/membership/membership.component';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -52,6 +53,7 @@ export function initializeAuthService(authService: AuthService) {
 @NgModule({
   declarations: [
     AppComponent,
+    MembershipComponent,
     // Thêm các components khác của bạn ở đây
   ],
   imports: [

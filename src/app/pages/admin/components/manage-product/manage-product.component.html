@@ -2,14 +2,46 @@
   <div class="manage-product-header">
     <h2>Quản lý sản phẩm</h2>
     <div class="manage-product-actions">
-      <span class="p-input-icon-left search-box">
+      <span class="p-input-icon-left search-box" style="position: relative">
         <input
           type="text"
           pInputText
           [(ngModel)]="searchKeyword"
-          (input)="searchProducts()"
+          (input)="onSearchInput($event)"
+          (blur)="onBlurAutoComplete()"
           placeholder="Tìm kiếm sản phẩm..."
+          autocomplete="off"
         />
+        <i
+          *ngIf="autoCompleteLoading"
+          class="pi pi-spin pi-spinner"
+          style="
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1976d2;
+          "
+        ></i>
+        <ul
+          *ngIf="showAutoComplete && autoCompleteSuggestions.length > 0"
+          class="autocomplete-list"
+          [ngStyle]="{
+            display:
+              showAutoComplete && autoCompleteSuggestions.length > 0
+                ? 'block'
+                : 'none',
+            zIndex: 9999
+          }"
+        >
+          <li
+            *ngFor="let suggestion of autoCompleteSuggestions"
+            (mousedown)="onSelectSuggestion(suggestion)"
+            [style.cursor]="'pointer'"
+          >
+            {{ suggestion }}
+          </li>
+        </ul>
       </span>
       <button
         pButton

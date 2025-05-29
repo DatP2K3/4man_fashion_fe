@@ -27,6 +27,13 @@ export class ManageProductComponent implements OnInit, OnDestroy {
   searchKeyword: string = '';
   productImageCache: Map<string, string> = new Map<string, string>();
 
+  // Autocomplete suggestions
+  autoCompleteSuggestions: string[] = [];
+  showAutoComplete: boolean = false;
+  autoCompleteLoading: boolean = false;
+  autoCompleteLimit: number = 10;
+  autoCompleteDebounce?: any;
+
   private searchSubject = new Subject<string>();
   private searchSubscription!: Subscription;
   private refreshSubscription!: Subscription;
@@ -262,5 +269,47 @@ export class ManageProductComponent implements OnInit, OnDestroy {
   // Add method to manually refresh the list
   refreshProductList() {
     this.loadProducts();
+  }
+
+  onSearchInput(event: any) {
+    const keyword = event.target.value;
+    this.searchKeyword = keyword;
+    if (this.autoCompleteDebounce) {
+      clearTimeout(this.autoCompleteDebounce);
+    }
+    if (!keyword) {
+      this.autoCompleteSuggestions = [];
+      this.showAutoComplete = false;
+      return;
+    }
+    this.autoCompleteDebounce = setTimeout(() => {
+      this.autoCompleteLoading = true;
+      this.productService
+        .productAutoComplete(keyword, this.autoCompleteLimit)
+        .subscribe({
+          next: (suggestions) => {
+            this.autoCompleteSuggestions = suggestions;
+            this.showAutoComplete = true;
+            this.autoCompleteLoading = false;
+          },
+          error: () => {
+            this.autoCompleteSuggestions = [];
+            this.showAutoComplete = false;
+            this.autoCompleteLoading = false;
+          },
+        });
+    }, 300);
+  }
+
+  onSelectSuggestion(suggestion: string) {
+    this.searchKeyword = suggestion;
+    this.showAutoComplete = false;
+    this.searchProducts();
+  }
+
+  onBlurAutoComplete() {
+    setTimeout(() => {
+      this.showAutoComplete = false;
+    }, 200);
   }
 }

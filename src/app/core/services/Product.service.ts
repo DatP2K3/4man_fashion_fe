@@ -80,6 +80,25 @@ export class ProductService {
     return this.http.put<any>(`${this.apiUrl}/products`, product);
   }
 
+  /**
+   * Gọi API autocomplete tên sản phẩm
+   * @param keyword Từ khóa tìm kiếm
+   * @param limit Số lượng kết quả trả về (mặc định 10)
+   */
+  productAutoComplete(
+    keyword: string,
+    limit: number = 10
+  ): Observable<string[]> {
+    return this.http
+      .get<{ data: string[] }>(
+        'http://localhost:8686/elasticsearch/api/products/autocomplete',
+        {
+          params: { keyword, limit: limit.toString() },
+        }
+      )
+      .pipe(map((res) => res.data));
+  }
+
   // Method to trigger a refresh
   triggerRefresh() {
     this.refreshNeededSubject.next(true);

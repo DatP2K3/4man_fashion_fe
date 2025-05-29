@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized.component';
+import { MembershipComponent } from './pages/user/account/components/membership/membership.component';
 
 // Main application routes
 const routes: Routes = [
@@ -96,6 +97,10 @@ const routes: Routes = [
       import('./pages/user/category-products/category-products.module').then(
         (m) => m.CategoryProductsModule
       ),
+  },
+  {
+    path: 'membership',
+    component: MembershipComponent,
   },
   { path: '**', redirectTo: '' },
 ];

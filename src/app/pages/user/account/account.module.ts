@@ -17,6 +17,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ManageOrderOfMeComponent } from './components/manage-order-of-me/manage-order-of-me.component';
 import { FaqComponent } from './components/faq/faq.component';
+import { MembershipComponent } from './components/membership/membership.component';
 // Import additional PrimeNG modules
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
@@ -48,6 +49,7 @@ const routes: Routes = [
     AddressComponent,
     ManageOrderOfMeComponent,
     FaqComponent,
+    // MembershipComponent đã bị loại bỏ khỏi declarations
   ],
   imports: [
     RouterModule,

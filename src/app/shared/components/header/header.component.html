@@ -72,14 +72,41 @@
     </ul>
   </nav>
 
-  <div class="search">
-    <input
-      type="text"
-      placeholder="Tìm kiếm sản phẩm..."
-      [(ngModel)]="searchKeyword"
-      (keydown)="onSearchKeydown($event)"
-    />
-    <button (click)="onSearch()"><i class="pi pi-search"></i></button>
+  <div class="search-saction">
+    <div class="search">
+      <input
+        type="text"
+        placeholder="Tìm kiếm sản phẩm..."
+        [(ngModel)]="searchKeyword"
+        (input)="onSearchInput($event)"
+        (blur)="onBlurAutoComplete()"
+        (keydown)="onSearchKeydown($event)"
+        autocomplete="off"
+      />
+      <button (click)="onSearch()"><i class="pi pi-search"></i></button>
+      <i
+        *ngIf="autoCompleteLoading"
+        class="pi pi-spin pi-spinner"
+        style="
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #1976d2;
+        "
+      ></i>
+    </div>
+    <ul
+      *ngIf="showAutoComplete && autoCompleteSuggestions.length > 0"
+      class="autocomplete-list"
+    >
+      <li
+        *ngFor="let suggestion of autoCompleteSuggestions"
+        (mousedown)="onSelectSuggestion(suggestion)"
+      >
+        {{ suggestion }}
+      </li>
+    </ul>
   </div>
 
   <nav class="auth-nav">
@@ -144,7 +171,9 @@
             Mua sắm ngay, hoàn tiền liền tay, rinh ngay đồ hiệu
           </p>
           <div class="btn-invite-group">
-            <button class="more-btn">Tìm hiểu thêm</button>
+            <button class="more-btn" routerLink="/membership">
+              Tìm hiểu thêm
+            </button>
           </div>
         </div>
 

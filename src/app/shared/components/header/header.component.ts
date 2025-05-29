@@ -11,7 +11,7 @@ import { AppStateService } from '../../state/AppState.service';
 import { ImageCacheService } from '@app/core/services/ImageCache.service';
 import { Category } from '@app/core/models/Category.model';
 import { CategoryService } from '@app/core/services/Category.service';
-import { Menu } from 'primeng/menu';
+import { ProductService } from '@app/core/services/Product.service'; // Import ProductService chuẩn Angular
 
 @Component({
   selector: 'app-header',
@@ -44,6 +44,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // Thêm thuộc tính searchKeyword để lưu từ khóa tìm kiếm
   searchKeyword: string = '';
 
+  // Autocomplete suggestions for header search
+  autoCompleteSuggestions: string[] = [];
+  showAutoComplete: boolean = false;
+  autoCompleteLoading: boolean = false;
+  autoCompleteLimit: number = 10;
+  autoCompleteDebounce?: any;
+
   constructor(
     private readonly keycloak: KeycloakService,
     private profileService: ProfileService,
@@ -51,6 +58,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private appState: AppStateService,
     private imageCacheService: ImageCacheService, // Replace FileUploadService with ImageCacheService
     private categoryService: CategoryService,
+    private productService: ProductService, // Inject ProductService đúng chuẩn Angular
     private router: Router // Thêm router để điều hướng
   ) {}
 
@@ -430,5 +438,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (event.key === 'Enter') {
       this.onSearch();
     }
+  }
+
+  onSearchInput(event: any) {
+    const keyword = event.target.value;
+    this.searchKeyword = keyword;
+    if (this.autoCompleteDebounce) {
+      clearTimeout(this.autoCompleteDebounce);
+    }
+    if (!keyword) {
+      this.autoCompleteSuggestions = [];
+      this.showAutoComplete = false;
+      return;
+    }
+    this.autoCompleteDebounce = setTimeout(() => {
+      this.autoCompleteLoading = true;
+      this.productService
+        .productAutoComplete(keyword, this.autoCompleteLimit)
+        .subscribe({
+          next: (suggestions) => {
+            this.autoCompleteSuggestions = suggestions;
+            this.showAutoComplete = true;
+            this.autoCompleteLoading = false;
+          },
+          error: () => {
+            this.autoCompleteSuggestions = [];
+            this.showAutoComplete = false;
+            this.autoCompleteLoading = false;
+          },
+        });
+    }, 300);
+  }
+
+  onSelectSuggestion(suggestion: string) {
+    this.searchKeyword = suggestion;
+    this.showAutoComplete = false;
+    this.onSearch();
+  }
+
+  onBlurAutoComplete() {
+    setTimeout(() => {
+      this.showAutoComplete = false;
+    }, 200);
   }
 }
