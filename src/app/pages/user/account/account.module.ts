@@ -16,6 +16,7 @@ import { SharedModule } from '@app/shared/shared.module';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ManageOrderOfMeComponent } from './components/manage-order-of-me/manage-order-of-me.component';
+import { FaqComponent } from './components/faq/faq.component';
 // Import additional PrimeNG modules
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
@@ -34,7 +35,7 @@ const routes: Routes = [
       { path: 'refer-friend', component: InfoComponent },
       { path: 'orders', component: InfoComponent },
       { path: '4mancash-point', component: InfoComponent },
-      { path: 'faq', component: InfoComponent },
+      { path: 'faq', component: FaqComponent },
       { path: 'manage-order-of-me', component: ManageOrderOfMeComponent },
     ],
   },
@@ -46,6 +47,7 @@ const routes: Routes = [
     InfoComponent,
     AddressComponent,
     ManageOrderOfMeComponent,
+    FaqComponent,
   ],
   imports: [
     RouterModule,
