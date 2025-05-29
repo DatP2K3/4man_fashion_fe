@@ -145,6 +145,13 @@ main {
     background-color: var(--primary-color);
     color: var(--secondary-text-color);
   }
+  
+  li.active-nav,
+  li.active-nav span,
+  li.active-nav i {
+    background-color: var(--primary-color) !important;
+    color: var(--secondary-text-color) !important;
+  }
 }
 
 /* Pagination z-index fix */
