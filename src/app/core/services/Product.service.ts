@@ -70,8 +70,24 @@ export class ProductService {
       );
   }
 
+  searchProductsForMannage(
+    searchRequest: ProductSearchRequest
+  ): Observable<ProductSearchResponse> {
+    return this.http
+      .post<ProductSearchResponse>(
+        'http://localhost:8686/elasticsearch/api/products/search',
+        searchRequest
+      )
+      .pipe(
+        map((response) => {
+          // Đảm bảo các trường hidden được xử lý đúng nếu tên trường khác nhau
+          return response;
+        })
+      );
+  }
+
   toggleProductVisibility(productId: string, hidden: boolean): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${productId}/visibility`, {
+    return this.http.put(`${this.apiUrl}/products/${productId}/visibility`, {
       hidden,
     });
   }

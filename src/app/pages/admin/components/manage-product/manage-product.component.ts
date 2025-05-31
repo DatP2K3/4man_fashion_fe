@@ -41,7 +41,6 @@ export class ManageProductComponent implements OnInit, OnDestroy {
   searchRequest: ProductSearchRequest = {
     keyword: '',
     categoryId: '',
-    hidden: false,
     sortBy: 'name.sort',
     pageIndex: 1,
     pageSize: 10,
