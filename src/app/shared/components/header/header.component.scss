@@ -309,6 +309,10 @@
     }
   }
 
+  .dropdown-item {
+    margin: 0 !important;
+  }
+
   // Add indicator for dropdown items
   > a:after {
     content: "\e902";

@@ -28,7 +28,7 @@
             <span>Đang tải...</span>
           </div>
           <ul *ngIf="aoCategories.length">
-            <li *ngFor="let category of aoCategories">
+            <li *ngFor="let category of aoCategories" class="dropdown-item">
               <a [routerLink]="['/ao', category.id]">{{ category.name }}</a>
             </li>
           </ul>
@@ -57,7 +57,7 @@
             <span>Đang tải...</span>
           </div>
           <ul *ngIf="quanCategories.length">
-            <li *ngFor="let category of quanCategories">
+            <li *ngFor="let category of quanCategories" class="dropdown-item">
               <a [routerLink]="['/quan', category.id]">{{ category.name }}</a>
             </li>
           </ul>
