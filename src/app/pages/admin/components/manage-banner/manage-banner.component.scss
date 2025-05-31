@@ -517,6 +517,133 @@
   border-radius: 8px;
 }
 
+// Banner Dialog Custom Styles
+:host ::ng-deep .p-dialog {
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+
+  .p-dialog-header {
+    background: #f8f9fa;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #222;
+    padding: 1.2rem 1.5rem 1rem 1.5rem;
+  }
+
+  .p-dialog-content {
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    background: #fff;
+  }
+
+  .p-dialog-footer {
+    background: #f8f9fa;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+// Form fields
+:host ::ng-deep .p-dialog .p-field {
+  margin-bottom: 1.2rem;
+
+  label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+
+  input[type="text"],
+  .p-inputtext,
+  .p-dropdown,
+  .p-inputnumber {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    background: #fafbfc;
+    transition: border 0.2s;
+
+    &:focus {
+      border-color: #1890ff;
+      background: #fff;
+    }
+  }
+
+  .p-error {
+    color: #e53935;
+    font-size: 0.95rem;
+    margin-top: 0.2rem;
+  }
+}
+
+// File upload
+:host ::ng-deep .p-dialog .p-fileupload {
+  width: 100%;
+
+  .p-button {
+    border-radius: 6px;
+    background: #1890ff;
+    color: #fff;
+    font-weight: 500;
+
+    &:hover {
+      background: #1765ad;
+    }
+  }
+}
+
+// Preview image
+:host ::ng-deep .preview-container {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background: #fafbfc;
+  text-align: center;
+
+  .preview-image {
+    max-width: 100%;
+    max-height: 180px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    margin: 0 auto;
+  }
+}
+
+// Footer buttons
+:host ::ng-deep .p-dialog-footer .p-button {
+  min-width: 100px;
+  font-size: 1rem;
+  border-radius: 6px;
+
+  &.p-button-text {
+    color: #888;
+    background: transparent;
+    border: none;
+
+    &:hover {
+      color: #e53935;
+      background: #fbe9e7;
+    }
+  }
+
+  &.p-button {
+    background: #1890ff;
+    color: #fff;
+
+    &:hover {
+      background: #1765ad;
+    }
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
   .banner-carousel {
