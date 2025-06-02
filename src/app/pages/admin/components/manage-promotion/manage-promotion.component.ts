@@ -223,10 +223,6 @@ export class ManagePromotionComponent implements OnInit, OnDestroy {
     this.router.navigate(['/admin/manage-promotions/flash-sale']);
   }
 
-  viewPromotion(promotion: Discount) {
-    this.router.navigate(['/admin/manage-promotions/view', promotion.id]);
-  }
-
   editPromotion(promotion: Discount) {
     this.router.navigate(['/admin/manage-promotions/edit', promotion.id]);
   }
@@ -278,6 +274,35 @@ export class ManagePromotionComponent implements OnInit, OnDestroy {
     } else {
       this.loading = false;
     }
+  }
+
+  // Đổi trạng thái kích hoạt của khuyến mãi
+  toggleVisibility(promotion: Discount) {
+    if (!promotion.id) return;
+    this.loading = true;
+    this.discountService.visibilityDiscount(promotion.id).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Thành công',
+          detail:
+            promotion.status === DiscountStatus.CANCELED
+              ? 'Kích hoạt thành công'
+              : 'Huỷ kích hoạt thành công',
+          life: 3000,
+        });
+        // Reload lại danh sách hoặc cập nhật trạng thái local
+        this.loadPromotions();
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Lỗi',
+          detail: 'Không thể thay đổi trạng thái khuyến mãi',
+        });
+        this.loading = false;
+      },
+    });
   }
 
   // Lấy class hiển thị theo trạng thái

@@ -1,0 +1,156 @@
+<div class="manage-category-container">
+  <p-toast
+    key="main"
+    [baseZIndex]="2000"
+    position="top-right"
+    [style]="{ top: '80px' }"
+    [autoZIndex]="true"
+    [preventOpenDuplicates]="true"
+    [breakpoints]="{ '576px': { width: '90vw', left: '5vw', right: '5vw' } }"
+  ></p-toast>
+  <div class="header-row">
+    <h2>Quản lý danh mục sản phẩm</h2>
+    <button
+      type="button"
+      class="custom-btn custom-btn-primary"
+      (click)="openNewDialog()"
+    >
+      <i class="pi pi-plus"></i> Thêm danh mục
+    </button>
+  </div>
+  <p-table
+    [value]="categories"
+    [loading]="loading"
+    [paginator]="true"
+    [rows]="10"
+    [responsiveLayout]="'scroll'"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Tên danh mục</th>
+        <th>Loại sản phẩm</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-category>
+      <tr [ngClass]="category.deleted ? 'deleted-row' : ''">
+        <td>{{ category.name }}</td>
+        <td>{{ category.productType }}</td>
+        <td>{{ category.description }}</td>
+        <td>
+          <div class="action-buttons">
+            <button
+              type="button"
+              class="custom-btn custom-btn-primary"
+              (click)="openEditDialog(category)"
+              title="Chỉnh sửa"
+              pTooltip="Chỉnh sửa danh mục"
+              [disabled]="category.deleted"
+              [ngClass]="category.deleted ? 'btn-disabled' : ''"
+            >
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button
+              *ngIf="!category.deleted"
+              type="button"
+              class="custom-btn custom-btn-danger btn-delete"
+              (click)="toggleCategoryVisibility(category)"
+              title="Huỷ kích hoạt"
+              pTooltip="Huỷ kích hoạt danh mục"
+            >
+              <i class="pi pi-ban"></i>
+            </button>
+            <button
+              *ngIf="category.deleted"
+              type="button"
+              class="custom-btn custom-btn-primary btn-activate"
+              (click)="toggleCategoryVisibility(category)"
+              title="Kích hoạt"
+              pTooltip="Kích hoạt lại danh mục"
+            >
+              <i class="pi pi-check-circle"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog
+    [(visible)]="displayDialog"
+    [header]="editMode ? 'Cập nhật danh mục' : 'Thêm danh mục'"
+    [modal]="true"
+    [style]="{ width: '400px' }"
+  >
+    <form [formGroup]="categoryForm" class="p-fluid">
+      <div class="p-field">
+        <label for="name">Tên danh mục</label>
+        <input id="name" type="text" pInputText formControlName="name" />
+      </div>
+      <div class="p-field">
+        <label for="productType">Loại sản phẩm</label>
+        <input
+          id="productType"
+          type="text"
+          pInputText
+          formControlName="productType"
+        />
+      </div>
+      <div class="p-field">
+        <label for="description">Mô tả</label>
+        <textarea
+          id="description"
+          pInputTextarea
+          formControlName="description"
+        ></textarea>
+      </div>
+    </form>
+    <div class="tag-desc-section">
+      <label style="font-weight: 500">Các tag (chỉ tên)</label>
+      <ng-container
+        *ngFor="
+          let tag of categoryForm.get('tagDescriptions')?.value;
+          let i = index
+        "
+      >
+        <div class="tag-desc-row" *ngIf="!tag.deleted">
+          <input
+            type="text"
+            placeholder="Tên tag"
+            [(ngModel)]="categoryForm.value.tagDescriptions[i].name"
+            (ngModelChange)="updateTagDescription(i, $event)"
+          />
+          <i
+            class="pi pi-trash custom-btn custom-btn-danger"
+            title="Xoá tag"
+            (click)="removeTagDescription(i)"
+          ></i>
+        </div>
+      </ng-container>
+      <i
+        class="pi pi-plus custom-btn custom-btn-primary"
+        style="margin-top: 10px"
+        title="Thêm tag"
+        (click)="addTagDescription()"
+      ></i>
+    </div>
+    <div class="dialog-footer">
+      <button
+        type="button"
+        class="custom-btn custom-btn-secondary"
+        (click)="cancelDialog()"
+      >
+        Hủy
+      </button>
+      <button
+        type="button"
+        class="custom-btn custom-btn-primary"
+        (click)="saveCategory()"
+        [disabled]="categoryForm.invalid"
+      >
+        Lưu
+      </button>
+    </div>
+  </p-dialog>
+</div>

@@ -63,6 +63,13 @@ export class DiscountService {
       .pipe(catchError(this.handleError));
   }
 
+  /**
+   * Thay đổi trạng thái hiển thị (kích hoạt/huỷ kích hoạt) của discount
+   */
+  visibilityDiscount(id: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}/visibility`, null);
+  }
+
   // Error handling method
   private handleError(error: HttpErrorResponse) {
     let errorMsg = 'Đã xảy ra lỗi không xác định';

@@ -12,6 +12,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ManageShopAddressComponent } from './components/manage-shop-address/manage-shop-address.component';
 import { RoleGuard } from '../../core/guards/role.guard';
+import { ManageCategoryComponent } from './components/manage-category/manage-category.component';
 
 // PrimeNG modules
 import { TableModule } from 'primeng/table';
@@ -69,6 +70,7 @@ const routes: Routes = [
       { path: 'manage-promotions/edit/:id', component: EditPromotionComponent },
       { path: 'manage-shop-address', component: ManageShopAddressComponent },
       { path: 'manage-orders', component: ManageOrderComponent },
+      { path: 'manage-categories', component: ManageCategoryComponent },
     ],
   },
 ];
@@ -84,6 +86,7 @@ const routes: Routes = [
     ManageShopAddressComponent,
     ManageOrderComponent,
     DashboardComponent,
+    ManageCategoryComponent,
   ],
   imports: [
     CommonModule,
