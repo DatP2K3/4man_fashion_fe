@@ -176,6 +176,30 @@ footer {
         color: var(--primary-color);
         margin-top: 0.25rem;
       }
+
+      .sale-price-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.25rem;
+
+        .sale-price {
+          font-size: 1.6rem;
+          font-weight: 700;
+          color: var(--primary-color);
+          margin: 0;
+        }
+
+        .discount-percent {
+          background-color: #ff4c4c;
+          color: white;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          margin: 0;
+        }
+      }
     }
 
     .discount-percent {

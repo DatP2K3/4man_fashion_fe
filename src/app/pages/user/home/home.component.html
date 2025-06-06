@@ -79,7 +79,10 @@
                 <!-- Sale Badge -->
                 <div
                   class="sale-badge"
-                  *ngIf="flashSaleProducts[0].discountPercentage"
+                  *ngIf="
+                    flashSaleProducts[0].discountPercentage &&
+                    flashSaleProducts[0].discountPercentage > 0
+                  "
                 >
                   {{ flashSaleProducts[0].discountPercentage }}% OFF
                 </div>
@@ -155,7 +158,10 @@
                 <!-- Sale Badge -->
                 <div
                   class="sale-badge"
-                  *ngIf="flashSaleProducts[1].discountPercentage"
+                  *ngIf="
+                    flashSaleProducts[1].discountPercentage &&
+                    flashSaleProducts[1].discountPercentage > 0
+                  "
                 >
                   {{ flashSaleProducts[1].discountPercentage }}% OFF
                 </div>
@@ -231,7 +237,10 @@
                 <!-- Sale Badge -->
                 <div
                   class="sale-badge"
-                  *ngIf="flashSaleProducts[2].discountPercentage"
+                  *ngIf="
+                    flashSaleProducts[2].discountPercentage &&
+                    flashSaleProducts[2].discountPercentage > 0
+                  "
                 >
                   {{ flashSaleProducts[2].discountPercentage }}% OFF
                 </div>
@@ -307,7 +316,10 @@
                 <!-- Sale Badge -->
                 <div
                   class="sale-badge"
-                  *ngIf="flashSaleProducts[3].discountPercentage"
+                  *ngIf="
+                    flashSaleProducts[3].discountPercentage &&
+                    flashSaleProducts[3].discountPercentage > 0
+                  "
                 >
                   {{ flashSaleProducts[3].discountPercentage }}% OFF
                 </div>
@@ -395,7 +407,12 @@
                 style="cursor: pointer"
               >
                 <!-- Sale Badge -->
-                <div class="sale-badge" *ngIf="product.originPrice">
+                <div
+                  class="sale-badge"
+                  *ngIf="
+                    product.discountPercentage && product.discountPercentage > 0
+                  "
+                >
                   {{ product.discountPercentage }}% OFF
                 </div>
 

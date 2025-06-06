@@ -100,19 +100,20 @@
                       }}</span
                     >
 
-                    <!-- Only show discount price when it exists -->
-                    <span class="sale-price" *ngIf="item.discountPrice">{{
-                      item.discountPrice | currency : "VND" : "symbol" : "1.0-0"
-                    }}</span>
+                    <!-- Sale price and discount percentage on same line -->
+                    <div class="sale-price-row" *ngIf="item.discountPrice">
+                      <span class="sale-price">{{
+                        item.discountPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}</span>
+                      <span
+                        *ngIf="item.discountPercent > 0"
+                        class="discount-percent"
+                      >
+                        -{{ item.discountPercent }}%
+                      </span>
+                    </div>
                   </div>
-
-                  <!-- Keep discount percentage -->
-                  <span
-                    *ngIf="item.discountPercent > 0"
-                    class="discount-percent"
-                  >
-                    -{{ item.discountPercent }}%
-                  </span>
                 </td>
                 <td class="quantity-cell">
                   <p-inputNumber

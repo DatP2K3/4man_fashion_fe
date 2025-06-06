@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
 import { Profile } from '../../../core/models/Profile.model';
@@ -59,7 +59,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private imageCacheService: ImageCacheService, // Replace FileUploadService with ImageCacheService
     private categoryService: CategoryService,
     private productService: ProductService, // Inject ProductService đúng chuẩn Angular
-    private router: Router // Thêm router để điều hướng
+    private router: Router, // Thêm router để điều hướng
+    private cdr: ChangeDetectorRef // Thêm ChangeDetectorRef
   ) {}
 
   public async ngOnInit() {
@@ -67,7 +68,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     // Subscribe to AppState to get cart and profile updates
     this.cartSubscription = this.appState.cart$.subscribe((cart) => {
+      const previousCart = this.cart;
       this.cart = cart;
+
+      // If cart changed and has items, load images
+      if (
+        cart &&
+        cart !== previousCart &&
+        cart.cartItems &&
+        cart.cartItems.length > 0
+      ) {
+        this.loadCartImages();
+        // Also preload images in background for future use
+        this.preloadCartImages();
+      }
     });
 
     this.profileSubscription = this.appState.profile$.subscribe((profile) => {
@@ -125,21 +139,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
       // Always show the cart drawer immediately
       this.cartVisible = true;
 
-      // If we don't have a cart yet, create a temporary empty cart object
-      // This prevents the loading state from showing
+      // If we don't have a cart yet, load it immediately
       if (!this.cart) {
-        // Create a temporary empty cart to avoid null state
-        this.cart = {
-          id: '',
-          userId: '',
-          cartItems: [],
-        };
-
-        // Then load the actual data in the background
         this.loadCartData();
+      } else {
+        // If we already have cart data, ensure images are loaded
+        this.loadCartImages();
       }
     } else {
       this.keycloak.login();
+    }
+  }
+
+  // Method to force reload images when cart popup is opened
+  public onCartDrawerOpen() {
+    if (this.cart && this.cart.cartItems) {
+      this.loadCartImages();
     }
   }
 
@@ -194,24 +209,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
     // Prefetch all images at once
     this.imageCacheService.prefetchImages(avatarIds);
 
-    // Still load any uncached images asynchronously
+    // Load any uncached images asynchronously with proper change detection
+    this.loadCartItemImages();
+
+    // Set loading to false after a short delay to allow for image loading
     setTimeout(() => {
-      this.loadCartItemImages();
       this.isImagesLoading = false;
-    }, 0);
+    }, 500);
+  }
+
+  // Method to preload all cart images in the background
+  private preloadCartImages(): void {
+    if (!this.cart?.cartItems) return;
+
+    const avatarIds = this.cart.cartItems
+      .filter((item) => item.avatarId && !item.deleted)
+      .map((item) => item.avatarId);
+
+    if (avatarIds.length > 0) {
+      // Preload images in the background without blocking UI
+      this.imageCacheService.prefetchImages(avatarIds);
+    }
   }
 
   // New method to apply cached images immediately
   private applyImagesFromCache(): void {
     if (!this.cart?.cartItems) return;
 
+    let hasChanges = false;
     this.cart.cartItems.forEach((item) => {
       if (item.avatarId && !item.imageUrl) {
         if (this.imageCacheService.hasImage(item.avatarId)) {
           item.imageUrl = this.imageCacheService.getCachedImage(item.avatarId);
+          hasChanges = true;
         }
       }
     });
+
+    // Trigger change detection if any images were applied
+    if (hasChanges) {
+      this.cdr.markForCheck();
+    }
   }
 
   // Optimize image loading with cache
@@ -224,11 +262,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (this.imageCacheService.hasImage(item.avatarId)) {
           // If image is in cache, set it directly
           item.imageUrl = this.imageCacheService.getCachedImage(item.avatarId);
+          // Trigger change detection immediately for cached images
+          this.cdr.markForCheck();
         } else {
           // Otherwise load it through the cache service
           this.imageCacheService.getImage(item.avatarId).subscribe({
             next: (url) => {
+              // Update the item's imageUrl
               item.imageUrl = url;
+
+              // Trigger change detection for loaded images
+              this.cdr.markForCheck();
+
+              // Update the app state to trigger change detection
+              if (this.cart) {
+                this.appState.updateCart(this.cart);
+              }
             },
             error: (err) => {
               console.error(`Error loading image for cart item:`, err);
@@ -237,6 +286,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  // Method to handle image loading errors
+  public onImageError(item: CartItem): void {
+    if (item.avatarId) {
+      console.warn(
+        `Failed to load image for cart item ${item.id}, retrying...`
+      );
+      // Clear the current imageUrl to show placeholder
+      item.imageUrl = undefined;
+      // Try to reload the image
+      this.imageCacheService.getImage(item.avatarId).subscribe({
+        next: (url) => {
+          item.imageUrl = url;
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.error(
+            `Failed to reload image for cart item ${item.id}:`,
+            err
+          );
+        },
+      });
+    }
   }
 
   // Helper methods for cart item filtering
