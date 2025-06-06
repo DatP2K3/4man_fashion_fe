@@ -18,24 +18,31 @@ import { MessageService } from 'primeng/api';
 import { ManageOrderOfMeComponent } from './components/manage-order-of-me/manage-order-of-me.component';
 import { FaqComponent } from './components/faq/faq.component';
 import { MembershipComponent } from './components/membership/membership.component';
+import { CashbackTransactionHistoryComponent } from './components/cashback-transaction-history/cashback-transaction-history.component';
 // Import additional PrimeNG modules
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip'; // Import TooltipModule
-import { DialogModule } from 'primeng/dialog'; // Thêm dòng này
+import { DialogModule } from 'primeng/dialog';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TagModule } from 'primeng/tag';
 
 const routes: Routes = [
   {
     path: '',
     component: AccountComponent,
     children: [
+      { path: '', redirectTo: '4mancash-point', pathMatch: 'full' },
       { path: 'info', component: InfoComponent },
       { path: 'address', component: AddressComponent },
       { path: 'refer-friend', component: InfoComponent },
       { path: 'orders', component: InfoComponent },
-      { path: '4mancash-point', component: InfoComponent },
+      {
+        path: '4mancash-point',
+        component: CashbackTransactionHistoryComponent,
+      },
       { path: 'faq', component: FaqComponent },
       { path: 'manage-order-of-me', component: ManageOrderOfMeComponent },
     ],
@@ -49,7 +56,8 @@ const routes: Routes = [
     AddressComponent,
     ManageOrderOfMeComponent,
     FaqComponent,
-    // MembershipComponent đã bị loại bỏ khỏi declarations
+    MembershipComponent,
+    CashbackTransactionHistoryComponent,
   ],
   imports: [
     RouterModule,
@@ -72,7 +80,9 @@ const routes: Routes = [
     PaginatorModule,
     InputTextModule,
     TooltipModule, // Add TooltipModule
-    DialogModule, // Thêm dòng này
+    DialogModule,
+    SkeletonModule,
+    TagModule,
   ],
   providers: [MessageService],
 })

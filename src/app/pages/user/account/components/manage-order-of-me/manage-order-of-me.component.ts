@@ -118,7 +118,7 @@ export class ManageOrderOfMeComponent implements OnInit {
 
   getStatusTranslation(status: OrderStatus): string {
     const statusMap: Record<OrderStatus, string> = {
-      [OrderStatus.PENDING_SHIPMENT]: 'Chờ lấy hàng',
+      [OrderStatus.PENDING_SHIPMENT]: 'Đã xác nhận',
       [OrderStatus.WAITING_FOR_PICKUP]: 'Chờ lấy hàng',
       [OrderStatus.IN_TRANSIT]: 'Đang vận chuyển',
       [OrderStatus.DELIVERED]: 'Giao thành công',

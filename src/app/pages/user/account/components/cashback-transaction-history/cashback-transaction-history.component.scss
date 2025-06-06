@@ -1,0 +1,561 @@
+.cashback-history-container {
+  padding: 1rem;
+  margin-left: 100px;
+  font-size: 1.4rem; // Set base font size for the entire component
+
+  * {
+    font-size: 1.4rem; // Apply to all elements unless overridden
+  }
+
+  .progress-container {
+    margin: 1rem 0;
+  }
+
+  .card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  ::ng-deep {
+    // Date filter styles
+    .filter-container {
+      padding: 0 0 1.2rem 0;
+      margin-bottom: 0.5rem;
+      background: none;
+      box-shadow: none;
+      border-radius: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+
+      .filter-section {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        gap: 1.5rem;
+        min-width: 0;
+        margin-bottom: 0;
+
+        .date-filter {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          label {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-right: 6px;
+            margin-bottom: 0;
+            color: #222;
+            white-space: nowrap;
+          }
+
+          p-calendar {
+            .p-calendar {
+              .p-inputtext {
+                font-size: 1.4rem !important;
+                height: 40px;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                border: 1px solid #ced4da;
+                background: #fff;
+                transition: box-shadow 0.15s, border-color 0.15s;
+
+                &:focus {
+                  outline: none;
+                  border-color: var(--primary-color, #2196f3);
+                  box-shadow: 0 0 0 1px var(--primary-color, #2196f3);
+                }
+              }
+
+              .p-calendar-button {
+                padding-left: 5px !important;
+              }
+
+              .p-datepicker {
+                font-size: 1.4rem;
+
+                .p-datepicker-header {
+                  .p-datepicker-title {
+                    .p-datepicker-month,
+                    .p-datepicker-year {
+                      font-size: 1.4rem;
+                    }
+                  }
+                }
+
+                table {
+                  font-size: 1.3rem;
+                }
+              }
+            }
+          }
+
+          p-button {
+            .p-button {
+              height: 40px;
+              align-items: center;
+              justify-content: center;
+              font-size: 1.4rem;
+              color: #888;
+              background: transparent;
+              border: none;
+
+              &:hover {
+                color: var(--primary-color, #2196f3);
+                background: #f0f7ff;
+              }
+            }
+          }
+        }
+
+        .search-input {
+          margin-left: auto;
+          margin-right: 10px;
+          min-width: 320px;
+          max-width: 400px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          position: relative;
+          flex: 1 1 320px;
+
+          i {
+            font-size: 1.4rem;
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            pointer-events: none;
+          }
+
+          input {
+            height: 40px;
+            font-size: 1.4rem;
+            padding: 0.5rem 1rem 0.5rem 2.8rem;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            background: #fff;
+            transition: box-shadow 0.15s, border-color 0.15s;
+            width: 100%;
+
+            &:focus {
+              outline: none;
+              border-color: var(--primary-color, #2196f3);
+              box-shadow: 0 0 0 1px var(--primary-color, #2196f3);
+            }
+          }
+        }
+      }
+    }
+
+    .p-datatable {
+      .p-datatable-header {
+        background-color: #f9f9f9;
+        border: none;
+        padding: 1rem;
+
+        .flex {
+          display: flex;
+
+          &.justify-content-between {
+            justify-content: space-between;
+          }
+
+          &.align-items-center {
+            align-items: center;
+          }
+        }
+      }
+
+      .p-datatable-thead > tr > th {
+        background-color: #f5f5f5;
+        color: #333;
+        padding: 1rem;
+        font-weight: 600;
+        font-size: 1.4rem;
+        border-bottom: 1px solid #e0e0e0;
+        text-align: left;
+
+        p-sorticon {
+          .p-sortable-column-icon {
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      .p-datatable-tbody > tr {
+        &:nth-child(even) {
+          background-color: #fcfcfc;
+        }
+
+        > td {
+          padding: 1rem;
+          border-bottom: 1px solid #f0f0f0;
+          font-size: 1.4rem;
+          vertical-align: middle;
+        }
+
+        &:hover {
+          background-color: #f5f7fa;
+        }
+      }
+      .p-paginator {
+        padding: 1rem;
+        background-color: white;
+        border-top: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .p-paginator-element {
+          font-size: 1.4rem;
+          height: 3rem;
+          min-width: 3rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 0.2rem;
+          border-radius: 4px;
+          transition: all 0.2s;
+
+          &.p-highlight {
+            background-color: var(--primary-color);
+            color: white;
+          }
+
+          &:not(.p-highlight):hover {
+            background-color: #e9ecef;
+          }
+        }
+
+        .p-dropdown {
+          height: 3rem;
+          min-width: 5rem;
+          margin: 0 0.5rem;
+
+          .p-dropdown-label {
+            font-size: 1.4rem;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+          }
+
+          .p-dropdown-trigger {
+            width: 3rem;
+          }
+        }
+
+        .p-paginator-current {
+          font-size: 1.4rem;
+          margin: 0 1rem;
+          color: #666;
+        }
+      }
+    }
+
+    // Status styles
+    .text-success {
+      color: #4caf50;
+      font-weight: 500;
+    }
+
+    .text-danger {
+      color: #f44336;
+      font-weight: 500;
+    }
+
+    // Tags
+    .p-tag {
+      font-size: 1.3rem;
+      padding: 0.25rem 0.75rem;
+
+      &.p-tag-success {
+        background-color: #e7f6e7;
+        color: #2e7d32;
+      }
+
+      &.p-tag-danger {
+        background-color: #ffebee;
+        color: #c62828;
+      }
+    }
+
+    // Empty state
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4rem 0;
+
+      i {
+        margin-bottom: 1.5rem;
+        font-size: 4rem;
+        color: #ddd;
+      }
+
+      p {
+        color: #757575;
+        font-size: 1.6rem;
+        font-weight: 500;
+      }
+    }
+
+    // Button styling
+    .p-button {
+      font-size: 1.4rem;
+
+      .p-button-icon {
+        font-size: 1.4rem;
+      }
+
+      &.p-button-text {
+        color: var(--primary-color);
+
+        &:hover {
+          background-color: rgba(33, 150, 243, 0.04);
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 1px rgba(33, 150, 243, 0.2);
+        }
+      }
+    }
+
+    // Paginator specific styles
+    .p-paginator-left-content {
+      margin-right: 1rem;
+
+      .p-button {
+        padding: 0.5rem;
+        height: 3rem;
+        width: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+
+        &:hover {
+          background-color: #e9ecef;
+        }
+      }
+    }
+
+    // Cursor pointer for rows
+    .cursor-pointer {
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .filter-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+
+      .filter-section {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        gap: 1.5rem;
+        min-width: 0;
+        margin-bottom: 0;
+
+        .date-filter {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          label {
+            white-space: nowrap;
+          }
+        }
+
+        .search-input {
+          margin-left: auto;
+          margin-right: 10px;
+          min-width: 320px;
+          max-width: 400px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          position: relative;
+          flex: 1 1 320px;
+
+          i {
+            font-size: 1.4rem;
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            pointer-events: none;
+          }
+
+          input {
+            height: 40px;
+            font-size: 1.4rem;
+            padding: 0.5rem 1rem 0.5rem 2.8rem;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            background: #fff;
+            transition: box-shadow 0.15s, border-color 0.15s;
+            width: 100%;
+
+            &:focus {
+              outline: none;
+              border-color: var(--primary-color, #2196f3);
+              box-shadow: 0 0 0 1px var(--primary-color, #2196f3);
+            }
+          }
+        }
+      }
+
+      @media (max-width: 900px) {
+        .filter-section {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 1rem;
+
+          .search-input {
+            margin-left: 0;
+            margin-right: 0;
+            min-width: 0;
+            max-width: 100%;
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    // Cursor pointer for rows
+    .cursor-pointer {
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f0f7ff !important;
+      }
+    }
+
+    .transaction-details {
+      .detail-row {
+        display: flex;
+        margin-bottom: 1rem;
+
+        .detail-label {
+          width: 40%;
+          font-weight: 600;
+          color: #666;
+        }
+
+        .detail-value {
+          width: 60%;
+        }
+      }
+    }
+
+    .p-dialog {
+      .p-dialog-header {
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+
+        .p-dialog-title {
+          font-size: 1.6rem;
+          font-weight: 600;
+          color: var(--primary-color);
+        }
+
+        .p-dialog-header-icon {
+          font-size: 1.4rem;
+        }
+      }
+
+      .p-dialog-content {
+        padding: 2rem 1.5rem;
+
+        .transaction-details {
+          .detail-row {
+            margin-bottom: 1.5rem;
+            display: flex;
+
+            .detail-label {
+              font-weight: 600;
+              color: #555;
+              width: 40%;
+              font-size: 1.4rem;
+            }
+
+            .detail-value {
+              width: 60%;
+              font-size: 1.4rem;
+            }
+          }
+        }
+      }
+
+      .p-dialog-footer {
+        padding: 1.5rem;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .clear-filter-btn {
+    border: 1.5px solid var(--primary-color);
+    color: var(--primary-color);
+    background: #fff;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 1.4rem;
+    padding: 0.5rem 1.2rem;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    height: 40px;
+    line-height: 1;
+
+    &:hover,
+    &:focus {
+      background: var(--primary-color);
+      color: #fff;
+    }
+  }
+}
+
+:host ::ng-deep .filter-container .date-filter p-calendar .p-inputtext,
+:host ::ng-deep .filter-container .date-filter .p-calendar .p-inputtext {
+  font-size: 1.4rem !important;
+}
+
+:host ::ng-deep .filter-container .date-filter .p-calendar .p-calendar-button,
+:host ::ng-deep .filter-container .date-filter .p-calendar-button {
+  padding-left: 5px !important;
+}
+
+:host ::ng-deep .p-button.p-button-text.p-button-sm[label="Xoá bộ lọc"] {
+  border: 1.5px solid var(--primary-color) !important;
+  color: var(--primary-color) !important;
+  background: #fff !important;
+  border-radius: 4px;
+  font-weight: 500;
+}
+:host ::ng-deep .p-button.p-button-text.p-button-sm[label="Xoá bộ lọc"]:hover,
+:host ::ng-deep .p-button.p-button-text.p-button-sm[label="Xoá bộ lọc"]:focus {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+}

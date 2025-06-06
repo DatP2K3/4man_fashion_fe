@@ -1,0 +1,217 @@
+<div class="cashback-history-container">
+  <p-toast></p-toast>
+
+  <div *ngIf="loading" class="progress-container">
+    <p-progressBar
+      mode="indeterminate"
+      [style]="{ height: '6px' }"
+    ></p-progressBar>
+  </div>
+
+  <div class="card">
+    <p-table
+      #dt
+      [value]="filteredTransactions"
+      [rows]="rows"
+      [paginator]="false"
+      [loading]="loading"
+      [rowHover]="true"
+      [globalFilterFields]="['description', 'createdAt']"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="caption">
+        <div class="filter-container">
+          <div class="flex align-items-center filter-section">
+            <span class="date-filter">
+              <label for="datefilter">Lọc theo ngày:</label>
+              <p-calendar
+                id="datefilter"
+                [(ngModel)]="dateRangeFilter"
+                selectionMode="range"
+                [showIcon]="true"
+                placeholder="Chọn khoảng thời gian"
+                (onSelect)="onDateRangeChange()"
+                dateFormat="dd/mm/yy"
+                [style]="{ 'min-width': '240px' }"
+              ></p-calendar>
+              <button
+                *ngIf="dateRangeFilter && dateRangeFilter.length > 0"
+                type="button"
+                class="clear-filter-btn"
+                (click)="clearFilters()"
+                title="Xóa bộ lọc"
+              >
+                Xoá bộ lọc
+              </button>
+            </span>
+            <span class="p-input-icon-left search-input">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Tìm kiếm..."
+              />
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="createdAt">
+            Ngày giao dịch <p-sortIcon field="createdAt"></p-sortIcon>
+          </th>
+          <th pSortableColumn="description">
+            Mô tả <p-sortIcon field="description"></p-sortIcon>
+          </th>
+          <th
+            pSortableColumn="type"
+            style="min-width: 140px; white-space: nowrap"
+          >
+            Loại giao dịch <p-sortIcon field="type"></p-sortIcon>
+          </th>
+          <th pSortableColumn="orderId">
+            Mã đơn hàng <p-sortIcon field="orderId"></p-sortIcon>
+          </th>
+          <th
+            pSortableColumn="amount"
+            style="text-align: right; min-width: 120px; white-space: nowrap"
+          >
+            Số điểm <p-sortIcon field="amount"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-transaction>
+        <tr
+          (click)="showTransactionDetails(transaction)"
+          class="cursor-pointer"
+        >
+          <td>{{ formatDate(transaction.createdAt) }}</td>
+          <td>{{ transaction.description }}</td>
+          <td style="white-space: nowrap">
+            <p-tag
+              [value]="getTransactionTypeLabel(transaction.type)"
+              [severity]="getSeverity(transaction.type)"
+            >
+            </p-tag>
+          </td>
+          <td>{{ transaction.orderId }}</td>
+          <td
+            style="text-align: right; font-weight: bold; white-space: nowrap"
+            [ngClass]="{
+              'text-success': transaction.type === 'EARNED',
+              'text-danger': transaction.type === 'USED'
+            }"
+          >
+            {{ getAmountWithSign(transaction) }}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" style="text-align: center">
+            <div class="empty-state">
+              <i class="pi pi-wallet" style="font-size: 3rem; color: #ddd"></i>
+              <p>Chưa có giao dịch 4ManCash nào</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td colspan="5" style="text-align: center">
+            <p-skeleton height="36px"></p-skeleton>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <div class="pagination-container">
+      <p-paginator
+        [rows]="rows"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        (onPageChange)="paginate($event)"
+      ></p-paginator>
+    </div>
+  </div>
+
+  <!-- Transaction Details Dialog -->
+  <p-dialog
+    header="Chi tiết giao dịch"
+    [(visible)]="displayDialog"
+    [style]="{ width: '450px' }"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div *ngIf="selectedTransaction" class="transaction-details">
+      <div class="detail-row">
+        <span class="detail-label">ID giao dịch:</span>
+        <span class="detail-value">{{ selectedTransaction.id }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Loại giao dịch:</span>
+        <span class="detail-value">
+          <p-tag
+            [value]="getTransactionTypeLabel(selectedTransaction.type)"
+            [severity]="getSeverity(selectedTransaction.type)"
+          ></p-tag>
+        </span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Số điểm:</span>
+        <span
+          class="detail-value"
+          [ngClass]="{
+            'text-success': selectedTransaction.type === 'EARNED',
+            'text-danger': selectedTransaction.type === 'USED'
+          }"
+          >{{ getAmountWithSign(selectedTransaction) }}</span
+        >
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Mô tả:</span>
+        <span class="detail-value">{{ selectedTransaction.description }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Mã đơn hàng:</span>
+        <span class="detail-value">{{
+          selectedTransaction.orderId || "N/A"
+        }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Ngày giao dịch:</span>
+        <span class="detail-value">{{
+          formatDate(selectedTransaction.createdAt)
+        }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Cập nhật lần cuối:</span>
+        <span class="detail-value">{{
+          formatDate(selectedTransaction.updatedAt)
+        }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Tạo bởi:</span>
+        <span class="detail-value">{{
+          selectedTransaction.createdBy || "Hệ thống"
+        }}</span>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Đóng"
+        icon="pi pi-times"
+        styleClass="p-button-text"
+        (click)="hideDialog()"
+      >
+      </p-button>
+    </ng-template>
+  </p-dialog>
+</div>

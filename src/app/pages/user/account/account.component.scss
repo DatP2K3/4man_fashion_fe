@@ -1,3 +1,7 @@
+.container-fluid {
+  padding: 0;
+}
+
 header {
   position: fixed;
   top: 0;
@@ -145,7 +149,7 @@ main {
     background-color: var(--primary-color);
     color: var(--secondary-text-color);
   }
-  
+
   li.active-nav,
   li.active-nav span,
   li.active-nav i {

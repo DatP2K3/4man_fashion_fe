@@ -13,7 +13,7 @@
           <i class="pi pi-chart-bar"></i>
           <span *ngIf="!isSidebarCollapsed">Thống kê</span>
         </li>
-        <li routerLink="/admin/users" routerLinkActive="active">
+        <li (click)="openExternalUserAdmin()">
           <i class="pi pi-users"></i>
           <span *ngIf="!isSidebarCollapsed">Quản lý người dùng</span>
         </li>
@@ -40,6 +40,13 @@
         <li routerLink="/admin/manage-categories" routerLinkActive="active">
           <i class="pi pi-briefcase"></i>
           <span *ngIf="!isSidebarCollapsed">Quản lý danh mục sản phẩm</span>
+        </li>
+        <li
+          routerLink="/admin/manage-membership-tiers"
+          routerLinkActive="active"
+        >
+          <i class="pi pi-id-card"></i>
+          <span *ngIf="!isSidebarCollapsed">Quản lý hạng thành viên</span>
         </li>
       </ul>
     </div>
