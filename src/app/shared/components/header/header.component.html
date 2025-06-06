@@ -211,6 +211,7 @@
       position="right"
       [baseZIndex]="10000"
       [style]="{ width: '350px' }"
+      (onShow)="onCartDrawerOpen()"
     >
       <div class="cart-popup">
         <h2 class="cart-popup-title">Giỏ hàng của bạn</h2>
@@ -247,14 +248,22 @@
             <!-- This *ngFor uses the filtered list of non-deleted items -->
             <div class="cart-item" *ngFor="let item of getVisibleCartItems()">
               <div class="cart-item-image">
+                <!-- Loading skeleton for images -->
+                <div
+                  *ngIf="!item.imageUrl && item.avatarId"
+                  class="image-skeleton"
+                >
+                  <i class="pi pi-spin pi-spinner"></i>
+                </div>
                 <img
                   *ngIf="item.imageUrl"
                   [src]="item.imageUrl"
                   [alt]="item.name"
                   class="cart-item-img"
+                  (error)="onImageError(item)"
                 />
                 <p-avatar
-                  *ngIf="!item.imageUrl"
+                  *ngIf="!item.imageUrl && !item.avatarId"
                   icon="pi pi-image"
                   styleClass="p-mr-2"
                   size="large"
@@ -269,22 +278,22 @@
                 </div>
                 <div class="item-price-qty">
                   <div class="price-container">
-                    <!-- Show original price with different styling based on discount -->
-                    <span
-                      [ngClass]="{
-                        'original-price': item.discountPrice,
-                        'item-price': !item.discountPrice
-                      }"
-                    >
+                    <!-- Show original price with strikethrough if there's a discount -->
+                    <span class="original-price" *ngIf="item.discountPrice">
                       {{
                         item.originPrice | currency : "VND" : "symbol" : "1.0-0"
                       }}
                     </span>
 
-                    <!-- Only show discount price when it exists -->
-                    <span class="item-price" *ngIf="item.discountPrice">
+                    <!-- Show sale price when discount exists, or normal price when no discount -->
+                    <span
+                      [ngClass]="{
+                        'sale-price': item.discountPrice,
+                        'item-price': !item.discountPrice
+                      }"
+                    >
                       {{
-                        item.discountPrice
+                        item.discountPrice || item.originPrice
                           | currency : "VND" : "symbol" : "1.0-0"
                       }}
                     </span>
