@@ -43,6 +43,7 @@ export class PickupInfoComponent implements OnInit {
   orderFee: OrderFeeDTO | null = null;
   subtotal: number = 0;
   shippingFee: number = 30000; // Default value until we get data from API
+  cashBackUsed: number = 0; // Default value for 4ManCash used
 
   constructor(
     private appState: AppStateService,
@@ -183,6 +184,7 @@ export class PickupInfoComponent implements OnInit {
           this.orderFee = response.data;
           this.subtotal = this.orderFee.totalPrice;
           this.shippingFee = this.orderFee.shippingFee;
+          this.cashBackUsed = this.orderFee.cashbackUsed;
           console.log('Order fees loaded:', this.orderFee);
         }
       },

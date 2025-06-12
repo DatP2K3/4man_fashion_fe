@@ -40,19 +40,19 @@ export class BrandStoryComponent implements OnInit {
       name: 'Phan Đình Đạt',
       position: 'Nhà sáng lập & CEO',
       bio: 'Với hơn 10 năm kinh nghiệm trong ngành thời trang, anh Đạt đã dẫn dắt 4ManFashion từ những ngày đầu với tầm nhìn tạo ra những sản phẩm thời trang nam chất lượng cao, giá hợp lý.',
-      image: 'assets/images/brand-story/founder-1.jpg',
+      image: 'assets/images/ceo.jpg',
     },
     {
       name: 'Nguyễn Văn Bảo',
       position: 'Giám đốc thiết kế',
       bio: 'Anh Bảo mang đến những thiết kế hiện đại, tinh tế và phù hợp với người Việt Nam. Với hơn 8 năm kinh nghiệm, chị đã góp phần định hình phong cách đặc trưng của 4ManFashion.',
-      image: 'assets/images/brand-story/founder-2.jpg',
+      image: 'assets/images/gdtk.jpg',
     },
     {
-      name: 'Lê Văn Luyện',
+      name: 'Tạ Đăng Tuân',
       position: 'Giám đốc vận hành',
-      bio: 'Anh Luyện chịu trách nhiệm xây dựng và quản lý hệ thống chuỗi cung ứng hiệu quả. Với nền tảng vững chắc từ ngành logistics, anh đảm bảo mọi sản phẩm đến tay khách hàng đúng hẹn.',
-      image: 'assets/images/brand-story/founder-3.jpg',
+      bio: 'Anh Tuân chịu trách nhiệm xây dựng và quản lý hệ thống chuỗi cung ứng hiệu quả. Với nền tảng vững chắc từ ngành logistics, anh đảm bảo mọi sản phẩm đến tay khách hàng đúng hẹn.',
+      image: 'assets/images/gdvh.jpg',
     },
   ];
 

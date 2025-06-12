@@ -56,4 +56,11 @@ export class AdminComponent implements OnInit {
   toggleSidebar() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed; // Toggle sidebar state
   }
+
+  openExternalUserAdmin() {
+    window.open(
+      'http://localhost:8180/admin/master/console/#/IamService/users',
+      '_blank'
+    );
+  }
 }

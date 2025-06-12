@@ -278,6 +278,150 @@
       font-weight: 500;
     }
   }
+
+  // Style cho modal chi tiết đơn hàng
+  .p-dialog {
+    .p-dialog-header {
+      background: var(--primary-color, #2196f3);
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 600;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      padding: 1.2rem 2rem;
+    }
+
+    .p-dialog-content {
+      background: #fafbfc;
+      padding: 2rem 2.5rem 1.5rem 2.5rem;
+      font-size: 1.4rem;
+      color: #222;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      min-height: 200px;
+
+      div {
+        margin-bottom: 0.8rem;
+        line-height: 1.7;
+      }
+
+      strong {
+        color: var(--primary-color, #2196f3);
+        font-weight: 500;
+        min-width: 120px;
+        display: inline-block;
+      }
+
+      ul {
+        margin: 0.5rem 0 0 1.5rem;
+        padding: 0;
+        list-style: disc;
+        font-size: 1.35rem;
+
+        li {
+          margin-bottom: 0.3rem;
+          color: #444;
+          background: #f5f7fa;
+          border-radius: 4px;
+          padding: 0.3rem 0.8rem;
+          font-size: 1.3rem;
+        }
+      }
+    }
+
+    .text-right {
+      text-align: right;
+      margin-top: 1.5rem;
+
+      button[pButton] {
+        min-width: 90px;
+        background: var(--primary-color, #2196f3);
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.3rem;
+        font-weight: 500;
+        padding: 0.5rem 1.5rem;
+        transition: background 0.2s;
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.08);
+
+        &:hover {
+          background: #1769aa;
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  // Responsive cho modal
+  @media (max-width: 700px) {
+    .p-dialog {
+      .p-dialog-content {
+        padding: 1rem 0.5rem 1rem 0.5rem;
+        font-size: 1.2rem;
+      }
+      .p-dialog-header {
+        font-size: 1.3rem;
+        padding: 0.8rem 1rem;
+      }
+    }
+  }
+
+  .date-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    label {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-right: 6px;
+      margin-bottom: 0;
+      color: #222;
+      white-space: nowrap;
+    }
+
+    p-calendar {
+      .p-calendar {
+        .p-inputtext {
+          font-size: 1.4rem !important;
+          height: 40px;
+          padding: 0.5rem 1rem;
+          border-radius: 4px;
+          border: 1px solid #ced4da;
+          background: #fff;
+          transition: box-shadow 0.15s, border-color 0.15s;
+
+          &:focus {
+            outline: none;
+            border-color: var(--primary-color, #2196f3);
+            box-shadow: 0 0 0 1px var(--primary-color, #2196f3);
+          }
+        }
+
+        .p-calendar-button {
+          padding-left: 5px !important;
+        }
+
+        .p-datepicker {
+          font-size: 1.4rem;
+
+          .p-datepicker-header {
+            .p-datepicker-title {
+              .p-datepicker-month,
+              .p-datepicker-year {
+                font-size: 1.4rem;
+              }
+            }
+          }
+
+          table {
+            font-size: 1.3rem;
+          }
+        }
+      }
+    }
+  }
 }
 
 label {
@@ -290,4 +434,15 @@ label {
     background-color: #f44336 !important; // Stronger red color
     color: #fff !important; // White text on hover
   }
+}
+
+:host ::ng-deep .filter-container .date-filter p-calendar .p-inputtext,
+:host ::ng-deep .filter-container .date-filter .p-calendar .p-inputtext {
+  font-size: 1.4rem !important;
+  height: 40px;
+}
+
+:host ::ng-deep .filter-container .date-filter .p-calendar .p-calendar-button,
+:host ::ng-deep .filter-container .date-filter .p-calendar-button {
+  padding-left: 5px !important;
 }

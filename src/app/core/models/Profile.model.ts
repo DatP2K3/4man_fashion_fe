@@ -30,6 +30,6 @@ export interface Profile {
   pointsToNextLevel?: number;
   points?: number;
   totalPoints?: number;
-  totalCoins?: number;
+  cashbackBalance?: number;
   percent?: number;
 }

@@ -50,10 +50,7 @@ export function initializeAuthService(authService: AuthService) {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    // Thêm các components khác của bạn ở đây
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     CommonModule,

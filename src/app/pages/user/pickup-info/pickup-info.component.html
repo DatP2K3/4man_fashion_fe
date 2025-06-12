@@ -183,7 +183,12 @@
 
               <div class="summary-item">
                 <span>Phí vận chuyển</span>
-                <span>{{ formatCurrency(shippingFee || 30000) }}</span>
+                <span>{{ formatCurrency(shippingFee) }}</span>
+              </div>
+
+              <div class="summary-item">
+                <span>4ManCash khả dụng</span>
+                <span>{{ formatCurrency(cashBackUsed) }}</span>
               </div>
 
               <hr />
@@ -191,7 +196,7 @@
               <div class="summary-total">
                 <span>Total</span>
                 <span>{{
-                  formatCurrency((subtotal || 0) + (shippingFee || 30000))
+                  formatCurrency(subtotal + shippingFee - cashBackUsed)
                 }}</span>
               </div>
             </div>

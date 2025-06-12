@@ -1,12 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
 import { Profile } from '../../../core/models/Profile.model';
 import { Cart, CartItem } from '../../../core/models/Cart.model';
+import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../../../core/services/Profile.service';
 import { CartService } from '../../../core/services/Cart.service';
 import { AppStateService } from '../../state/AppState.service';
 import { ImageCacheService } from '@app/core/services/ImageCache.service';
+import { Category } from '@app/core/models/Category.model';
+import { CategoryService } from '@app/core/services/Category.service';
+import { ProductService } from '@app/core/services/Product.service'; // Import ProductService chuẩn Angular
 
 @Component({
   selector: 'app-header',
@@ -23,15 +28,39 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public isCartLoading: boolean = false;
   public isImagesLoading: boolean = false; // New flag to track image loading separately
 
+  // Add these new properties for the dropdown menu
+  aoCategories: Category[] = [];
+  quanCategories: Category[] = [];
+  activeDropdown: string | null = null;
+  loadingCategories: boolean = false;
+
+  // Menu items for PrimeNG menu
+  aoMenuItems: MenuItem[] = [];
+  quanMenuItems: MenuItem[] = [];
+
   private profileSubscription: Subscription | null = null;
   private cartSubscription: Subscription | null = null;
+
+  // Thêm thuộc tính searchKeyword để lưu từ khóa tìm kiếm
+  searchKeyword: string = '';
+
+  // Autocomplete suggestions for header search
+  autoCompleteSuggestions: string[] = [];
+  showAutoComplete: boolean = false;
+  autoCompleteLoading: boolean = false;
+  autoCompleteLimit: number = 10;
+  autoCompleteDebounce?: any;
 
   constructor(
     private readonly keycloak: KeycloakService,
     private profileService: ProfileService,
     private cartService: CartService,
     private appState: AppStateService,
-    private imageCacheService: ImageCacheService // Replace FileUploadService with ImageCacheService
+    private imageCacheService: ImageCacheService, // Replace FileUploadService with ImageCacheService
+    private categoryService: CategoryService,
+    private productService: ProductService, // Inject ProductService đúng chuẩn Angular
+    private router: Router, // Thêm router để điều hướng
+    private cdr: ChangeDetectorRef // Thêm ChangeDetectorRef
   ) {}
 
   public async ngOnInit() {
@@ -39,7 +68,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     // Subscribe to AppState to get cart and profile updates
     this.cartSubscription = this.appState.cart$.subscribe((cart) => {
+      const previousCart = this.cart;
       this.cart = cart;
+
+      // If cart changed and has items, load images
+      if (
+        cart &&
+        cart !== previousCart &&
+        cart.cartItems &&
+        cart.cartItems.length > 0
+      ) {
+        this.loadCartImages();
+        // Also preload images in background for future use
+        this.preloadCartImages();
+      }
     });
 
     this.profileSubscription = this.appState.profile$.subscribe((profile) => {
@@ -97,21 +139,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
       // Always show the cart drawer immediately
       this.cartVisible = true;
 
-      // If we don't have a cart yet, create a temporary empty cart object
-      // This prevents the loading state from showing
+      // If we don't have a cart yet, load it immediately
       if (!this.cart) {
-        // Create a temporary empty cart to avoid null state
-        this.cart = {
-          id: '',
-          userId: '',
-          cartItems: [],
-        };
-
-        // Then load the actual data in the background
         this.loadCartData();
+      } else {
+        // If we already have cart data, ensure images are loaded
+        this.loadCartImages();
       }
     } else {
       this.keycloak.login();
+    }
+  }
+
+  // Method to force reload images when cart popup is opened
+  public onCartDrawerOpen() {
+    if (this.cart && this.cart.cartItems) {
+      this.loadCartImages();
     }
   }
 
@@ -166,24 +209,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
     // Prefetch all images at once
     this.imageCacheService.prefetchImages(avatarIds);
 
-    // Still load any uncached images asynchronously
+    // Load any uncached images asynchronously with proper change detection
+    this.loadCartItemImages();
+
+    // Set loading to false after a short delay to allow for image loading
     setTimeout(() => {
-      this.loadCartItemImages();
       this.isImagesLoading = false;
-    }, 0);
+    }, 500);
+  }
+
+  // Method to preload all cart images in the background
+  private preloadCartImages(): void {
+    if (!this.cart?.cartItems) return;
+
+    const avatarIds = this.cart.cartItems
+      .filter((item) => item.avatarId && !item.deleted)
+      .map((item) => item.avatarId);
+
+    if (avatarIds.length > 0) {
+      // Preload images in the background without blocking UI
+      this.imageCacheService.prefetchImages(avatarIds);
+    }
   }
 
   // New method to apply cached images immediately
   private applyImagesFromCache(): void {
     if (!this.cart?.cartItems) return;
 
+    let hasChanges = false;
     this.cart.cartItems.forEach((item) => {
       if (item.avatarId && !item.imageUrl) {
         if (this.imageCacheService.hasImage(item.avatarId)) {
           item.imageUrl = this.imageCacheService.getCachedImage(item.avatarId);
+          hasChanges = true;
         }
       }
     });
+
+    // Trigger change detection if any images were applied
+    if (hasChanges) {
+      this.cdr.markForCheck();
+    }
   }
 
   // Optimize image loading with cache
@@ -196,11 +262,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (this.imageCacheService.hasImage(item.avatarId)) {
           // If image is in cache, set it directly
           item.imageUrl = this.imageCacheService.getCachedImage(item.avatarId);
+          // Trigger change detection immediately for cached images
+          this.cdr.markForCheck();
         } else {
           // Otherwise load it through the cache service
           this.imageCacheService.getImage(item.avatarId).subscribe({
             next: (url) => {
+              // Update the item's imageUrl
               item.imageUrl = url;
+
+              // Trigger change detection for loaded images
+              this.cdr.markForCheck();
+
+              // Update the app state to trigger change detection
+              if (this.cart) {
+                this.appState.updateCart(this.cart);
+              }
             },
             error: (err) => {
               console.error(`Error loading image for cart item:`, err);
@@ -209,6 +286,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  // Method to handle image loading errors
+  public onImageError(item: CartItem): void {
+    if (item.avatarId) {
+      console.warn(
+        `Failed to load image for cart item ${item.id}, retrying...`
+      );
+      // Clear the current imageUrl to show placeholder
+      item.imageUrl = undefined;
+      // Try to reload the image
+      this.imageCacheService.getImage(item.avatarId).subscribe({
+        next: (url) => {
+          item.imageUrl = url;
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.error(
+            `Failed to reload image for cart item ${item.id}:`,
+            err
+          );
+        },
+      });
+    }
   }
 
   // Helper methods for cart item filtering
@@ -289,5 +390,168 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public goToCart() {
     this.cartVisible = false;
+  }
+
+  // Modified method to show dropdown
+  loadCategories(type: string): void {
+    this.activeDropdown = type;
+
+    // Cancel any ongoing hide timer
+    this.cancelHideDropdown();
+
+    // Load categories if needed
+    if (type === 'ao' && this.aoCategories.length === 0) {
+      this.loadingCategories = true;
+      console.log('Loading Áo categories...');
+
+      this.categoryService.getCategoriesByProductType('Áo').subscribe({
+        next: (response) => {
+          console.log('Áo categories response:', response);
+          if (response && response.success) {
+            this.aoCategories = response.data || [];
+            console.log('Áo categories loaded:', this.aoCategories);
+          }
+          this.loadingCategories = false;
+        },
+        error: (err) => {
+          console.error('Error fetching Áo categories:', err);
+          this.loadingCategories = false;
+        },
+      });
+    } else if (type === 'quan' && this.quanCategories.length === 0) {
+      this.loadingCategories = true;
+      console.log('Loading Quần categories...');
+
+      this.categoryService.getCategoriesByProductType('Quần').subscribe({
+        next: (response) => {
+          console.log('Quần categories response:', response);
+          if (response && response.success) {
+            this.quanCategories = response.data || [];
+            console.log('Quần categories loaded:', this.quanCategories);
+          }
+          this.loadingCategories = false;
+        },
+        error: (err) => {
+          console.error('Error fetching Quần categories:', err);
+          this.loadingCategories = false;
+        },
+      });
+    }
+
+    // Add event listeners for mouseleave
+    setTimeout(() => {
+      const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+      dropdownMenus.forEach((menu) => {
+        menu.addEventListener('mouseleave', () => {
+          this.activeDropdown = null;
+        });
+      });
+    }, 0);
+  }
+
+  // Improved dropdown handling with mouse events
+  private dropdownTimer: any = null;
+  private isMouseInSubmenu = false;
+
+  // Method to cancel any pending hide dropdowns
+  cancelHideDropdown(): void {
+    if (this.dropdownTimer) {
+      clearTimeout(this.dropdownTimer);
+      this.dropdownTimer = null;
+    }
+  }
+
+  // Handle mouse leave from the entire dropdown container
+  handleMouseLeave(type: string): void {
+    // Start a timer to hide the dropdown
+    this.dropdownTimer = setTimeout(() => {
+      // Only hide if the type matches the active dropdown
+      // This prevents one dropdown from closing another
+      if (this.activeDropdown === type) {
+        this.activeDropdown = null;
+      }
+    }, 100);
+  }
+
+  resetDropdown(): void {
+    // Add a small delay before hiding to give users time to move to submenu
+    this.dropdownTimer = setTimeout(() => {
+      this.activeDropdown = null;
+    }, 100);
+  }
+
+  // When entering the dropdown menu directly, cancel any hide timer
+  enterDropdown(): void {
+    if (this.dropdownTimer) {
+      clearTimeout(this.dropdownTimer);
+      this.dropdownTimer = null;
+    }
+  }
+
+  // Method to navigate to a specific category
+  navigateToCategory(
+    categoryId: string | undefined,
+    productType: string
+  ): void {
+    if (categoryId) {
+      // Will automatically navigate via routerLink in menu items
+      console.log(`Navigate to ${productType} category: ${categoryId}`);
+    }
+  }
+
+  onSearch() {
+    const keyword = this.searchKeyword?.trim();
+    if (keyword) {
+      // Điều hướng đến trang category-products với query param keyword
+      this.router.navigate(['/search'], { queryParams: { keyword } });
+    }
+  }
+
+  onSearchKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onSearch();
+    }
+  }
+
+  onSearchInput(event: any) {
+    const keyword = event.target.value;
+    this.searchKeyword = keyword;
+    if (this.autoCompleteDebounce) {
+      clearTimeout(this.autoCompleteDebounce);
+    }
+    if (!keyword) {
+      this.autoCompleteSuggestions = [];
+      this.showAutoComplete = false;
+      return;
+    }
+    this.autoCompleteDebounce = setTimeout(() => {
+      this.autoCompleteLoading = true;
+      this.productService
+        .productAutoComplete(keyword, this.autoCompleteLimit)
+        .subscribe({
+          next: (suggestions) => {
+            this.autoCompleteSuggestions = suggestions;
+            this.showAutoComplete = true;
+            this.autoCompleteLoading = false;
+          },
+          error: () => {
+            this.autoCompleteSuggestions = [];
+            this.showAutoComplete = false;
+            this.autoCompleteLoading = false;
+          },
+        });
+    }, 300);
+  }
+
+  onSelectSuggestion(suggestion: string) {
+    this.searchKeyword = suggestion;
+    this.showAutoComplete = false;
+    this.onSearch();
+  }
+
+  onBlurAutoComplete() {
+    setTimeout(() => {
+      this.showAutoComplete = false;
+    }, 200);
   }
 }

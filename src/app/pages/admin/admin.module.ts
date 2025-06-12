@@ -12,6 +12,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ManageShopAddressComponent } from './components/manage-shop-address/manage-shop-address.component';
 import { RoleGuard } from '../../core/guards/role.guard';
+import { ManageCategoryComponent } from './components/manage-category/manage-category.component';
 
 // PrimeNG modules
 import { TableModule } from 'primeng/table';
@@ -40,6 +41,7 @@ import { MessageService } from 'primeng/api';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { ChartModule } from 'primeng/chart';
+import { ManageMembershipTierComponent } from './components/manage-membershiptier/manage-membershiptier.component';
 
 const routes: Routes = [
   {
@@ -69,6 +71,11 @@ const routes: Routes = [
       { path: 'manage-promotions/edit/:id', component: EditPromotionComponent },
       { path: 'manage-shop-address', component: ManageShopAddressComponent },
       { path: 'manage-orders', component: ManageOrderComponent },
+      { path: 'manage-categories', component: ManageCategoryComponent },
+      {
+        path: 'manage-membership-tiers',
+        component: ManageMembershipTierComponent,
+      },
     ],
   },
 ];
@@ -84,6 +91,8 @@ const routes: Routes = [
     ManageShopAddressComponent,
     ManageOrderComponent,
     DashboardComponent,
+    ManageCategoryComponent,
+    ManageMembershipTierComponent,
   ],
   imports: [
     CommonModule,

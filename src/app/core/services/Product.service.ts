@@ -70,14 +70,49 @@ export class ProductService {
       );
   }
 
+  searchProductsForMannage(
+    searchRequest: ProductSearchRequest
+  ): Observable<ProductSearchResponse> {
+    return this.http
+      .post<ProductSearchResponse>(
+        'http://localhost:8686/elasticsearch/api/products/search',
+        searchRequest
+      )
+      .pipe(
+        map((response) => {
+          // Đảm bảo các trường hidden được xử lý đúng nếu tên trường khác nhau
+          return response;
+        })
+      );
+  }
+
   toggleProductVisibility(productId: string, hidden: boolean): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${productId}/visibility`, {
+    return this.http.put(`${this.apiUrl}/products/${productId}/visibility`, {
       hidden,
     });
   }
 
   updateProduct(product: Product): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/products`, product);
+  }
+
+  /**
+   * Gọi API autocomplete tên sản phẩm
+   * @param keyword Từ khóa tìm kiếm
+   * @param limit Số lượng kết quả trả về (mặc định 10)
+   */
+  productAutoComplete(
+    keyword: string,
+    limit: number = 10
+  ): Observable<string[]> {
+    return this.http
+      .get<{ data: string[] }>(
+        'http://localhost:8686/elasticsearch/api/products/autocomplete',
+        {
+          params: { keyword, limit: limit.toString() },
+        }
+      )
+      .pipe(map((res) => res.data));
   }
 
   // Method to trigger a refresh

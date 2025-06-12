@@ -45,126 +45,125 @@
     </div>
   </div>
 
-  <!-- Tab Menu for Promotion Status -->
-  <p-tabView (onChange)="onTabChange($event)" class="promotion-tabs">
-    <p-tabPanel *ngFor="let tab of statusOptions" [header]="tab.label">
-      <div class="promotion-list-container">
-        <!-- Search and Filter Bar -->
-        <div class="filter-container">
-          <span class="p-input-icon-left search-box">
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="searchKeyword"
-              (input)="searchPromotions()"
-              placeholder="Lọc theo tên khuyến mãi"
-              class="p-inputtext p-component"
-            />
-          </span>
+  <!-- Custom Tab Menu for Promotion Status -->
+  <div class="promotion-tabs">
+    <ul class="custom-tab-list">
+      <li
+        *ngFor="let tab of statusOptions; let i = index"
+        [class.active]="activeStatusTab === tab.value"
+        (click)="onCustomTabChange(tab, i)"
+      >
+        {{ tab.label }}
+      </li>
+    </ul>
+  </div>
 
-          <div class="type-filter">
-            <p-dropdown
-              [options]="promotionTypeOptions"
-              [(ngModel)]="selectedPromotionType"
-              placeholder="Loại khuyến mãi"
-              optionLabel="label"
-              optionValue="value"
-              [showClear]="true"
-              (onChange)="onPromotionTypeChange($event)"
-            >
-            </p-dropdown>
-          </div>
-        </div>
+  <!-- Tab Content -->
+  <div class="promotion-list-container">
+    <!-- Search and Filter Bar -->
+    <div class="filter-container">
+      <span class="p-input-icon-left search-box">
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="searchKeyword"
+          (input)="searchPromotions()"
+          placeholder="Lọc theo tên khuyến mãi"
+          class="p-inputtext p-component"
+        />
+      </span>
 
-        <!-- Promotions Table -->
-        <p-table
-          [value]="filteredPromotions"
-          [paginator]="true"
-          [rows]="pageSize"
-          [totalRecords]="totalRecords"
-          [rowsPerPageOptions]="[5, 10, 25]"
-          [showCurrentPageReport]="true"
-          currentPageReportTemplate="{first} - {last} của {totalRecords} mục"
-          [loading]="loading"
-          (onPage)="onPageChange($event)"
-          styleClass="p-datatable-sm"
-          [responsive]="true"
-          responsiveLayout="scroll"
+      <div class="type-filter">
+        <p-dropdown
+          [options]="promotionTypeOptions"
+          [(ngModel)]="selectedPromotionType"
+          placeholder="Loại khuyến mãi"
+          optionLabel="label"
+          optionValue="value"
+          [showClear]="true"
+          (onChange)="onPromotionTypeChange($event)"
         >
-          <!-- Table Header -->
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Tên khuyến mãi</th>
-              <th>Loại khuyến mãi</th>
-              <th>Trạng thái</th>
-              <th>Thời gian bắt đầu</th>
-              <th>Thời gian kết thúc</th>
-              <th>Hành động</th>
-            </tr>
-          </ng-template>
-
-          <!-- Table Body -->
-          <ng-template pTemplate="body" let-promotion>
-            <tr>
-              <td>{{ promotion.name }}</td>
-              <td>{{ getDiscountTypeLabel(promotion.discountType) }}</td>
-              <td>
-                <span
-                  class="status-badge"
-                  [ngClass]="getStatusClass(promotion.status)"
-                >
-                  {{ getStatusLabel(promotion.status) }}
-                </span>
-              </td>
-              <td>{{ formatDate(promotion.startDate) }}</td>
-              <td>{{ formatDate(promotion.endDate) }}</td>
-              <td>
-                <div class="action-buttons">
-                  <button
-                    pButton
-                    pRipple
-                    icon="pi pi-eye"
-                    class="p-button-rounded p-button-text p-button-plain"
-                    pTooltip="Xem"
-                    tooltipPosition="top"
-                    (click)="viewPromotion(promotion)"
-                  ></button>
-                  <button
-                    pButton
-                    pRipple
-                    icon="pi pi-pencil"
-                    class="p-button-rounded p-button-text p-button-plain"
-                    pTooltip="Chỉnh sửa"
-                    tooltipPosition="top"
-                    (click)="editPromotion(promotion)"
-                  ></button>
-                  <button
-                    pButton
-                    pRipple
-                    icon="pi pi-trash"
-                    class="p-button-rounded p-button-text p-button-danger"
-                    pTooltip="Xóa"
-                    tooltipPosition="top"
-                    (click)="confirmDelete(promotion)"
-                  ></button>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-
-          <!-- Empty Message -->
-          <ng-template pTemplate="emptymessage">
-            <tr>
-              <td colspan="5" class="text-center p-4">
-                <span *ngIf="loading">Đang tải dữ liệu...</span>
-                <span *ngIf="!loading">Không tìm thấy khuyến mãi nào.</span>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
+        </p-dropdown>
       </div>
-    </p-tabPanel>
-  </p-tabView>
+    </div>
+
+    <!-- Promotions Table -->
+    <p-table
+      [value]="filteredPromotions"
+      [paginator]="true"
+      [rows]="pageSize"
+      [totalRecords]="totalRecords"
+      [rowsPerPageOptions]="[5, 10, 25]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} của {totalRecords} mục"
+      [loading]="loading"
+      (onPage)="onPageChange($event)"
+      styleClass="p-datatable-sm"
+      [responsive]="true"
+      responsiveLayout="scroll"
+    >
+      <!-- Table Header -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Tên khuyến mãi</th>
+          <th>Loại khuyến mãi</th>
+          <th>Trạng thái</th>
+          <th>Thời gian bắt đầu</th>
+          <th>Thời gian kết thúc</th>
+          <th>Hành động</th>
+        </tr>
+      </ng-template>
+
+      <!-- Table Body -->
+      <ng-template pTemplate="body" let-promotion>
+        <tr>
+          <td>{{ promotion.name }}</td>
+          <td>{{ getDiscountTypeLabel(promotion.discountType) }}</td>
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="getStatusClass(promotion.status)"
+            >
+              {{ getStatusLabel(promotion.status) }}
+            </span>
+          </td>
+          <td>{{ formatDate(promotion.startDate) }}</td>
+          <td>{{ formatDate(promotion.endDate) }}</td>
+          <td>
+            <div class="action-buttons">
+              <!-- Bỏ nút xem (btn-view) -->
+              <button
+                type="button"
+                class="custom-btn-action btn-edit"
+                title="Chỉnh sửa"
+                (click)="editPromotion(promotion)"
+              >
+                <i class="pi pi-pencil"></i>
+              </button>
+              <button
+                type="button"
+                class="custom-btn-action btn-delete"
+                title="Xóa"
+                (click)="confirmDelete(promotion)"
+              >
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Empty Message -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center p-4">
+            <span *ngIf="loading">Đang tải dữ liệu...</span>
+            <span *ngIf="!loading">Không tìm thấy khuyến mãi nào.</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>
 
 <!-- Confirmation Dialog -->

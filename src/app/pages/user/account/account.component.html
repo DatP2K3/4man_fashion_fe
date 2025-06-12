@@ -32,13 +32,13 @@
             <h2 class="title-drawer">
               Hi, {{ profile?.firstName }} {{ profile?.lastName }}
             </h2>
-            <p>
-              Hiện tại bạn có: <br />
-              <span class="wallet"
-                ><i class="pi pi-money-bill"></i>
-                <strong class="coin">{{ profile?.totalCoins }}</strong>
-                4Mancash</span
-              >
+            <p class="wallet">
+              Hiện tại bạn có:
+              <span class="wallet-balance">
+                <i class="pi pi-money-bill"></i>
+                <strong class="coin">{{ profile?.cashbackBalance }}</strong>
+                4Mancash
+              </span>
             </p>
           </div>
 
@@ -54,9 +54,6 @@
               </p>
               <p-progressbar [value]="profile?.percent" />
             </div>
-            <button class="section-invite">
-              Giới thiệu bạn bè <i class="pi pi-user-plus"></i>
-            </button>
           </div>
         </div>
       </div>
@@ -67,15 +64,14 @@
               <span>Thông tin tài khoản</span>
               <i class="pi pi-arrow-right"></i>
             </li>
-            <li [routerLink]="['/account/refer-friend']">
-              <span>Giới thiệu bạn bè</span>
-              <i class="pi pi-arrow-right"></i>
-            </li>
             <li [routerLink]="['/account/manage-order-of-me']">
               <span>Lịch sử đơn hàng</span>
               <i class="pi pi-arrow-right"></i>
             </li>
-            <li [routerLink]="['/account/4mancash-point']">
+            <li
+              [routerLink]="['/account/4mancash-point']"
+              routerLinkActive="active-nav"
+            >
               <span>Lịch sử 4ManCash</span>
               <i class="pi pi-arrow-right"></i>
             </li>

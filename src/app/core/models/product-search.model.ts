@@ -1,6 +1,7 @@
 export interface ProductSearchRequest {
   keyword?: string;
   categoryId?: string;
+  productType?: string; // Add this field to support searching by product type
   hidden?: boolean;
   pageIndex?: number;
   pageSize?: number;

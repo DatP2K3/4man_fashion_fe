@@ -1,3 +1,7 @@
+.container-fluid {
+  padding: 0;
+}
+
 header {
   position: fixed;
   top: 0;
@@ -66,19 +70,23 @@ main {
     align-items: center;
     justify-content: space-between;
 
-    p {
+    .wallet {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .wallet-balance {
       height: 80px;
       padding: 10px;
       border-radius: 10px;
-
-      .wallet {
-        display: flex;
-        align-items: center;
-
-        .coin {
-          margin: 0 6px;
-        }
-      }
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+      color: var(--primary-color);
 
       i {
         font-size: 1.8rem;
@@ -108,19 +116,6 @@ main {
     .target-cash {
       color: var(--primary-color);
       font-weight: bold;
-    }
-  }
-  .section-invite {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--third-background-color);
-    padding: 15px 30px;
-    width: 300px;
-    color: var(--secondary-text-color);
-    font-size: 1.8rem;
-
-    i {
-      font-size: 1.8rem;
     }
   }
 }
@@ -153,6 +148,13 @@ main {
   .active-nav {
     background-color: var(--primary-color);
     color: var(--secondary-text-color);
+  }
+
+  li.active-nav,
+  li.active-nav span,
+  li.active-nav i {
+    background-color: var(--primary-color) !important;
+    color: var(--secondary-text-color) !important;
   }
 }
 

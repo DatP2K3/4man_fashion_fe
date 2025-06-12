@@ -1,0 +1,161 @@
+<div class="manage-membershiptier-container">
+  <p-toast></p-toast>
+  <div class="header-row">
+    <h2>Quản lý hạng thành viên</h2>
+    <div style="display: flex; gap: 0.75rem">
+      <button
+        type="button"
+        class="custom-btn custom-btn-primary"
+        (click)="openNewDialog()"
+      >
+        <i class="pi pi-plus"></i> Thêm hạng thành viên
+      </button>
+    </div>
+  </div>
+  <!-- Table hiển thị danh sách hạng thành viên (cần bổ sung load API thực tế) -->
+  <p-table
+    [value]="membershipTiers"
+    [loading]="loading"
+    [paginator]="true"
+    [rows]="10"
+    [responsiveLayout]="'scroll'"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Tên hạng</th>
+        <th>Phần trăm hoàn tiền</th>
+        <th>Điểm tối thiểu</th>
+        <th>Mặc định</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-tier>
+      <tr>
+        <td>{{ tier.name }}</td>
+        <td>{{ tier.cashbackPercentage }}%</td>
+        <td>{{ tier.minPoints }}</td>
+        <td>
+          <span *ngIf="tier.defaultTier" class="badge badge-primary"
+            >Mặc định</span
+          >
+        </td>
+        <td>
+          <span
+            [ngClass]="
+              tier.deleted ? 'badge badge-danger' : 'badge badge-success'
+            "
+          >
+            {{ tier.deleted ? "Đã huỷ kích hoạt" : "Đang hoạt động" }}
+          </span>
+        </td>
+        <td>
+          <div class="action-buttons">
+            <button
+              type="button"
+              class="custom-btn custom-btn-primary btn-edit"
+              (click)="openEditDialog(tier)"
+              title="Chỉnh sửa"
+              [disabled]="tier.deleted"
+              [ngClass]="tier.deleted ? 'btn-disabled' : ''"
+              pTooltip="Chỉnh sửa hạng thành viên"
+            >
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button
+              *ngIf="!tier.deleted"
+              type="button"
+              class="custom-btn custom-btn-danger btn-delete"
+              (click)="toggleMembershipTierVisibility(tier)"
+              title="Huỷ kích hoạt"
+              pTooltip="Huỷ kích hoạt hạng thành viên"
+            >
+              <i class="pi pi-ban"></i>
+            </button>
+            <button
+              *ngIf="tier.deleted"
+              type="button"
+              class="custom-btn custom-btn-primary btn-activate"
+              (click)="toggleMembershipTierVisibility(tier)"
+              title="Kích hoạt"
+              pTooltip="Kích hoạt lại hạng thành viên"
+            >
+              <i class="pi pi-check-circle"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog
+    [(visible)]="displayDialog"
+    [header]="editMode ? 'Cập nhật hạng thành viên' : 'Thêm hạng thành viên'"
+    [modal]="true"
+    [style]="{ width: '400px' }"
+  >
+    <form [formGroup]="membershipTierForm" class="p-fluid">
+      <div class="p-field">
+        <label for="name">Tên hạng</label>
+        <input id="name" type="text" pInputText formControlName="name" />
+      </div>
+      <div class="p-field">
+        <label for="cashbackPercentage">Phần trăm hoàn tiền</label>
+        <input
+          id="cashbackPercentage"
+          type="number"
+          pInputText
+          formControlName="cashbackPercentage"
+        />
+        <div
+          *ngIf="
+            membershipTierForm.get('cashbackPercentage')?.touched &&
+            membershipTierForm.get('cashbackPercentage')?.value < 0
+          "
+          class="input-error-text"
+        >
+          Không được nhập giá trị âm
+        </div>
+      </div>
+      <div class="p-field">
+        <label for="minPoints">Điểm tối thiểu</label>
+        <input
+          id="minPoints"
+          type="number"
+          pInputText
+          formControlName="minPoints"
+        />
+        <div
+          *ngIf="
+            membershipTierForm.get('minPoints')?.touched &&
+            membershipTierForm.get('minPoints')?.value < 0
+          "
+          class="input-error-text"
+        >
+          Không được nhập giá trị âm
+        </div>
+      </div>
+      <div class="p-field-checkbox">
+        <input type="checkbox" id="defaultTier" formControlName="defaultTier" />
+        <label for="defaultTier">Hạng mặc định</label>
+      </div>
+    </form>
+    <div class="dialog-footer">
+      <button
+        type="button"
+        class="custom-btn custom-btn-secondary"
+        (click)="cancelDialog()"
+      >
+        Hủy
+      </button>
+      <button
+        type="button"
+        class="custom-btn custom-btn-primary"
+        (click)="saveMembershipTier()"
+        [disabled]="membershipTierForm.invalid"
+      >
+        Lưu
+      </button>
+    </div>
+  </p-dialog>
+</div>

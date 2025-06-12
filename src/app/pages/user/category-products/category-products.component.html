@@ -1,0 +1,176 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <header class="row">
+    <app-header></app-header>
+  </header>
+
+  <!-- Main Content -->
+  <main class="row">
+    <div class="col-12">
+      <!-- Category Header -->
+      <section class="category-header mb-4">
+        <h1 class="category-title">{{ categoryName }}</h1>
+
+        <!-- Filters and Sorting - only show when we have a categoryId -->
+        <div class="filters-container" *ngIf="categoryId">
+          <div class="sort-container">
+            <label for="sort-select">Sắp xếp theo:</label>
+            <p-dropdown
+              [options]="sortOptions"
+              [(ngModel)]="selectedSort"
+              optionLabel="label"
+              optionValue="value"
+              (onChange)="onSortChange($event)"
+            ></p-dropdown>
+          </div>
+        </div>
+      </section>
+
+      <!-- Products Section -->
+      <section class="products-section">
+        <div class="product-grid">
+          <!-- Loading Indicator -->
+          <div *ngIf="loading" class="text-center p-5">
+            <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            <p>Đang tải sản phẩm...</p>
+          </div>
+
+          <!-- Main Menu Category Instructions - Show when no categoryId -->
+          <div *ngIf="!loading && !categoryName" class="empty-category-message">
+            <div class="text-center p-5">
+              <i class="pi pi-list" style="font-size: 3rem; color: #ccc"></i>
+              <h3>Vui lòng chọn một danh mục cụ thể</h3>
+              <p>Hãy chọn một danh mục con từ menu để xem sản phẩm.</p>
+
+              <!-- Display subcategories if we're on a main productType page -->
+              <div *ngIf="productType === 'ao'" class="subcategories-list">
+                <h4>Danh mục Áo:</h4>
+                <ul>
+                  <li *ngFor="let category of aoCategories">
+                    <a [routerLink]="['/ao', category.id]">{{
+                      category.name
+                    }}</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="productType === 'quan'" class="subcategories-list">
+                <h4>Danh mục Quần:</h4>
+                <ul>
+                  <li *ngFor="let category of quanCategories">
+                    <a [routerLink]="['/quan', category.id]">{{
+                      category.name
+                    }}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products Grid - Only show when we have a categoryId -->
+          <div *ngIf="!loading && categoryName" class="row">
+            <div
+              *ngFor="let product of products"
+              class="col-12 col-sm-6 col-md-3 mb-4"
+            >
+              <div
+                class="product-card h-100"
+                (click)="navigateToProductDetail(product.id)"
+                style="cursor: pointer"
+              >
+                <!-- Sale Badge -->
+                <div
+                  class="sale-badge"
+                  *ngIf="
+                    product.discountPercentage && product.discountPercentage > 0
+                  "
+                >
+                  {{ product.discountPercentage }}% OFF
+                </div>
+
+                <!-- Product Image -->
+                <div class="product-image-container">
+                  <img
+                    [src]="product.imageUrl"
+                    [alt]="product.name"
+                    class="product-image"
+                  />
+                  <div class="product-overlay">
+                    <button
+                      pButton
+                      icon="pi pi-shopping-cart"
+                      class="p-button-rounded p-button-text"
+                      (click)="$event.stopPropagation()"
+                    ></button>
+                  </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info mt-3">
+                  <h4 class="product-title">{{ product.name }}</h4>
+
+                  <div class="price-container">
+                    <!-- Show original price with different styling based on discount -->
+                    <span
+                      [ngClass]="{
+                        'original-price': product.discountPrice,
+                        'normal-price': !product.discountPrice
+                      }"
+                      >{{
+                        product.originPrice
+                          | currency : "VND" : "symbol" : "1.0-0"
+                      }}</span
+                    >
+
+                    <!-- Only show discount price when it exists -->
+                    <span class="sale-price" *ngIf="product.discountPrice">{{
+                      product.discountPrice
+                        | currency : "VND" : "symbol" : "1.0-0"
+                    }}</span>
+                  </div>
+
+                  <p-rating
+                    [ngModel]="product.averageRating || 0"
+                    [readonly]="true"
+                    class="mt-2 d-flex justify-content-center"
+                  ></p-rating>
+                </div>
+              </div>
+            </div>
+
+            <!-- No Products Found Message -->
+            <div *ngIf="products.length === 0" class="col-12 text-center p-5">
+              Không tìm thấy sản phẩm nào.
+            </div>
+          </div>
+
+          <!-- Enhanced Pagination - Only show when we have products and categoryId -->
+          <div
+            *ngIf="!loading && categoryId && totalElements > 0"
+            class="pagination-container mt-4"
+          >
+            <div class="product-count mb-2">
+              Hiển thị {{ (pageIndex - 1) * pageSize + 1 }} -
+              {{ Math.min(pageIndex * pageSize, totalElements) }} trên tổng số
+              {{ totalElements }} sản phẩm
+            </div>
+
+            <p-paginator
+              [rows]="pageSize"
+              [totalRecords]="totalElements"
+              [rowsPerPageOptions]="[12, 24, 48]"
+              [showCurrentPageReport]="true"
+              [currentPageReportTemplate]="'Trang {currentPage} / {totalPages}'"
+              (onPageChange)="onPageChange($event)"
+            ></p-paginator>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="row">
+    <app-footer></app-footer>
+  </footer>
+</div>
